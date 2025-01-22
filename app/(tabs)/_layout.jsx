@@ -11,7 +11,7 @@ function TabIcon({ icon, color, name, focused }) {
                 style={{ tintColor: color }} // Changed tintColor to style prop
                 className="w-6 h-6"
             />
-            <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs w-12 text-center`}>
+            <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs w-12 text-center`} style={{ color: color }}>
                 {name}
             </Text>
         </View>
@@ -24,6 +24,14 @@ const TabsLayout = () => {
     <Tabs
     screenOptions={{
         tabBarShowLabel: false,
+        tabBarActiveTintColor: '#FFC300',
+        tabBarInactiveTintColor: '#996B00',
+        tabBarStyle: {
+            backgroundColor: '#000814',
+            borderTopWidth: 1,
+            borderTopColor: '#996B00',
+            height: 84,
+        }
     }}
     >
         
