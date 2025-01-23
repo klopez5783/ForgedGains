@@ -6,6 +6,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        gradientStart: '#000814',
+        gradientEnd: '#00000A',
         primary: {
           DEFAULT: '#003566',
           100: '#336699',
@@ -65,5 +67,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('nativewind/plugin'),
+  ],
 }
