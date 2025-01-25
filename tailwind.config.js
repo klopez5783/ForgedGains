@@ -68,6 +68,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('nativewind/plugin'),
+    // require('nativewind/plugin'),
   ],
 }

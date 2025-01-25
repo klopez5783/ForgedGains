@@ -7,21 +7,27 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={{height: '100%'}}>
-        <LinearGradient
-        // Background Linear Gradient
-        colors={["#000000", "#FFFFFF"]}
-        start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-        className='w-full h-full' 
-      >
-          <View className="w-full justify-start items-center h-full px-4 mt-4">
-            <Image source={images.logo}
-            className="w-[175px] h-[145px]" />
+    <LinearGradient
+      colors={['#001433', '#000814']}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View nativeID="IntroImageView" className="w-full justify-start items-center px-4 mt-5">
+            <Image source={images.logoV4}
+              className="w-[175px] h-[145px]"
+              resizeMode='contain' />
           </View>
-          
-      </LinearGradient>
-      </ScrollView>
-    </SafeAreaView>
+          <View nativeID="introTextView" className='flex-1 justify-start px-4 mt-12'>
+            <Text nativeID="introText" className="text-2xl text-white font-bold text-center">
+              <Text className='text-darkGold'>Forged Gains:</Text> Where Strength is Crafted and Limits are Broken. 
+              Raw determination meets relentless effort to shape the ultimate version of you. 
+              Every drop of sweat is a strike on the anvil of transformation, every rep a step closer to greatness. 
+              Where ordinary is melted down and reforged into extraordinary. Are you ready to build the unbreakable?
+            </Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
