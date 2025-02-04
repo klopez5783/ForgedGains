@@ -9,7 +9,7 @@ import CustomBTN from '../components/CustomBTN';
 export default function App() {
   return (
     <LinearGradient
-      colors={['#001433', '#000814']}
+      colors={['#000814' , '#001433']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={{ flex: 1 }}>
