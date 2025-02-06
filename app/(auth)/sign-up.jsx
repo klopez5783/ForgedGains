@@ -6,6 +6,8 @@ import FormField from '../../components/FormField'
 import CustomBTN from '../../components/CustomBTN'
 import { Link } from 'expo-router'
 
+
+
 export default function SignUp() {
 
   const [form , setForm] = useState({
@@ -16,6 +18,27 @@ export default function SignUp() {
   });
 
   const [isSubmiting , setIsSubmiting ] = useState(false);
+
+  const handleSignUp = () => {
+    setIsSubmiting(true);
+
+    // Password requirements
+    const passwordRequirements = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Minimum 8 characters, at least one letter and one number
+
+    if (form.password !== form.confirmPassword) {
+      setIsSubmiting(false);
+      alert("Passwords do not match!");
+      return;
+    }
+
+    if (!passwordRequirements.test(form.password)) {
+      setIsSubmiting(false);
+      alert("Password must be at least 8 characters long and include at least one letter and one number.");
+      return;
+    }
+
+    // Add your sign-up logic here
+  };
 
   return (
     <SafeAreaView className="bg-backGround h-full">
@@ -32,9 +55,9 @@ export default function SignUp() {
           <FormField 
           title="Username"
           value={form.userName}
-          handleChangeText={(e) => setForm({...form, email: e})}
+          handleChangeText={(e) => setForm({...form, userName: e})}
           otherStyles="mt-7"
-          keyboardType="email-address"
+          keyboardType="default"
           />
 
           <FormField 
@@ -54,29 +77,17 @@ export default function SignUp() {
 
           <FormField 
           title="Confirm Password"
-          value={form.ConfirmPassword}
-          handleChangeText={(e) => setForm({...form, password: e})}
+          value={form.confirmPassword}
+          handleChangeText={(e) => setForm({...form, confirmPassword: e})}
           otherStyles="mt-4"
           />
 
           <CustomBTN
-          Title="Sign In"
+          Title="Sign Up"
           width={300}
-          handlePress={isSubmiting}
+          handlePress={handleSignUp}
           
           />
-
-          <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
-              Don't have an account?
-            </Text>
-            <Link
-              href="/sign-up"
-              className="text-lg font-psemibold text-darkGold"
-            >
-              Signup
-            </Link>
-          </View>
 
         </View>
       </ScrollView>
