@@ -5,44 +5,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomBTN from '../components/CustomBTN';
-import * as SQLite from 'expo-sqlite';
-import { useEffect } from 'react';
 
-const setupDatabase = async () => {
-  try {
-    const db = await SQLite.openDatabaseAsync('forgedGains');
-    // Enable Write-Ahead Logging (WAL) for better performance
-    await db.execAsync(`PRAGMA journal_mode = WAL;`);
-    await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS Users (userName TEXT PRIMARY KEY NOT NULL, 
-                                        email TEXT NOT NULL,
-                                        password TEXT NOT NULL);
-    `);
-    // Insert sample users (if needed)
-    await db.execAsync(`
-      INSERT OR IGNORE INTO Users (userName, email, password) VALUES 
-      ("Xx_Slayer_xX", "slayer@email.com", "password123"),
-      ("TheRealSlimShady", "shady@email.com", "password456");
-  `);  
-
-    console.log("Database setup completed successfully!");
-
-    // Fetch all rows from the Users table
-    const allRows = await db.getAllAsync('SELECT * FROM Users');
-    for (const row of allRows) {
-      console.log(row.userName, row.email);
-    }
-  } catch (err) {
-    console.error("Database setup failed with error: " + err);
-  }
-};
+import * as FileSystem from 'expo-file-system';
 
 export default function App() {
-  useEffect(() => {
-    setupDatabase();
-  }, []);
-
+  
+console.log("Database path:", FileSystem.documentDirectory + "SQLite/forgedGains.db");
   return (
+    
     <LinearGradient
       colors={['#001433', '#000814']}
       style={{ flex: 1 }}
