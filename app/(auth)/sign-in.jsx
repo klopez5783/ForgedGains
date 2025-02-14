@@ -5,8 +5,12 @@ import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import CustomBTN from '../../components/CustomBTN'
 import { Link } from 'expo-router'
+import { signin } from '../../Database/authentication'
+import { useRouter } from 'expo-router';
 
 export default function SignIn() {
+
+  const router = useRouter();
 
   const [form , setForm] = useState({
     email: '',
@@ -14,6 +18,19 @@ export default function SignIn() {
   });
 
   const [isSubmiting , setIsSubmiting ] = useState(false);
+
+  const handleSignIn = async() => {
+      console.log("Signing Up...");
+      setIsSubmiting(true);
+
+      try {
+        await signin(form.email, form.password); // Call the signup function
+        router.push('/(tabs)/Home') // Navigate to home screen after sign-up
+      } catch (err){
+        console.error("Error hashing password:", err);
+        setIsSubmiting(false);
+      }
+    };
 
   return (
     <SafeAreaView className="bg-backGround h-full">
@@ -45,7 +62,7 @@ export default function SignIn() {
           <CustomBTN
           Title="Sign In"
           width={300}
-          handlePress={isSubmiting}
+          handlePress={handleSignIn}
           
           />
 

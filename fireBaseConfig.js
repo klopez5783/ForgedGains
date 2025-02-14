@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
+import { initializeAuth, getReactNativePersistence, createUserWithEmailAndPassword } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from "firebase/app";
-import { initializeAuth , getReactNativePersistence } from "firebase/auth";
-import  ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,7 +16,15 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const auth = initializeAuth(app,{
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth with AsyncStorage persistence
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage)
 });
+
+// Sign Up function
+export const signup = async (email, password) => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
+};

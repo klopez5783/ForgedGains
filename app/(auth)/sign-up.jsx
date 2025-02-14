@@ -4,11 +4,11 @@ import React, { useState } from 'react'
 import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import CustomBTN from '../../components/CustomBTN'
-import { Link } from 'expo-router'
-import { addUser } from '../../Database/createUser';
 import * as ExpoCrypto from 'expo-crypto';
 import CryptoJS from 'crypto-js';
 import { useSQLiteContext } from 'expo-sqlite';
+import { signup } from '../../Database/authentication';
+import { useRouter } from 'expo-router';
 
 
 async function generateSalt() {
@@ -36,6 +36,7 @@ async function hashPassword(password) {
 export default function SignUp() {
 
   const db = useSQLiteContext();
+  const router = useRouter();
 
   const [form , setForm] = useState({
     userName : '',
@@ -67,58 +68,26 @@ export default function SignUp() {
 
     // Hash the password
     console.log("Hashing Password...");
+    // try {
+    //   const { hash, salt } = await hashPassword(form.password); // ⬅️ Await the result
+
+    //   // Now pass the hashed password & salt to createUser
+    //   //await addUser(db, form.email, form.userName, hash);
+
+    // } catch (err){
+    //   console.error("Error hashing password:", err);
+    //   setIsSubmiting(false);
+    // }
+
     try {
-      const { hash, salt } = await hashPassword(form.password); // ⬅️ Await the result
-
-      // Now pass the hashed password & salt to createUser
-      await addUser(db, form.email, form.userName, hash);
-
+      await signup(form.email, form.password); // Call the signup function
+      router.push('/sign-in'); // Navigate to home screen after sign-up
     } catch (err){
       console.error("Error hashing password:", err);
       setIsSubmiting(false);
     }
   };
 
-<<<<<<< HEAD
-  const handleSignUp = async() => {
-    console.log("Signing Up...");
-=======
-  const handleSignUp = () => {
->>>>>>> 063d6b6 (Added password confirmation (password and confirm password are the same) and regex to check password requirements. (Minimum 8 characters, at least one letter and one number))
-    setIsSubmiting(true);
-
-    // Password requirements
-    const passwordRequirements = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Minimum 8 characters, at least one letter and one number
-
-    if (form.password !== form.confirmPassword) {
-      setIsSubmiting(false);
-      alert("Passwords do not match!");
-      return;
-    }
-
-    if (!passwordRequirements.test(form.password)) {
-      setIsSubmiting(false);
-      alert("Password must be at least 8 characters long and include at least one letter and one number.");
-      return;
-    }
-
-<<<<<<< HEAD
-    // Hash the password
-    console.log("Hashing Password...");
-    try {
-      const { hash, salt } = await hashPassword(form.password); // ⬅️ Await the result
-
-      // Now pass the hashed password & salt to createUser
-      await addUser(db, form.email, form.userName, hash);
-
-    } catch (err){
-      console.error("Error hashing password:", err);
-      setIsSubmiting(false);
-    }
-=======
-    // Add your sign-up logic here
->>>>>>> 063d6b6 (Added password confirmation (password and confirm password are the same) and regex to check password requirements. (Minimum 8 characters, at least one letter and one number))
-  };
 
   return (
       <SafeAreaView className="bg-backGround h-full">
@@ -132,13 +101,13 @@ export default function SignUp() {
             
             <Text className="text-3xl text-darkGold font-bold mt-10">Sign Up for Forged Fitness</Text>
 
-            <FormField 
+            {/* <FormField 
             title="Username"
             value={form.userName}
             handleChangeText={(e) => setForm({...form, userName: e})}
             otherStyles="mt-7"
             keyboardType="default"
-            />
+            /> */}
 
             <FormField 
             title="Email"
@@ -168,15 +137,7 @@ export default function SignUp() {
           handlePress={handleSignUp}
           
           />
-            <CustomBTN
-            Title="Sign Up"
-            width={300}
-            handlePress={handleSignUp}
-            
-            />
-
-          {/* {isSubmiting && <createUser email={form.email} userName={form.userName} password={hash} />} */}
-
+          
 
           </View>
         </ScrollView>
