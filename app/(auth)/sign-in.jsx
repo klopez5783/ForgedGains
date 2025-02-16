@@ -78,7 +78,7 @@ export default function SignIn() {
               Forgot your password?
             </Text>
             <Link
-              href="/sign-up"
+              href="/resetPassword"
               className="text-lg font-psemibold text-darkGold"
             >
               <Text>Reset Password Here</Text>

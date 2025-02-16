@@ -8,7 +8,7 @@ export default function AuthLayout() {
       <Stack>
         <Stack.Screen name="sign-in" options={{headerShown: false}} />
         <Stack.Screen name="sign-up" options={{headerShown: false}} />
-        <Stack.Screen name="landing" options={{headerShown: false}} />
+        <Stack.Screen name="resetPassword" options={{headerShown: false}} />
       </Stack>
       <StatusBar
         backGroundColor="#161622"

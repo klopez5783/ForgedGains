@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  , sendPasswordResetEmail } from "firebase/auth";
 import { app } from "../fireBaseConfig"; // Import your Firebase app instance
 
 const auth = getAuth(app); // Get the authentication instance
@@ -35,10 +35,11 @@ export const signin = async (email, password) => {
   }
 };
 
-export const resetPassword = async (email) => {
+export const sendPasswordReset = async (auth, email) =>{
   try {
     await sendPasswordResetEmail(auth, email);
-    return "Password reset email sent.";
+    console.log("Password reset email sent!");
+    return { success: true };
   } catch (error) {
     let errorMessage = "Something went wrong. Please try again.";
     if (error.code === "auth/user-not-found") {
@@ -47,3 +48,4 @@ export const resetPassword = async (email) => {
     throw new Error(errorMessage);
   }
 }
+
