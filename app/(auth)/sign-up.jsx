@@ -4,38 +4,10 @@ import React, { useState } from 'react'
 import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import CustomBTN from '../../components/CustomBTN'
-import * as ExpoCrypto from 'expo-crypto';
-import CryptoJS from 'crypto-js';
-import { useSQLiteContext } from 'expo-sqlite';
 import { signup } from '../../Database/authentication';
-import { useRouter } from 'expo-router';
-
-
-async function generateSalt() {
-  console.log("Generating salt...");
-  const randomBytes = await ExpoCrypto.getRandomBytesAsync(16);
-  const salt = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.create(randomBytes));
-  console.log("Generated Salt:", salt);
-  return salt;
-}
-
-async function hashPassword(password) {
-  if (!password) {
-    throw new Error("Password is undefined");
-  }
-  console.log("Hashing Password...");
-  const salt = await generateSalt();
-  const hash = CryptoJS.SHA256(password + salt).toString();
-  console.log("Hashed Password:", hash);
-  return { hash, salt };
-}
-
-
-
+import { useRouter , Link } from 'expo-router';
 
 export default function SignUp() {
-
-  const db = useSQLiteContext();
   const router = useRouter();
 
   const [form , setForm] = useState({
@@ -66,24 +38,13 @@ export default function SignUp() {
       return;
     }
 
-    // Hash the password
-    console.log("Hashing Password...");
-    // try {
-    //   const { hash, salt } = await hashPassword(form.password); // ⬅️ Await the result
-
-    //   // Now pass the hashed password & salt to createUser
-    //   //await addUser(db, form.email, form.userName, hash);
-
-    // } catch (err){
-    //   console.error("Error hashing password:", err);
-    //   setIsSubmiting(false);
-    // }
-
     try {
+      setIsSubmiting(true);
       await signup(form.email, form.password); // Call the signup function
       router.push('/sign-in'); // Navigate to home screen after sign-up
-    } catch (err){
-      console.error("Error hashing password:", err);
+    } catch (err) {
+      alert(err.message);
+    }finally{
       setIsSubmiting(false);
     }
   };
@@ -137,6 +98,18 @@ export default function SignUp() {
           handlePress={handleSignUp}
           
           />
+
+          <View className="flex justify-center pt-5 flex-row gap-2">
+              <Text className="text-lg text-gray-100 font-pregular">
+                Already have an account?
+              </Text>
+              <Link
+                href="/sign-in"
+                className="text-lg font-psemibold text-darkGold"
+              >
+                Sign in
+              </Link>
+            </View>
           
 
           </View>

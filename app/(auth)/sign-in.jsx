@@ -1,12 +1,13 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useState } from 'react'
-import { images } from '../../constants'
+import { images , icons } from '../../constants'
 import FormField from '../../components/FormField'
 import CustomBTN from '../../components/CustomBTN'
 import { Link } from 'expo-router'
 import { signin } from '../../Database/authentication'
 import { useRouter } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function SignIn() {
 
@@ -20,14 +21,13 @@ export default function SignIn() {
   const [isSubmiting , setIsSubmiting ] = useState(false);
 
   const handleSignIn = async() => {
-      console.log("Signing Up...");
+    try {
       setIsSubmiting(true);
-
-      try {
         await signin(form.email, form.password); // Call the signup function
         router.push('/(tabs)/Home') // Navigate to home screen after sign-up
-      } catch (err){
-        console.error("Error hashing password:", err);
+      } catch (err) {
+        alert(err.message);
+      } finally {
         setIsSubmiting(false);
       }
     };
@@ -35,11 +35,19 @@ export default function SignIn() {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-        <View className="w-full justify-center min-h-[70vh] px-4 my-6">
+        <View className="w-full justify-center min-h-[80vh] px-4 my-6">
+
+          <View className="mb-15 px-2 pt-10">
+            <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
+              <AntDesign name="arrowleft" size={30} color="#FFC300" />
+              <Text className="text-lg font-psemibold text-darkGold ml-2">Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+
 
           <Image 
           source={images.logoV4} 
-          className="w-[175px] h-[15vh] mx-auto" 
+          className="w-[175px] h-[15vh] mx-auto mt-10" 
           resizeMode='contain' />
           
           <Text className="text-3xl text-darkGold font-bold mt-10">Sign In</Text>
@@ -63,18 +71,17 @@ export default function SignIn() {
           Title="Sign In"
           width={300}
           handlePress={handleSignIn}
-          
           />
 
           <View className="flex justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-pregular">
-              Don't have an account?
+              Forgot your password?
             </Text>
             <Link
               href="/sign-up"
               className="text-lg font-psemibold text-darkGold"
             >
-              Signup
+              <Text>Reset Password Here</Text>
             </Link>
           </View>
 

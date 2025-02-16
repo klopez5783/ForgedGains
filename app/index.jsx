@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, View, Image } from 'react-native';
-import { Redirect , router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,10 +9,9 @@ import CustomBTN from '../components/CustomBTN';
 import * as FileSystem from 'expo-file-system';
 
 export default function App() {
-  
-console.log("Database path:", FileSystem.documentDirectory + "SQLite/forgedGains.db");
+  const router = useRouter();
+
   return (
-    
     <LinearGradient
       colors={['#001433', '#000814']}
       style={{ flex: 1 }}
@@ -32,7 +31,7 @@ console.log("Database path:", FileSystem.documentDirectory + "SQLite/forgedGains
             
           <CustomBTN width={250} 
           Title="I'm Ready."
-          handlePress={() => router.push('/(auth)/sign-in')}
+          handlePress={() => router.push('/(auth)/sign-up')}
            />
           </View>
         </ScrollView>

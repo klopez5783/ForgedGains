@@ -2,38 +2,8 @@ import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
 import "../global.css";
 import { useEffect } from "react";
-import { SQLiteProvider } from "expo-sqlite";
 
 SplashScreen.preventAutoHideAsync();
-
-const setupDatabase = async (db) => {
-  try {
-    await db.execAsync("DROP TABLE IF EXISTS Users;");
-    const response = await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS Users (userName TEXT PRIMARY KEY NOT NULL, 
-                                        email TEXT NOT NULL,
-                                        password TEXT NOT NULL);
-    `);
-    // Enable Write-Ahead Logging (WAL) for better performance
-    await db.execAsync(`PRAGMA journal_mode = WAL;`);
-    // Insert sample users (if needed)
-  //   await db.execAsync(`
-  //     INSERT OR IGNORE INTO Users (userName, email, password) VALUES 
-  //     ("Xx_Slayer_xX", "slayer@email.com", "password123"),
-  //     ("TheRealSlimShady", "shady@email.com", "password456");
-  // `);
-
-    console.log("Database setup completed successfully!");
-
-    // Fetch all rows from the Users table
-    const allRows = await db.getAllAsync("SELECT * FROM Users");
-    for (const row of allRows) {
-      console.log(row.userName, row.email);
-    }
-  } catch (err) {
-    console.error("Database setup failed with error: " + err);
-  }
-};
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -57,13 +27,11 @@ export default function RootLayout() {
 
   return (
     <>
-      <SQLiteProvider databaseName="forgedGains" version="1.0" onInit={setupDatabase}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
-      </SQLiteProvider>
     </>
   );
 }
