@@ -24,6 +24,7 @@ export default function resetPassword() {
     const handleReset = async() => {
       try {
         setIsSubmiting(true);
+        console.log(form.email);
           const response = await sendPasswordReset(form.email); // Call the signup function
           if(response.success) alert("Password reset email sent successfully!");
           router.push('/(tabs)/Home') // Navigate to home screen after sign-up
@@ -58,7 +59,7 @@ export default function resetPassword() {
           title="Email"
           value={form.email}
           handleChangeText={(e) => setForm({...form, email: e})}
-          otherStyles="mt-7"
+          otherStyles="mt-5"
           keyboardType="email-address"
           />
 

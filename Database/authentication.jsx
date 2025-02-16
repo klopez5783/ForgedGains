@@ -35,7 +35,7 @@ export const signin = async (email, password) => {
   }
 };
 
-export const sendPasswordReset = async (auth, email) =>{
+export const sendPasswordReset = async (email) =>{
   try {
     await sendPasswordResetEmail(auth, email);
     console.log("Password reset email sent!");
@@ -48,4 +48,3 @@ export const sendPasswordReset = async (auth, email) =>{
     throw new Error(errorMessage);
   }
 }
-

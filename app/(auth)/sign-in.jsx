@@ -35,7 +35,7 @@ export default function SignIn() {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-        <View className="w-full justify-center min-h-[80vh] px-4 my-6">
+        <View className="w-full justify-center px-4 my-6">
 
           <View className="mb-15 px-2 pt-10">
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
