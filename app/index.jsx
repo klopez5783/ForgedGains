@@ -6,7 +6,6 @@ import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomBTN from '../components/CustomBTN';
 
-import * as FileSystem from 'expo-file-system';
 
 export default function App() {
   const router = useRouter();

@@ -27,7 +27,7 @@ export default function resetPassword() {
         console.log(form.email);
           const response = await sendPasswordReset(form.email); // Call the signup function
           if(response.success) alert("Password reset email sent successfully!");
-          router.push('/(tabs)/Home') // Navigate to home screen after sign-up
+          router.push('/(auth)/sign-in') // Navigate to home screen after sign-up
         } catch (err) {
           alert(err.message);
         } finally {

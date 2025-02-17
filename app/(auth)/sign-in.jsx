@@ -24,7 +24,7 @@ export default function SignIn() {
     try {
       setIsSubmiting(true);
         await signin(form.email, form.password); // Call the signup function
-        router.push('/(tabs)/Home') // Navigate to home screen after sign-up
+        router.replace('/(tabs)/Home') // Navigate to home screen after sign-up
       } catch (err) {
         alert(err.message);
       } finally {

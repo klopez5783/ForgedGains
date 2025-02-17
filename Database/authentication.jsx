@@ -1,4 +1,8 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  , sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  sendPasswordResetEmail,
+  signOut } from "firebase/auth";
 import { app } from "../fireBaseConfig"; // Import your Firebase app instance
 
 const auth = getAuth(app); // Get the authentication instance
@@ -46,5 +50,13 @@ export const sendPasswordReset = async (email) =>{
       errorMessage = "No account found with this email.";
     }
     throw new Error(errorMessage);
+  }
+}
+
+export const SignUserOut = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Sign-out error:", error);
   }
 }
