@@ -4,17 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomBTN from '../../components/CustomBTN'
 import { SignUserOut } from '../../Database/authentication'
 import { useNavigation, useRouter } from 'expo-router'
+import { useGlobalContext } from "../../context/globalProvider"
 
 
 export default function Home() {
 
-  const navigation = useNavigation();
+  const { user } = useGlobalContext();
 
-  useEffect(() => {
-    navigation.setOptions({
-      gestureEnabled: false, // Disable swipe-back gesture
-    });
-  }, [navigation]);
+  const navigation = useNavigation();
 
   const router = useRouter();
 
@@ -38,6 +35,11 @@ export default function Home() {
       handlePress={ handleSignOut }
       width={200}
       />
+      <View>
+        <Text>
+          { user ? `Welcome ${user.email}` : 'Not Logged In'}
+        </Text>
+      </View>
     </SafeAreaView>
   )
 }

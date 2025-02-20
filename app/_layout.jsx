@@ -2,6 +2,7 @@ import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
 import "../global.css";
 import { useEffect } from "react";
+import  GlobalProvider  from '../context/globalProvider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +27,7 @@ export default function RootLayout() {
   if (!fontsLoaded && !error) return null;
 
   return (
-    <>
+    <GlobalProvider>
         <Stack
         screenOptions={{
           gestureEnabled: false, // Disable swipe gestures globally
@@ -35,6 +36,6 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
-    </>
+    </GlobalProvider>
   );
 }

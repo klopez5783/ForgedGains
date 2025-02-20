@@ -5,16 +5,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomBTN from '../components/CustomBTN';
+import { useGlobalContext } from '../context/globalProvider';
 
 
 export default function App() {
   const router = useRouter();
 
+  const {user} = useGlobalContext();
+  
+
+  if(user) {
+    setTimeout(() => {
+    router.replace("/(tabs)/Home");
+    }, 100);
+  }
+
   return (
-    <LinearGradient
-      colors={['#001433', '#000814']}
-      style={{ flex: 1 }}
-    >
+      <LinearGradient
+        colors={['#001433', '#000814']}
+        style={{ flex: 1 }}
+      >
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View nativeID="IntroImageView" className="w-full justify-start items-center px-4 mt-5">
