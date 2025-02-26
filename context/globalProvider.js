@@ -33,8 +33,8 @@ const GlobalProvider = ({ children }) => {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000814" }}>
+        <ActivityIndicator size="large" color="FFC300" />
       </View>
     );
   }

@@ -62,14 +62,6 @@ export default function SignUp() {
             
             <Text className="text-3xl text-darkGold font-bold mt-10">Sign Up for Forged Fitness</Text>
 
-            {/* <FormField 
-            title="Username"
-            value={form.userName}
-            handleChangeText={(e) => setForm({...form, userName: e})}
-            otherStyles="mt-7"
-            keyboardType="default"
-            /> */}
-
             <FormField 
             title="Email"
             value={form.email}

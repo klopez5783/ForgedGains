@@ -6,6 +6,7 @@ import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomBTN from '../components/CustomBTN';
 import { useGlobalContext } from '../context/globalProvider';
+import React from 'react';
 
 
 export default function App() {
@@ -13,8 +14,9 @@ export default function App() {
 
   const {user} = useGlobalContext();
   
-
   if(user) {
+    console.log("Redirecting to Home Page...")
+    console.log("Index Page \nUser: ", user);
     setTimeout(() => {
     router.replace("/(tabs)/Home");
     }, 100);
