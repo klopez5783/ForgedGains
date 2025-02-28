@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import { useState } from 'react'
 import WheelPicker from '../../components/WheelPicker'
+import CustomBTN from '../../components/CustomBTN'
 
 export default function Start() {
 
@@ -145,19 +146,22 @@ export default function Start() {
                   placeHolder={{"Weight": "Enter Weight"}}
                   onChangeText={weight => setWeight(weight)}
                   defaultValue={weight}
-                  className="w-2/3  rounded-lg border border-darkGold m-2 p-2 self-center mb-4"
+                  className="w-2/3  rounded-lg border border-darkGold m-2 p-2 self-center"
                   style={{ color: 'white', textAlign: 'center' }}
                   keyboardType="numeric"
                   />
 
-                  <Pressable
-                    className="justify-center self-center bg-darkGold rounded-2xl p-3"
-                    onPress={() => {
+                  <CustomBTN
+                    Title="Set Weight"
+                    otherStyles="bg-darkGold self-center mt-2"
+                    handlePress={() => {
                       setForm({...form, Weight: weight});
                       setModalVisible(!modalVisible);
-                    }}>
-                    <Text className="text-lg font-psemibold text-white">Set Weight</Text>
-                  </Pressable>
+                    }}
+                    width={200}
+                  />
+
+
                 </View>
               </View>
           </Modal>
