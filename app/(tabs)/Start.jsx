@@ -7,7 +7,9 @@ import WheelPicker from '../../components/WheelPicker'
 
 export default function Start() {
 
-  const [text, setText] = useState('');
+  const [weight, setWeight] = useState('');
+
+  const [selectedWeightUnit , setWeightUnit] = useState('Pounds');
 
   const styles = StyleSheet.create({
     centeredView: {
@@ -80,28 +82,44 @@ export default function Start() {
             otherStyles="mt-7"
             keyboardType="default"
           />
-          <FormField 
-            title="Last Name"
-            value={form.LastName}
-            handleChangeText={(e) => setForm({...form, LastName: e})}
-            otherStyles="mt-7"
-            keyboardType="default"
-          />
-          <View className="flex flex-row justify-evenly">
-            <FormField 
-              title="Weight (LBS)"
+
+          <View className="flex flex-row justify-evenly w-full mt-7">
+            {/* <FormField 
+              title="Weight"
               value={form.Weight}
               handleChangeText={(e) => setForm({...form, Weight: e})}
-              otherStyles="mt-7 w-1/2 p-1"
+              otherStyles="max-w-[50%] p-1" // Changed w-50 to w-1/2
               keyboardType="numeric"
-            />
-            <FormField
+            /> */}
+
+          <View className="w-1/2 p-1">
+            <Text className="font-pmedium text-white text-lg">Weight</Text>
+            <Pressable
+              className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
+              onPress={() => setModalVisible(true)}>
+              <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                {form.Weight} {selectedWeightUnit}
+              </Text>
+            </Pressable>
+          </View>
+
+            {/* <FormField
               title={"Height (FT'IN)"}
               value={form.Height}
               handleChangeText={(e) => setForm({...form, Height: e})}
-              otherStyles="mt-7 w-1/2 p-1"
+              otherStyles="max-w-[50%] p-1" // Changed w-50 to w-1/2
               keyboardType="numeric"
-            />
+            /> */}
+
+
+          <View className="w-1/2 p-1">
+            <Text className="font-pmedium text-white text-lg">Height</Text>
+            <Pressable
+              className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
+              onPress={() => setModalVisible(true)}>
+            </Pressable>
+          </View>
+
           </View>
 
 
@@ -116,13 +134,17 @@ export default function Start() {
               <View className="justify-center items-center flex-1 bg-backGround/50">
                 <View className="bg-backGround-300 h-1/3 w-3/4 rounded-2xl p-4" data-id="modalView">
                   <Text className="text-2xl font-psemibold self-center text-white">Weight</Text>
+                  
                   <WheelPicker
-                  data={["Pounds","Stone","Kilograms"]} />
+                  data={["Pounds","Stone","Kilograms"]}
+                  selectedWeightUnit={selectedWeightUnit}
+                  setWeightUnit={setWeightUnit}
+                  />
 
                   <TextInput
                   placeHolder={{"Weight": "Enter Weight"}}
-                  onChangeText={newText => setText(newText)}
-                  defaultValue={text}
+                  onChangeText={weight => setWeight(weight)}
+                  defaultValue={weight}
                   className="w-2/3  rounded-lg border border-darkGold m-2 p-2 self-center mb-4"
                   style={{ color: 'white', textAlign: 'center' }}
                   keyboardType="numeric"
@@ -130,18 +152,21 @@ export default function Start() {
 
                   <Pressable
                     className="justify-center self-center bg-darkGold rounded-2xl p-3"
-                    onPress={() => setModalVisible(!modalVisible)}>
-                    <Text className="text-lg font-psemibold text-white">Hide Modal</Text>
+                    onPress={() => {
+                      setForm({...form, Weight: weight});
+                      setModalVisible(!modalVisible);
+                    }}>
+                    <Text className="text-lg font-psemibold text-white">Set Weight</Text>
                   </Pressable>
                 </View>
               </View>
           </Modal>
           
-          <Pressable
+          {/* <Pressable
             style={[styles.button, styles.buttonOpen]}
             onPress={() => setModalVisible(true)}>
             <Text style={styles.textStyle}>Show Modal</Text>
-          </Pressable>
+          </Pressable> */}
 
 
         </View>
