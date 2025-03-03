@@ -156,10 +156,16 @@ export default function Start() {
                       Title="Set Height"
                       otherStyles="bg-darkGold self-center mt-2"
                       handlePress={() => {
+                        console.log("Button Pressed");
+                        if(selectedHeightUnit === "CM"){
+                          setForm({...form, Height: selectedCentimeters});
+                          setHeightModalVisible(!heightModalVisible);
+                        } else {
                         setForm({...form, Height: selectedFeet + "'" + selectedInches + "''"});
                         setHeightModalVisible(!heightModalVisible);
-                      }}
-                      width={125}
+                      }
+                    }}
+                    width={125}
                     />
 
                   </View>
