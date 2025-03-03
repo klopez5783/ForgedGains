@@ -10,54 +10,20 @@ export default function Start() {
 
   const [weight, setWeight] = useState('');
 
+  const [selectedFeet , setFeet] = useState(0);
+
+  const [selectedInches , setInches] = useState(0);
+
   const [selectedWeightUnit , setWeightUnit] = useState('Pounds');
 
-  const styles = StyleSheet.create({
-    centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-      height: 300, // Add this line to set the height of the modal
-    },
-    button: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-    },
-    buttonOpen: {
-      backgroundColor: '#F194FF',
-    },
-    buttonClose: {
-      backgroundColor: '#2196F3',
-    },
-    textStyle: {
-      color: 'white',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
-    },
-  });
-  
+  const [heightModalVisible, setHeightModalVisible] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [selectedHeightUnit , setHeightUnit] = useState('IN');
+
+  const [selectedCentimeters , setCentimeters] = useState(175);
+
 
 
   const [form , setForm] = useState({
@@ -99,7 +65,7 @@ export default function Start() {
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setModalVisible(true)}>
               <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
-                {form.Weight} {selectedWeightUnit}
+                {form.Weight ? `${form.Weight} ${selectedWeightUnit}` : 'Enter Weight'}
               </Text>
             </Pressable>
           </View>
@@ -117,11 +83,92 @@ export default function Start() {
             <Text className="font-pmedium text-white text-lg">Height</Text>
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
-              onPress={() => setModalVisible(true)}>
+              onPress={() => setHeightModalVisible(true)}>
+                <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                {form.Height ? `${form.Height} ${selectedHeightUnit}` : 'Enter Height'}
+                </Text>
             </Pressable>
           </View>
 
           </View>
+
+          <Modal
+          animationType='slide'
+          transparent={true}
+          visible={heightModalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!heightModalVisible);
+          }}>
+              <View className="justify-center items-center flex-1 bg-backGround/50">
+                <View className="bg-backGround-300 h-1/3 w-3/4 rounded-2xl p-4" data-id="modalView">
+                  <Text className="text-2xl font-psemibold self-center text-white">Height</Text>
+                  
+                  
+
+                  
+
+                    <View className="flex flex-row justify-evenly h-2/3">
+
+                        {selectedHeightUnit === "IN" ? (
+                          <>
+                          <WheelPicker
+                          data={[1,2,3,4,5,6,7,8]}
+                          selectedOption={selectedFeet}
+                          setOptionFN={setFeet}
+                          />
+  
+                          <WheelPicker
+                          data={[1,2,3,4,5,6,7,8,9,10,11]}
+                          selectedOption={selectedInches}
+                          setOptionFN={setInches}
+                          />
+                          </>
+                        ) : (
+                          <WheelPicker
+                          data={Array.from({length: 350}, (_, i) => i)}
+                          selectedOption={selectedCentimeters}
+                          setOptionFN={setCentimeters}
+                          />
+                        )}
+
+                        <WheelPicker
+                        data={["IN", "CM"]}
+                        selectedOption={selectedHeightUnit}
+                        setOptionFN={setHeightUnit}
+                        />
+
+                  </View>
+
+                  {/* Bottom of the modal */}
+
+                  <View className="flex flex-row justify-evenly">
+                    <CustomBTN
+                      Title="Cancel"
+                      otherStyles="bg-darkGold self-center mt-2"
+                      handlePress={() => {
+                        setHeightModalVisible(!heightModalVisible);
+                      }}
+                      width={125}
+                    />
+
+                    <CustomBTN
+                      Title="Set Height"
+                      otherStyles="bg-darkGold self-center mt-2"
+                      handlePress={() => {
+                        setForm({...form, Height: selectedFeet + "'" + selectedInches + "''"});
+                        setHeightModalVisible(!heightModalVisible);
+                      }}
+                      width={125}
+                    />
+
+                  </View>
+
+
+                </View>
+              </View>
+
+          </Modal>
 
 
           <Modal
@@ -138,8 +185,8 @@ export default function Start() {
                   
                   <WheelPicker
                   data={["Pounds","Stone","Kilograms"]}
-                  selectedWeightUnit={selectedWeightUnit}
-                  setWeightUnit={setWeightUnit}
+                  selectedOption={selectedWeightUnit}
+                  setOptionFN={setWeightUnit}
                   />
 
                   <TextInput
@@ -151,15 +198,27 @@ export default function Start() {
                   keyboardType="numeric"
                   />
 
-                  <CustomBTN
-                    Title="Set Weight"
-                    otherStyles="bg-darkGold self-center mt-2"
-                    handlePress={() => {
-                      setForm({...form, Weight: weight});
-                      setModalVisible(!modalVisible);
-                    }}
-                    width={200}
-                  />
+                  <View className="flex flex-row justify-evenly">
+                    <CustomBTN
+                      Title="Cancel"
+                      otherStyles="bg-darkGold self-center mt-2"
+                      handlePress={() => {
+                        setModalVisible(!modalVisible);
+                      }}
+                      width={125}
+                    />
+
+                    <CustomBTN
+                      Title="Set Weight"
+                      otherStyles="bg-darkGold self-center mt-2"
+                      handlePress={() => {
+                        setForm({...form, Weight: weight});
+                        setModalVisible(!modalVisible);
+                      }}
+                      width={125}
+                    />
+
+                  </View>
 
 
                 </View>
