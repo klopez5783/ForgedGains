@@ -5,6 +5,7 @@ import FormField from '../../components/FormField'
 import { useState } from 'react'
 import WheelPicker from '../../components/WheelPicker'
 import CustomBTN from '../../components/CustomBTN'
+import Select from '../../components/Select'
 
 export default function Start() {
 
@@ -23,6 +24,8 @@ export default function Start() {
   const [selectedHeightUnit , setHeightUnit] = useState('IN');
 
   const [selectedCentimeters , setCentimeters] = useState(175);
+
+  const [selectedGender , setSelectedGender] = useState("");
 
 
 
@@ -92,6 +95,13 @@ export default function Start() {
 
           </View>
 
+          <Text className="text-lg text-white font-pmedium mt-7">
+            Gender
+          </Text>
+
+          <Select optionOne="Male" optionTwo="Female" onSelect={(option) => setSelectedGender(option)} />
+
+
           <Modal
           animationType='slide'
           transparent={true}
@@ -126,7 +136,7 @@ export default function Start() {
                           </>
                         ) : (
                           <WheelPicker
-                          data={Array.from({length: 350}, (_, i) => i)}
+                          data={Array.from({length: 350}, (_, i) => i + 140)}
                           selectedOption={selectedCentimeters}
                           setOptionFN={setCentimeters}
                           />
