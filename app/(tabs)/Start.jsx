@@ -27,15 +27,21 @@ export default function Start() {
 
   const [selectedGender , setSelectedGender] = useState("");
 
+  const [bodyFatModalVisible, setBodyFatModalVisible] = useState(false);
+
+  const [selectedBodyFat , setSelectedBodyFat] = useState("");
+
+  const [bodyFatInput , setBodyFatInput] = useState("");
+
 
 
   const [form , setForm] = useState({
       FirstName: '',
-      LastName: '',
       Gender: '',
       Weight: '',
       Height: '',
-      Age: ''
+      Age: '',
+      BodyFat: ''
     });
 
   return (
@@ -100,6 +106,68 @@ export default function Start() {
           </Text>
 
           <Select optionOne="Male" optionTwo="Female" onSelect={(option) => setSelectedGender(option)} />
+
+          <View className="w-full p-1 mt-7">
+            <Text className="font-pmedium text-white text-lg">Body Fat</Text>
+            <Pressable
+              className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
+              onPress={() => setBodyFatModalVisible(true)}>
+                <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                {form.BodyFat ? `${form.BodyFat} ${selectedBodyFat}%` : 'Enter Body Fat %'}
+                </Text>
+            </Pressable>
+          </View>
+          
+
+          <Modal
+          animationType='slide'
+          transparent={true}
+          visible={bodyFatModalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!bodyFatModalVisible);
+          }}>
+            <View className="justify-center items-center flex-1 bg-backGround/50">
+            <View className="bg-backGround-300 h-1/4 w-2/3 rounded-2xl p-4 justify-center items-center" data-id="BodyFatModalView">
+            <Text className="text-2xl font-psemibold text-white">Body Fat</Text>
+
+            <View className="w-2/3 rounded-lg border border-darkGold mt-5 p-2 flex-row items-center">
+              <TextInput
+                placeholder="Body Fat"
+                onChangeText={bodyFat => setBodyFatInput(bodyFat)}
+                defaultValue={form.BodyFat}
+                style={{ color: 'white', textAlign: 'center' }}
+                keyboardType="numeric"
+                className="flex-1 text-white"
+              />
+              <Text className="text-white">%</Text>
+            </View>
+
+
+            <View className="flex flex-row justify-evenly mt-5">
+              <CustomBTN
+                  Title="Cancel"
+                  otherStyles="bg-darkGold mt-5 mx-2"
+                  handlePress={() => setBodyFatModalVisible(!bodyFatModalVisible)}
+                  width={100}
+                />
+                  <CustomBTN
+                  Title="Set Body Fat"
+                  otherStyles="bg-darkGold mt-5 mx-2"
+                  handlePress={() => {
+                    setForm({...form, BodyFat: bodyFatInput});
+                    setBodyFatModalVisible(!bodyFatModalVisible);
+                  }}
+                width={100}
+                />
+            </View>
+
+              
+
+                    </View>
+
+          </View>
+          </Modal>
 
 
           <Modal
@@ -206,9 +274,9 @@ export default function Start() {
                   />
 
                   <TextInput
-                  placeHolder={{"Weight": "Enter Weight"}}
+                  placeholder="Enter Weight"
                   onChangeText={weight => setWeight(weight)}
-                  defaultValue={weight}
+                  defaultValue={form.weight}
                   className="w-2/3  rounded-lg border border-darkGold m-2 p-2 self-center"
                   style={{ color: 'white', textAlign: 'center' }}
                   keyboardType="numeric"

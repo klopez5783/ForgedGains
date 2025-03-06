@@ -13,7 +13,7 @@ export default function Select({ otherStyles , optionOne , optionTwo, onSelect})
     };
 
   return (
-    <View className="flex flex-row justify-center w-1/2">
+    <View className="flex flex-row justify-center w-full mt-1 h-10">
       <Pressable
            onPress={() => handleSelection(optionOne)}
           className={`border border-solid border-darkGold rounded-l-lg p-1 w-1/2 ${selectedOption == optionOne ? "border-lightGold bg-darkGold" : "border-darkGold" }`}
@@ -23,7 +23,7 @@ export default function Select({ otherStyles , optionOne , optionTwo, onSelect})
         </Text>
         </Pressable>
         <Pressable
-           onPress={() => handleSelection(optionOne)}
+           onPress={() => handleSelection(optionTwo)}
           className={`border border-solid border-darkGold rounded-r-lg p-1 w-1/2 ${selectedOption == optionTwo ? "border-lightGold bg-darkGold" : "border-darkGold" }`}
           >
         <Text className={`self-center font-pmedium text-lg ${selectedOption == optionTwo ? "text-backGround" : "text-darkGold" }`}>
