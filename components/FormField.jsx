@@ -5,7 +5,7 @@ import { icons } from '../constants';
 
 export default function FormField({title , value , placeholder , handleChangeText , otherStyles, ...props}) {
 
-    const [ showPassword , setShowPassword ] = useState(false);
+  const [ showPassword , setShowPassword ] = useState(false);
 
   return (
     <View className={`w-full ${otherStyles}`}>
@@ -22,6 +22,7 @@ export default function FormField({title , value , placeholder , handleChangeTex
           placeholderTextColor="#8D8D8D"
           onChangeText={handleChangeText}
           secureTextEntry={(title === 'Password' || title === 'Confirm Password') && !showPassword }
+          {...props}
         />
 
         {(title === 'Password' || title === 'Confirm Password') && (

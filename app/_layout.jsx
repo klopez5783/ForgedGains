@@ -1,7 +1,8 @@
-import { Stack,SplashScreen } from "expo-router";
-import { useFonts} from "expo-font"
+import { Stack, SplashScreen } from "expo-router";
+import { useFonts } from "expo-font";
 import "../global.css";
 import { useEffect } from "react";
+import  GlobalProvider  from '../context/globalProvider';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,15 +20,22 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-   if(error) throw error;
-   if(fontsLoaded) SplashScreen.hideAsync();
+    if (error) throw error;
+    if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded]);
 
-  if(!fontsLoaded && !error) return null;
+  if (!fontsLoaded && !error) return null;
 
-  return <Stack>
-    <Stack.Screen name="index" options={{headerShown: false}} />
-    <Stack.Screen name="(auth)" options={{headerShown: false}} />
-    <Stack.Screen name="(tabs)" options={{headerShown: false}} />
-  </Stack>;
+  return (
+    <GlobalProvider>
+        <Stack
+        screenOptions={{
+          gestureEnabled: false, // Disable swipe gestures globally
+        }}>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+    </GlobalProvider>
+  );
 }

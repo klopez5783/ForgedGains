@@ -1,17 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, View, Image } from 'react-native';
-import { Redirect , router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomBTN from '../components/CustomBTN';
+import { useGlobalContext } from '../context/globalProvider';
+import React from 'react';
+
 
 export default function App() {
+  const router = useRouter();
+
+  const {user} = useGlobalContext();
+  
+  if(user) {
+    console.log("Redirecting to Home Page...")
+    console.log("Index Page \nUser: ", user);
+    setTimeout(() => {
+    router.replace("/(tabs)/Home");
+    }, 100);
+  }
+
   return (
-    <LinearGradient
-      colors={['#000814' , '#001433']}
-      style={{ flex: 1 }}
-    >
+      <LinearGradient
+        colors={['#001433', '#000814']}
+        style={{ flex: 1 }}
+      >
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View nativeID="IntroImageView" className="w-full justify-start items-center px-4 mt-5">
@@ -27,13 +42,10 @@ export default function App() {
             
           <CustomBTN width={250} 
           Title="I'm Ready."
-          handlePress={() => router.push('/(auth)/sign-in')}
+          handlePress={() => router.push('/(auth)/sign-up')}
            />
           </View>
-
-
         </ScrollView>
-
         <StatusBar backgroundColor="#161622" style="light" />
       </SafeAreaView>
     </LinearGradient>
