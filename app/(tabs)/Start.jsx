@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Modal, Pressable, StyleSheet, TextInput} from 'react-native'
+import { View, Text, ScrollView, Modal, Pressable, TextInput, Button} from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
@@ -6,6 +6,8 @@ import { useState } from 'react'
 import WheelPicker from '../../components/WheelPicker'
 import CustomBTN from '../../components/CustomBTN'
 import Select from '../../components/Select'
+import {Link} from 'expo-router'
+import { router } from 'expo-router'
 
 export default function Start() {
 
@@ -116,6 +118,11 @@ export default function Start() {
                 {form.BodyFat ? `${form.BodyFat} ${selectedBodyFat}%` : 'Enter Body Fat %'}
                 </Text>
             </Pressable>
+            <Button
+            title="Don't Know Body Fat? Tap Here"
+            onPress={() => router.push("/bodyFat")}
+            className="text-darkGold font-pmedium text-lg mt-2"
+            />
           </View>
           
 
