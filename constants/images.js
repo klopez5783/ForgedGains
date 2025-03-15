@@ -8,5 +8,6 @@ import empty from "../assets/images/empty.png";
 import logoV2 from "../assets/images/LogoV2.png";
 import logoV3 from "../assets/images/LogoV3.png";
 import logoV4 from "../assets/images/LogoV4.png";
+import MeasuringWaist from "../assets/images/MeasuringWaist.png";
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, logoV2, logoV3, logoV4 };
+export default { profile, thumbnail, cards, path, logo, logoSmall, empty, logoV2, logoV3, logoV4, MeasuringWaist };

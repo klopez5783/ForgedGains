@@ -16,7 +16,7 @@ export default function FormField({title , value , placeholder , handleChangeTex
       rounded-2xl
       focus:border-#0A52FF items-center flex-row ">
         <TextInput
-          className="flex-1 text-white font-semibold text-base"
+          className="flex-1 text-white font-semibold text-base h-full"
           value={value}
           placeholder={placeholder}
           placeholderTextColor="#8D8D8D"

@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Modal, Pressable, TextInput, Button} from 'reac
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
-import { useState } from 'react'
+import { useState , useCallback } from 'react'
 import WheelPicker from '../../components/WheelPicker'
 import CustomBTN from '../../components/CustomBTN'
 import Select from '../../components/Select'
@@ -45,6 +45,11 @@ export default function Start() {
       Age: '',
       BodyFat: ''
     });
+
+
+    const navigateToBodyFat = useCallback(() => {
+      router.push("/bodyFat");
+    }, []);
 
   return (
     <SafeAreaView className="bg-backGround h-full">
@@ -120,7 +125,7 @@ export default function Start() {
             </Pressable>
             <Button
             title="Don't Know Body Fat? Tap Here"
-            onPress={() => router.push("/bodyFat")}
+            onPress={ navigateToBodyFat }
             className="text-darkGold font-pmedium text-lg mt-2"
             />
           </View>

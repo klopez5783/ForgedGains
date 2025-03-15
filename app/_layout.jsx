@@ -30,11 +30,13 @@ export default function RootLayout() {
     <GlobalProvider>
         <Stack
         screenOptions={{
-          gestureEnabled: false, // Disable swipe gestures globally
+          gestureEnabled: false,
+          freezeOnBlur: true // Disable swipe gestures globally
         }}>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="bodyFat" options={{ headerShown: false }} />
         </Stack>
     </GlobalProvider>
   );
