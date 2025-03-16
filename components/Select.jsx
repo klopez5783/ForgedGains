@@ -8,6 +8,7 @@ export default function Select({ otherStyles , optionOne , optionTwo, onSelect})
 
     const handleSelection = (option) => {
       const newSelection = selectedOption === option ? "" : option;
+      console.log("New Selection: ", newSelection);
       setSelectedOption(newSelection);
       onSelect(newSelection); // Notify parent of the selection change
     };

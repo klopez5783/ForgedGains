@@ -8,8 +8,11 @@ import CustomBTN from '../../components/CustomBTN'
 import Select from '../../components/Select'
 import {Link} from 'expo-router'
 import { router } from 'expo-router'
+import { useNavigation } from "@react-navigation/native";
 
 export default function Start() {
+  
+  const navigation = useNavigation();
 
   const [weight, setWeight] = useState('');
 
@@ -48,8 +51,9 @@ export default function Start() {
 
 
     const navigateToBodyFat = useCallback(() => {
-      router.push("/bodyFat");
-    }, []);
+      console.log("Navigating to Body Fat");
+      navigation.navigate("waistMeasurement", { gender: selectedGender });
+    }, [selectedGender]);
 
   return (
     <SafeAreaView className="bg-backGround h-full">
@@ -112,7 +116,7 @@ export default function Start() {
             Gender
           </Text>
 
-          <Select optionOne="Male" optionTwo="Female" onSelect={(option) => setSelectedGender(option)} />
+          <Select optionOne="Male" optionTwo="Female" onSelect={(option) =>{ setSelectedGender(option);}} />
 
           <View className="w-full p-1 mt-7">
             <Text className="font-pmedium text-white text-lg">Body Fat</Text>
@@ -320,12 +324,6 @@ export default function Start() {
                 </View>
               </View>
           </Modal>
-          
-          {/* <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => setModalVisible(true)}>
-            <Text style={styles.textStyle}>Show Modal</Text>
-          </Pressable> */}
 
 
         </View>

@@ -36,7 +36,8 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="bodyFat" options={{ headerShown: false }} />
+          <Stack.Screen name="waistMeasurement" options={{ headerShown: false }} />
+          <Stack.Screen name="neckMeasurement" options={{ headerShown: false }} />
         </Stack>
     </GlobalProvider>
   );
