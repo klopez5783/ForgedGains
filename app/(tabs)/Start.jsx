@@ -9,11 +9,12 @@ import Select from '../../components/Select'
 import { router } from 'expo-router'
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from '@react-navigation/native';
+import {convertToHeightString} from '../../Utilities/heightCalulations'
 
 export default function Start() {
 
   const route = useRoute();
-  const { bodyFat } = route.params || {};
+  const { bodyFat, heightNum, gender } = route.params || {};
   
   const navigation = useNavigation();
 
@@ -45,9 +46,9 @@ export default function Start() {
 
   const [form , setForm] = useState({
       FirstName: '',
-      Gender: '',
+      Gender: gender ? gender : '',
       Weight: '',
-      Height: '',
+      Height: heightNum ? convertToHeightString(heightNum) : '',
       Age: '',
       BodyFat: bodyFat ? parseFloat(bodyFat.toFixed(2)) : ''
     });
@@ -121,7 +122,7 @@ export default function Start() {
             Gender
           </Text>
 
-          <Select optionOne="Male" optionTwo="Female" onSelect={(option) =>{ setSelectedGender(option);}} />
+          <Select optionOne="Male"  defaultOption={gender ? gender : ""} optionTwo="Female" onSelect={(option) =>{ setSelectedGender(option);}} />
 
           <View className="w-full p-1 mt-7">
             <Text className="font-pmedium text-white text-lg">Body Fat</Text>

@@ -7,13 +7,13 @@ import { images } from '../constants';
 import FormField from '../components/FormField';
 import CustomBTN from '../components/CustomBTN';
 import { useRoute } from '@react-navigation/native';
-import convertToInches from '../Utilities/heightCalulations';
+import {convertToInches} from '../Utilities/heightCalulations';
 
 export default function hipMeasurements() {
     const route = useRoute(); 
     const navigation = useNavigation();
 
-    const { waist, height , neck } = route.params;
+    const { waist, height , neck, gender } = route.params;
 
     const [hip, setHip] = useState("");
 
@@ -33,7 +33,7 @@ export default function hipMeasurements() {
               - 97.684 * Math.log10(heightNum) 
               - 78.387;  // Corrected subtraction
         console.log("Calulated Body Fat:", bodyFat);
-        navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat } });
+        navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat, heightNum, gender } });
       };
     
     return (

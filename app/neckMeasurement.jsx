@@ -7,7 +7,7 @@ import { images } from '../constants';
 import FormField from '../components/FormField';
 import CustomBTN from '../components/CustomBTN';
 import { useRoute } from '@react-navigation/native';
-import convertToInches from '../Utilities/heightCalulations';
+import {convertToInches} from '../Utilities/heightCalulations';
 
 export default function neckMeasurement() {
     const route = useRoute(); 
@@ -23,7 +23,10 @@ export default function neckMeasurement() {
     const bodyFat = 86.010 * Math.log10(waistNum - neckNum) 
                   - 70.041 * Math.log10(heightNum) 
                   + 36.76;
-    navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat } });
+    console.log("Height:", heightNum);
+    console.log("gender: ", gender);
+    console.log("Navigating to Start");
+    navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat , heightNum, gender  } });
   };
 
   return (
@@ -89,7 +92,7 @@ export default function neckMeasurement() {
               handlePress={() => {
                 if (!neck) return alert("Please enter a neck measurement");
                 if (gender == "Female"){
-                    navigation.navigate("hipMeasurements", { waist, height, neck });
+                    navigation.navigate("hipMeasurements", { waist, height, neck, gender });
                 }else{
                     calculateBodyFat();
                 }

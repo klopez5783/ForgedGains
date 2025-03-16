@@ -78,6 +78,10 @@ export default function waistMeasurement() {
                 width={250}
                 handlePress={() => {
                   if (!waist) return alert("Please enter a waist measurement");
+                  console.log("Waist Measurement:", waist);
+                  console.log("Height:", height);
+                  console.log("gender: ", gender);
+                  console.log("Navigating to Neck");
                   navigation.navigate("neckMeasurement", { gender, waist, height }); // Pass waist to NeckScreen
                 }}
               />
