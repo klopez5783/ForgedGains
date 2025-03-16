@@ -11,7 +11,7 @@ export default function waistMeasurement() {
   const route = useRoute(); 
   const navigation = useNavigation();
 
-  const { gender } = route.params || { gender: "Male" };
+  const { gender, height } = route.params || { gender: "Male" };
   const [waist, setWaist] = useState('');
 
   console.log("Gender selection:", gender);
@@ -78,7 +78,7 @@ export default function waistMeasurement() {
                 width={250}
                 handlePress={() => {
                   if (!waist) return alert("Please enter a waist measurement");
-                  navigation.navigate("neckMeasurement", { gender, waist }); // Pass waist to NeckScreen
+                  navigation.navigate("neckMeasurement", { gender, waist, height }); // Pass waist to NeckScreen
                 }}
               />
             </View>

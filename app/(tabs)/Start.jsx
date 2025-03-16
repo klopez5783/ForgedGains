@@ -6,11 +6,14 @@ import { useState , useCallback } from 'react'
 import WheelPicker from '../../components/WheelPicker'
 import CustomBTN from '../../components/CustomBTN'
 import Select from '../../components/Select'
-import {Link} from 'expo-router'
 import { router } from 'expo-router'
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from '@react-navigation/native';
 
 export default function Start() {
+
+  const route = useRoute();
+  const { bodyFat } = route.params || {};
   
   const navigation = useNavigation();
 
@@ -46,13 +49,15 @@ export default function Start() {
       Weight: '',
       Height: '',
       Age: '',
-      BodyFat: ''
+      BodyFat: bodyFat ? parseFloat(bodyFat.toFixed(2)) : ''
     });
 
 
     const navigateToBodyFat = useCallback(() => {
+      if (!selectedGender) return alert("Please select Gender");
+      if (!form.Height) return alert("Please enter Height");
       console.log("Navigating to Body Fat");
-      navigation.navigate("waistMeasurement", { gender: selectedGender });
+      navigation.navigate("waistMeasurement", { gender: selectedGender, height: form.Height });
     }, [selectedGender]);
 
   return (
@@ -250,12 +255,11 @@ export default function Start() {
                       Title="Set Height"
                       otherStyles="bg-darkGold self-center mt-2"
                       handlePress={() => {
-                        console.log("Button Pressed");
                         if(selectedHeightUnit === "CM"){
                           setForm({...form, Height: selectedCentimeters});
                           setHeightModalVisible(!heightModalVisible);
                         } else {
-                        setForm({...form, Height: selectedFeet + "'" + selectedInches + "''"});
+                        setForm({...form, Height: selectedFeet + "'" + selectedInches});
                         setHeightModalVisible(!heightModalVisible);
                       }
                     }}

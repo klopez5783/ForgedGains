@@ -7,22 +7,23 @@ import { images } from '../constants';
 import FormField from '../components/FormField';
 import CustomBTN from '../components/CustomBTN';
 import { useRoute } from '@react-navigation/native';
+import convertToInches from '../Utilities/heightCalulations';
 
 export default function neckMeasurement() {
     const route = useRoute(); 
     const navigation = useNavigation();
 
-    const { gender, waist } = route.params;
+    const { gender, waist, height } = route.params;
     const [neck, setNeck] = useState("");
 
   const calculateBodyFat = () => {
-    console.log("Waist: ", waist);
-    console.log("Neck: ", neck);
-    console.log("Gender: ", gender)
-    // const waistNum = parseFloat(waist);
-    // const neckNum = parseFloat(neck);
-    // if (!waistNum || !neckNum) return 0;
-    // return ((waistNum - neckNum) * 0.15).toFixed(2); // Example formula
+    const waistNum = parseFloat(waist);
+    const neckNum = parseFloat(neck);
+    const heightNum = convertToInches(height) == "Invalid height Format" ? null : convertToInches(height);
+    const bodyFat = 86.010 * Math.log10(waistNum - neckNum) 
+                  - 70.041 * Math.log10(heightNum) 
+                  + 36.76;
+    navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat } });
   };
 
   return (
@@ -82,12 +83,16 @@ export default function neckMeasurement() {
             </View>
 
             <CustomBTN
-              Title="Next"
+              Title={`${gender == "Male" ? "Calculate" : "Next"}`}
               otherStyles="self-center mt-4 w-4/5"
               width={250}
               handlePress={() => {
                 if (!neck) return alert("Please enter a neck measurement");
-                calculateBodyFat();
+                if (gender == "Female"){
+                    navigation.navigate("hipMeasurements", { waist, height, neck });
+                }else{
+                    calculateBodyFat();
+                }
               }}
             />
           </View>

@@ -10,5 +10,6 @@ import logoV3 from "../assets/images/LogoV3.png";
 import logoV4 from "../assets/images/LogoV4.png";
 import MeasuringWaist from "../assets/images/MeasuringWaist.png";
 import MeasuringNeck from "../assets/images/measureNeck.jpg";
+import MeasuringHip from "../assets/images/MeasuringHip.png";
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, logoV2, logoV3, logoV4, MeasuringWaist, MeasuringNeck };
+export default { profile, thumbnail, cards, path, logo, logoSmall, empty, logoV2, logoV3, logoV4, MeasuringWaist, MeasuringNeck, MeasuringHip };
