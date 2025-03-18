@@ -88,7 +88,7 @@ export default function SignUp() {
           Title="Sign Up"
           width={300}
           handlePress={handleSignUp}
-          
+          otherStyles={"mt-4"}
           />
 
           <View className="flex justify-center pt-5 flex-row gap-2">

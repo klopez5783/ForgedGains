@@ -4,20 +4,47 @@ import { getAuth,
   sendPasswordResetEmail,
   signOut } from "firebase/auth";
 import { app } from "../fireBaseConfig"; // Import your Firebase app instance
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 const auth = getAuth(app); // Get the authentication instance
+const db = getFirestore(app);
 
 // Function for signing up a new user
-export const signup = async (email, password) => {
+export const signup = async (email, password, height=0,
+                                              bodyFat=0,
+                                              weight=0,
+                                              gender="Not Selected") => {
   try {
+    // Create a new user
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user; // Return user details
+    // Get the user object from the userCredential
+    const user = userCredential.user;
+    // Get the user's unique ID
+    const uid = user.uid;
+
+
+    //Add user to firestore.
+    const userRef = doc(db, "users", uid);
+    await setDoc(userRef, {
+        height,
+        bodyFat,
+        weight,
+        gender,
+        email
+    });
+
+
+    // Optionally, use a Cloud Function to handle this to keep client-side logic minimal.
+
+    return user; // Return user details
   } catch (error) {
     let errorMessage = "Something went wrong. Please try again.";
     if (error.code === "auth/email-already-in-use") {
       errorMessage = "This email is already in use.";
     } else if (error.code === "auth/weak-password") {
       errorMessage = "Password should be at least 6 characters.";
+    } else if (error.code === "auth/invalid-email"){
+        errorMessage = "Invalid email address provided."
     }
     throw new Error(errorMessage);
   }

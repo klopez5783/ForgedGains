@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Image, TouchableOpacity, Platform} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useState } from 'react'
 import { images , icons } from '../../constants'
@@ -8,6 +8,9 @@ import { Link } from 'expo-router'
 import { signin } from '../../Database/authentication'
 import { useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { KeyboardAvoidingView } from 'react-native';
+import { Keyboard } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 
 export default function SignIn() {
 
@@ -34,6 +37,12 @@ export default function SignIn() {
 
   return (
     <SafeAreaView className="bg-backGround h-full">
+      <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={10}
+                style={{ flex: 1 }}
+              >
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ScrollView>
         <View className="w-full justify-center px-4 my-6">
 
@@ -71,6 +80,7 @@ export default function SignIn() {
           Title="Sign In"
           width={300}
           handlePress={handleSignIn}
+          otherStyles={"mt-4"}
           />
 
           <View className="flex justify-center pt-5 flex-row gap-2">
@@ -87,6 +97,8 @@ export default function SignIn() {
 
         </View>
       </ScrollView>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

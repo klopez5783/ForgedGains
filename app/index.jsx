@@ -6,17 +6,37 @@ import { images } from '../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomBTN from '../components/CustomBTN';
 import { useGlobalContext } from '../context/globalProvider';
-import React from 'react';
+import React, { useState, useEffect} from 'react';
+import {getUserData} from '../Database/FitnessData';
 
 
 export default function App() {
-  const router = useRouter();
-
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const {user} = useGlobalContext();
+  const router = useRouter();
+  
+  // useEffect(() => {
+  //   if (user) {
+  //     getUserData(user)
+  //       .then((data) => {
+  //         setUserData(data);
+  //         setLoading(false);
+  //       })
+  //       .catch((err) => {
+  //         setError(err);
+  //         setLoading(false);
+  //       });
+  //   }
+  // }, [user]);
+   // *Crucially* depend on the 'user' object from the context
   
   if(user) {
     console.log("Redirecting to Home Page...")
     console.log("Index Page \nUser: ", user);
+    console.log("Fetching User Data...");
+    getUserData(user);
     setTimeout(() => {
     router.replace("/(tabs)/Home");
     }, 100);
@@ -34,7 +54,7 @@ export default function App() {
               className="w-[175px] h-[35vh]"
               resizeMode='contain' />
           </View>
-          <View nativeID="introTextView" className='flex-1 justify-start px-4'>
+          <View nativeID="introTextView" className='flex-1 justify-start '>
             <Text nativeID="introText" className="text-2xl text-white font-bold text-center">
               <Text className='text-darkGold'>Forged Gains:</Text> Where Strength is Crafted and Limits are Broken. 
               Where ordinary is melted down and reforged into extraordinary. Are you ready to build the unbreakable?
@@ -43,6 +63,7 @@ export default function App() {
           <CustomBTN width={250} 
           Title="I'm Ready."
           handlePress={() => router.push('/(auth)/sign-up')}
+          otherStyles="mt-5"
            />
           </View>
         </ScrollView>
