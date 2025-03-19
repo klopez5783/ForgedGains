@@ -13,7 +13,7 @@ export default function hipMeasurements() {
     const route = useRoute(); 
     const navigation = useNavigation();
 
-    const { waist, height , neck, gender } = route.params;
+    const { form, waist, neck } = route.params;
 
     const [hip, setHip] = useState("");
 
@@ -21,7 +21,7 @@ export default function hipMeasurements() {
         const waistNum = parseFloat(waist);
         const neckNum = parseFloat(neck);
         const hipNum = parseFloat(hip);
-        const heightNum = convertToInches(height) == "Invalid height Format" ? null : convertToInches(height);
+        const heightNum = convertToInches(form.Height) == "Invalid height Format" ? null : convertToInches(form.Height);
 
           // Log the values to check if they're valid numbers
         console.log("waist:", waistNum);
@@ -33,7 +33,7 @@ export default function hipMeasurements() {
               - 97.684 * Math.log10(heightNum) 
               - 78.387;  // Corrected subtraction
         console.log("Calulated Body Fat:", bodyFat);
-        navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat, heightNum, gender } });
+        navigation.navigate("(tabs)", { screen: "Start", params: { form, bodyFat } });
       };
     
     return (

@@ -53,7 +53,6 @@ export default function Start() {
   }, [selectedFeet, selectedInches]); // Runs when selectedFeet or selectedInches change
   
 
-
   const [form, setForm] = useState({
     FirstName: '',
     Gender: '',
@@ -71,6 +70,15 @@ export default function Start() {
         }));
       }
     }, [route.params?.form]); // Runs when route.params.form changes
+
+    useEffect(() => {
+      if (route.params?.bodyFat) {
+        setForm(prevForm => ({
+          ...prevForm, // Keep existing values if not provided in receivedForm
+          BodyFat: parseFloat(bodyFat).toFixed(2) // Override with new values
+        }));
+      }
+    }, [bodyFat]);
 
 
     const navigateToBodyFat = useCallback(() => {
@@ -134,7 +142,7 @@ export default function Start() {
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setBodyFatModalVisible(true)}>
                 <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
-                {form.BodyFat ? `${form.BodyFat} ${form.BodyFat}%` : 'Enter Body Fat %'}
+                {form.BodyFat ? `${form.BodyFat}%` : 'Enter Body Fat %'}
                 </Text>
             </Pressable>
             <Button
