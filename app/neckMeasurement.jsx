@@ -13,20 +13,19 @@ export default function neckMeasurement() {
     const route = useRoute(); 
     const navigation = useNavigation();
 
-    const { gender, waist, height } = route.params;
+    const { form , waist } = route.params;
     const [neck, setNeck] = useState("");
 
   const calculateBodyFat = () => {
     const waistNum = parseFloat(waist);
     const neckNum = parseFloat(neck);
-    const heightNum = convertToInches(height) == "Invalid height Format" ? null : convertToInches(height);
+    const heightNum = convertToInches(form.Height) == "Invalid height Format" ? null : convertToInches(form.Height);
     const bodyFat = 86.010 * Math.log10(waistNum - neckNum) 
                   - 70.041 * Math.log10(heightNum) 
                   + 36.76;
-    console.log("Height:", heightNum);
-    console.log("gender: ", gender);
     console.log("Navigating to Start");
-    navigation.navigate("(tabs)", { screen: "Start", params: { bodyFat , heightNum, gender  } });
+    console.log("Form Data:", form);
+    navigation.navigate("(tabs)", { screen: "Start", params: { form , bodyFat } });
   };
 
   return (
@@ -86,13 +85,13 @@ export default function neckMeasurement() {
             </View>
 
             <CustomBTN
-              Title={`${gender == "Male" ? "Calculate" : "Next"}`}
+              Title={`${form.Gender == "Male" ? "Calculate" : "Next"}`}
               otherStyles="self-center mt-4 w-4/5"
               width={250}
               handlePress={() => {
                 if (!neck) return alert("Please enter a neck measurement");
-                if (gender == "Female"){
-                    navigation.navigate("hipMeasurements", { waist, height, neck, gender });
+                if (form.Gender == "Female"){
+                    navigation.navigate("hipMeasurements", { form, waist, neck });
                 }else{
                     calculateBodyFat();
                 }

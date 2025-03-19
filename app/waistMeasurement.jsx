@@ -11,10 +11,11 @@ export default function waistMeasurement() {
   const route = useRoute(); 
   const navigation = useNavigation();
 
-  const { gender, height } = route.params || { gender: "Male" };
+  const { form } = route.params;
   const [waist, setWaist] = useState('');
 
-  console.log("Gender selection:", gender);
+  console.log("Form Data:", form);
+
 
   return (
     <SafeAreaView className="bg-backGround h-full flex-1">
@@ -79,10 +80,10 @@ export default function waistMeasurement() {
                 handlePress={() => {
                   if (!waist) return alert("Please enter a waist measurement");
                   console.log("Waist Measurement:", waist);
-                  console.log("Height:", height);
-                  console.log("gender: ", gender);
+                  console.log("Height:", form.Height);
+                  console.log("gender: ", form.Gender);
                   console.log("Navigating to Neck");
-                  navigation.navigate("neckMeasurement", { gender, waist, height }); // Pass waist to NeckScreen
+                  navigation.navigate("neckMeasurement", { form , waist }); // Pass waist to NeckScreen
                 }}
               />
             </View>

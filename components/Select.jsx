@@ -3,15 +3,21 @@ import React from 'react'
 
 
 export default function Select({ otherStyles, optionOne, optionTwo, onSelect, defaultOption }) {
-  // Initialize selectedOption with the defaultOption or empty string if not provided
+  // Initialize selectedOption with defaultOption
   const [selectedOption, setSelectedOption] = React.useState(defaultOption || "");
 
+  // Sync state with defaultOption when it changes
+  React.useEffect(() => {
+    setSelectedOption(defaultOption || "");
+  }, [defaultOption]);
+
   const handleSelection = (option) => {
-      const newSelection = selectedOption === option ? "" : option;
-      console.log("New Selection: ", newSelection);
-      setSelectedOption(newSelection);
-      onSelect(newSelection); // Notify parent of the selection change
+    const newSelection = selectedOption === option ? "" : option;
+    console.log("New Selection: ", newSelection);
+    setSelectedOption(newSelection);
+    onSelect(newSelection); // Notify parent of selection change
   };
+
 
   return (
       <View className="flex flex-row justify-center w-full mt-1 h-10">

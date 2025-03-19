@@ -1,8 +1,7 @@
 import { View, Text, ScrollView, Modal, Pressable, TextInput, Button} from 'react-native'
-import React from 'react'
+import React, { useState,useEffect,useCallback } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
-import { useState , useCallback } from 'react'
 import WheelPicker from '../../components/WheelPicker'
 import CustomBTN from '../../components/CustomBTN'
 import Select from '../../components/Select'
@@ -14,7 +13,11 @@ import {convertToHeightString} from '../../Utilities/heightCalulations'
 export default function Start() {
 
   const route = useRoute();
-  const { bodyFat, heightNum, gender } = route.params || {};
+  
+  const receivedForm = route.params?.form || {}; // Default to empty object if undefined
+  
+  const bodyFat = route.params?.bodyFat ?? 0; // Default to 0 if undefined
+    
   
   const navigation = useNavigation();
 
@@ -34,32 +37,49 @@ export default function Start() {
 
   const [selectedCentimeters , setCentimeters] = useState(175);
 
-  const [selectedGender , setSelectedGender] = useState("");
-
   const [bodyFatModalVisible, setBodyFatModalVisible] = useState(false);
-
-  const [selectedBodyFat , setSelectedBodyFat] = useState("");
 
   const [bodyFatInput , setBodyFatInput] = useState("");
 
+  useEffect(() => {
+    // Runs whenever selectedFeet or selectedInches change
+    console.log("Feet and Inches changed:", selectedFeet, selectedInches);
+    
+    if (selectedHeightUnit === "CM") {
+      setForm({...form, Height: selectedCentimeters});
+    } else {
+      setForm({...form, Height: selectedFeet + "'" + selectedInches});
+    }
+  }, [selectedFeet, selectedInches]); // Runs when selectedFeet or selectedInches change
+  
 
 
-  const [form , setForm] = useState({
-      FirstName: '',
-      Gender: gender ? gender : '',
-      Weight: '',
-      Height: heightNum ? convertToHeightString(heightNum) : '',
-      Age: '',
-      BodyFat: bodyFat ? parseFloat(bodyFat.toFixed(2)) : ''
+  const [form, setForm] = useState({
+    FirstName: '',
+    Gender: '',
+    Weight: '',
+    Height: '',
+    Age: '',
+    BodyFat: 0
     });
+
+    useEffect(() => {
+      if (route.params?.form) {
+        setForm(prevForm => ({
+          ...prevForm, // Keep existing values if not provided in receivedForm
+          ...receivedForm // Override with new values
+        }));
+      }
+    }, [route.params?.form]); // Runs when route.params.form changes
 
 
     const navigateToBodyFat = useCallback(() => {
-      if (!selectedGender) return alert("Please select Gender");
+      console.log("Form", form);
+      if (!form.Gender) return alert("Please select Gender");
       if (!form.Height) return alert("Please enter Height");
       console.log("Navigating to Body Fat");
-      navigation.navigate("waistMeasurement", { gender: selectedGender, height: form.Height });
-    }, [selectedGender]);
+      navigation.navigate("waistMeasurement", { form });
+    }, [form.Gender]);
 
   return (
     <SafeAreaView className="bg-backGround h-full">
@@ -77,13 +97,6 @@ export default function Start() {
           />
 
           <View className="flex flex-row justify-evenly w-full mt-7">
-            {/* <FormField 
-              title="Weight"
-              value={form.Weight}
-              handleChangeText={(e) => setForm({...form, Weight: e})}
-              otherStyles="max-w-[50%] p-1" // Changed w-50 to w-1/2
-              keyboardType="numeric"
-            /> */}
 
           <View className="w-1/2 p-1">
             <Text className="font-pmedium text-white text-lg">Weight</Text>
@@ -96,22 +109,13 @@ export default function Start() {
             </Pressable>
           </View>
 
-            {/* <FormField
-              title={"Height (FT'IN)"}
-              value={form.Height}
-              handleChangeText={(e) => setForm({...form, Height: e})}
-              otherStyles="max-w-[50%] p-1" // Changed w-50 to w-1/2
-              keyboardType="numeric"
-            /> */}
-
-
           <View className="w-1/2 p-1">
             <Text className="font-pmedium text-white text-lg">Height</Text>
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setHeightModalVisible(true)}>
                 <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
-                {form.Height ? `${form.Height} ${selectedHeightUnit}` : 'Enter Height'}
+                {form.Height != "0'0" ? `${form.Height} ${selectedHeightUnit}` : 'Enter Height'}
                 </Text>
             </Pressable>
           </View>
@@ -122,7 +126,7 @@ export default function Start() {
             Gender
           </Text>
 
-          <Select optionOne="Male"  defaultOption={gender ? gender : ""} optionTwo="Female" onSelect={(option) =>{ setSelectedGender(option);}} />
+          <Select optionOne="Male" defaultOption={form.Gender} optionTwo="Female" onSelect={(option) => { setForm({...form, Gender: option})}} />
 
           <View className="w-full p-1 mt-7">
             <Text className="font-pmedium text-white text-lg">Body Fat</Text>
@@ -130,7 +134,7 @@ export default function Start() {
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setBodyFatModalVisible(true)}>
                 <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
-                {form.BodyFat ? `${form.BodyFat} ${selectedBodyFat}%` : 'Enter Body Fat %'}
+                {form.BodyFat ? `${form.BodyFat} ${form.BodyFat}%` : 'Enter Body Fat %'}
                 </Text>
             </Pressable>
             <Button
@@ -203,9 +207,6 @@ export default function Start() {
               <View className="justify-center items-center flex-1 bg-backGround/50">
                 <View className="bg-backGround-300 h-1/3 w-3/4 rounded-2xl p-4" data-id="modalView">
                   <Text className="text-2xl font-psemibold self-center text-white">Height</Text>
-                  
-                  
-
                   
 
                     <View className="flex flex-row justify-evenly h-2/3">
