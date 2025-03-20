@@ -17,21 +17,6 @@ export default function App() {
   const {user} = useGlobalContext();
   const router = useRouter();
   
-  // useEffect(() => {
-  //   if (user) {
-  //     getUserData(user)
-  //       .then((data) => {
-  //         setUserData(data);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => {
-  //         setError(err);
-  //         setLoading(false);
-  //       });
-  //   }
-  // }, [user]);
-   // *Crucially* depend on the 'user' object from the context
-  
   if(user) {
     console.log("Redirecting to Home Page...")
     console.log("Index Page \nUser: ", user);

@@ -9,6 +9,7 @@ import { router } from 'expo-router'
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from '@react-navigation/native';
 import {convertToHeightString} from '../../Utilities/heightCalulations'
+import { useGlobalContext } from '../../context/globalProvider';
 
 export default function Start() {
 
@@ -40,6 +41,8 @@ export default function Start() {
   const [bodyFatModalVisible, setBodyFatModalVisible] = useState(false);
 
   const [bodyFatInput , setBodyFatInput] = useState("");
+
+  const { user, updateUser } = useGlobalContext();
 
   useEffect(() => {
     // Runs whenever selectedFeet or selectedInches change
@@ -89,6 +92,29 @@ export default function Start() {
       navigation.navigate("waistMeasurement", { form });
     }, [form.Gender]);
 
+    const submitForm = () => {
+      console.log("Current Form:\n" , form)
+      if (Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
+        console.log("Form is completely filled out!");
+        
+        const updatedUser = {
+          ...user,
+          gender: form.Gender || user.gender, // Use form value if available, else keep existing
+          height: Number(form.Height) || user.height,
+          weight: Number(form.Weight) || user.weight,
+          bodyFat: Number(form.BodyFat) || user.bodyFat,
+          firstName: form.FirstName
+        };
+    
+        updateUser(updatedUser);
+
+      } else {
+        console.log("Please fill out all fields.");
+      }
+      
+    }
+      
+
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
@@ -100,7 +126,7 @@ export default function Start() {
             title="First Name"
             value={form.FirstName}
             handleChangeText={(e) => setForm({...form, FirstName: e})}
-            otherStyles="mt-7"
+            otherStyles="text-lg mt-7"
             keyboardType="default"
           />
 
@@ -151,6 +177,23 @@ export default function Start() {
             className="text-darkGold font-pmedium text-lg mt-2"
             />
           </View>
+
+
+          <View>
+            <FormField 
+              title="Age"
+              value={form.Age}
+              handleChangeText={(e) => setForm({...form, Age: e})}
+              otherStyles="text-lg"
+              keyboardType="numeric"
+            />
+          <CustomBTN
+              Title="Submit"
+              otherStyles="bg-darkGold mt-5 mx-2"
+              handlePress={() => submitForm()}
+              width={100}
+            />
+          </View>
           
 
           <Modal
@@ -163,44 +206,44 @@ export default function Start() {
           }}>
             <View className="justify-center items-center flex-1 bg-backGround/50">
             <View className="bg-backGround-300 h-1/4 w-2/3 rounded-2xl p-4 justify-center items-center" data-id="BodyFatModalView">
-            <Text className="text-2xl font-psemibold text-white">Body Fat</Text>
+              <Text className="text-2xl font-psemibold text-white">Body Fat</Text>
 
-            <View className="w-2/3 rounded-lg border border-darkGold mt-5 p-2 flex-row items-center">
-              <TextInput
-                placeholder="Body Fat"
-                onChangeText={bodyFat => setBodyFatInput(bodyFat)}
-                defaultValue={form.BodyFat}
-                style={{ color: 'white', textAlign: 'center' }}
-                keyboardType="numeric"
-                className="flex-1 text-white"
-              />
-              <Text className="text-white">%</Text>
-            </View>
+              <View className="w-2/3 rounded-lg border border-darkGold mt-5 p-2 flex-row items-center">
+                <TextInput
+                  placeholder="Body Fat"
+                  onChangeText={bodyFat => setBodyFatInput(bodyFat)}
+                  defaultValue={form.BodyFat}
+                  style={{ color: 'white', textAlign: 'center' }}
+                  keyboardType="numeric"
+                  className="flex-1 text-white"
+                />
+                <Text className="text-white">%</Text>
+              </View>
 
 
-            <View className="flex flex-row justify-evenly mt-5">
-              <CustomBTN
-                  Title="Cancel"
-                  otherStyles="bg-darkGold mt-5 mx-2"
-                  handlePress={() => setBodyFatModalVisible(!bodyFatModalVisible)}
+              <View className="flex flex-row justify-evenly mt-5">
+                <CustomBTN
+                    Title="Cancel"
+                    otherStyles="bg-darkGold mt-5 mx-2"
+                    handlePress={() => setBodyFatModalVisible(!bodyFatModalVisible)}
+                    width={100}
+                  />
+                    <CustomBTN
+                    Title="Set Body Fat"
+                    otherStyles="bg-darkGold mt-5 mx-2"
+                    handlePress={() => {
+                      setForm({...form, BodyFat: bodyFatInput});
+                      setBodyFatModalVisible(!bodyFatModalVisible);
+                    }}
                   width={100}
-                />
-                  <CustomBTN
-                  Title="Set Body Fat"
-                  otherStyles="bg-darkGold mt-5 mx-2"
-                  handlePress={() => {
-                    setForm({...form, BodyFat: bodyFatInput});
-                    setBodyFatModalVisible(!bodyFatModalVisible);
-                  }}
-                width={100}
-                />
-            </View>
+                  />
+              </View>
 
               
 
-                    </View>
+              </View>
 
-          </View>
+            </View>
           </Modal>
 
 

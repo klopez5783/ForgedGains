@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { View, ActivityIndicator } from "react-native";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 
 const GlobalContext = createContext({
   user: null,
@@ -31,6 +31,25 @@ const GlobalProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+
+  const updateUser = async (updatedUserData) => {
+    try {
+      //Check for valid user authentication
+      if (!auth.currentUser){
+        Alert.alert("Error", "You need to be logged in to update your profile.")
+        return;
+      }
+
+      await updateProfile(auth.currentUser, updatedUserData); //Update the profile
+      const updatedUser = {...user, ...updatedUserData} //Update the local state
+      setUser(updatedUser);
+      Alert.alert("Success!", "Your profile has been updated successfully!");
+    } catch (error) {
+      console.error("Error updating user:", error);
+      Alert.alert("Error", "There was an error updating your profile.  Please try again later.");
+    }
+  };
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000814" }}>
@@ -40,7 +59,7 @@ const GlobalProvider = ({ children }) => {
   }
 
   return (
-    <GlobalContext.Provider value={{ user, loading }}>
+    <GlobalContext.Provider value={{ user, loading, updateUser }}>
       {children}
     </GlobalContext.Provider>
   );
