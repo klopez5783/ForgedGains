@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { Alert } from "react-native";
 
 const GlobalContext = createContext({
   user: null,
@@ -33,6 +34,7 @@ const GlobalProvider = ({ children }) => {
 
 
   const updateUser = async (updatedUserData) => {
+    const auth = getAuth();
     try {
       //Check for valid user authentication
       if (!auth.currentUser){

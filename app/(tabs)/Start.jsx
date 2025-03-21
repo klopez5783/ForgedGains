@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useRoute } from '@react-navigation/native';
 import {convertToHeightString} from '../../Utilities/heightCalulations'
 import { useGlobalContext } from '../../context/globalProvider';
+import { updateFitnessData } from '../../Database/FitnessData';
 
 export default function Start() {
 
@@ -18,7 +19,6 @@ export default function Start() {
   const receivedForm = route.params?.form || {}; // Default to empty object if undefined
   
   const bodyFat = route.params?.bodyFat ?? 0; // Default to 0 if undefined
-    
   
   const navigation = useNavigation();
 
@@ -107,6 +107,7 @@ export default function Start() {
         };
     
         updateUser(updatedUser);
+        updateFitnessData(user, form);
 
       } else {
         console.log("Please fill out all fields.");
