@@ -67,6 +67,7 @@ export default function resetPassword() {
           Title="Reset Password"
           width={300}
           handlePress={handleReset}
+          otherStyles={"mt-4"}
           />
 
 

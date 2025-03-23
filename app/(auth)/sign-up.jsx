@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { Platform, View, Text, ScrollView, Image, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useState } from 'react'
 import { images } from '../../constants'
@@ -11,7 +11,7 @@ export default function SignUp() {
   const router = useRouter();
 
   const [form , setForm] = useState({
-    userName : '',
+    firstName : '',
     email: '',
     confirmPassword: '',  
     password: ''
@@ -40,18 +40,23 @@ export default function SignUp() {
 
     try {
       setIsSubmiting(true);
-      await signup(form.email, form.password); // Call the signup function
+      await signup(form.email, form.password,form.firstName); // Call the signup function
       router.push('/sign-in'); // Navigate to home screen after sign-up
     } catch (err) {
-      alert(err.message);
+      alert("Error Signing Up:"+ err.message);
     }finally{
       setIsSubmiting(false);
     }
   };
 
-
   return (
       <SafeAreaView className="bg-backGround h-full">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={10}
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView>
           <View className="w-full justify-center min-h-[70vh] px-4 my-6">
 
@@ -63,10 +68,18 @@ export default function SignUp() {
             <Text className="text-3xl text-darkGold font-bold mt-10">Sign Up for Forged Fitness</Text>
 
             <FormField 
+            title="First Name"
+            value={form.firstName}
+            handleChangeText={(e) => setForm({...form, firstName: e})}
+            otherStyles="mt-7"
+            keyboardType="default"
+            />
+
+            <FormField 
             title="Email"
             value={form.email}
             handleChangeText={(e) => setForm({...form, email: e})}
-            otherStyles="mt-7"
+            otherStyles="mt-4"
             keyboardType="email-address"
             />
 
@@ -106,6 +119,8 @@ export default function SignUp() {
 
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }

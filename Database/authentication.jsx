@@ -10,7 +10,8 @@ const auth = getAuth(app); // Get the authentication instance
 const db = getFirestore(app);
 
 // Function for signing up a new user
-export const signup = async (email, password, height=0,
+export const signup = async (email, password, firstName,
+                                              height=0,
                                               bodyFat=0,
                                               weight=0,
                                               gender="Not Selected") => {
@@ -26,6 +27,7 @@ export const signup = async (email, password, height=0,
     //Add user to firestore.
     const userRef = doc(db, "users", uid);
     await setDoc(userRef, {
+        firstName,
         height,
         bodyFat,
         weight,
@@ -46,6 +48,7 @@ export const signup = async (email, password, height=0,
     } else if (error.code === "auth/invalid-email"){
         errorMessage = "Invalid email address provided."
     }
+    console.error("Error signing up:", error);
     throw new Error(errorMessage);
   }
 };

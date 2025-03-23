@@ -54,3 +54,4 @@ export const updateFitnessData = async (user, updatedFitnessData) => {
     console.error("Error updating fitness data:", error);
   }
 };
+

@@ -45,6 +45,28 @@ export default function Start() {
   const { user, updateUser } = useGlobalContext();
 
   useEffect(() => {
+    console.log("Use Effect Triggered")
+    if (user) {
+      setForm((prevForm) => ({
+        ...prevForm, // Preserve existing form data
+        FirstName: user?.firstName || prevForm.FirstName || "",
+        Age: user?.age || prevForm.Age || "",
+        Gender: user?.gender || prevForm.Gender || "",
+        Weight: user?.weight || prevForm.Weight || "",
+        Height: user?.height || prevForm.Height || "",
+      }));
+    }else{
+      console.log("User is not defined")
+    }
+  }, [user]);
+
+  useEffect(() => {
+    console.log("Form State Updated:", form);
+  }, [form]);
+  
+  
+
+  useEffect(() => {
     // Runs whenever selectedFeet or selectedInches change
     console.log("Feet and Inches changed:", selectedFeet, selectedInches);
     
@@ -57,11 +79,11 @@ export default function Start() {
   
 
   const [form, setForm] = useState({
-    FirstName: '',
+    FirstName: user.firstName || '',
     Gender: '',
     Weight: '',
     Height: '',
-    Age: '',
+    Age: user.firstName ? user.firstName : '',
     BodyFat: 0
     });
 
