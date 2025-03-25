@@ -11,6 +11,7 @@ import { useRoute } from '@react-navigation/native';
 import {convertToHeightString} from '../../Utilities/heightCalulations'
 import { useGlobalContext } from '../../context/globalProvider';
 import { updateFitnessData } from '../../Database/FitnessData';
+import PillList from '../../components/pillList';
 
 export default function Start() {
 
@@ -49,7 +50,6 @@ export default function Start() {
     if (user) {
       setForm((prevForm) => ({
         ...prevForm, // Preserve existing form data
-        FirstName: user?.firstName || prevForm.FirstName || "",
         Age: user?.age || prevForm.Age || "",
         Gender: user?.gender || prevForm.Gender || "",
         Weight: user?.weight || prevForm.Weight || "",
@@ -79,7 +79,6 @@ export default function Start() {
   
 
   const [form, setForm] = useState({
-    FirstName: user.firstName || '',
     Gender: '',
     Weight: '',
     Height: '',
@@ -143,16 +142,9 @@ export default function Start() {
       <ScrollView>
         <View className="w-full justify-center px-4 my-6">
           <Text className="text-3xl text-darkGold font-bold mt-10">
-            Start
+            Defecit Calculator
           </Text>
-          <FormField 
-            title="First Name"
-            value={form.FirstName}
-            handleChangeText={(e) => setForm({...form, FirstName: e})}
-            otherStyles="text-lg mt-7"
-            keyboardType="default"
-          />
-
+          
           <View className="flex flex-row justify-evenly w-full mt-7">
 
           <View className="w-1/2 p-1">
@@ -253,7 +245,7 @@ export default function Start() {
                   />
                     <CustomBTN
                     Title="Set Body Fat"
-                    otherStyles="bg-darkGold mt-5 mx-2"
+                    otherStyles="bg-darkGold mt-5 mx-3"
                     handlePress={() => {
                       setForm({...form, BodyFat: bodyFatInput});
                       setBodyFatModalVisible(!bodyFatModalVisible);
@@ -280,7 +272,7 @@ export default function Start() {
           }}>
               <View className="justify-center items-center flex-1 bg-backGround/50">
                 <View className="bg-backGround-300 h-1/3 w-3/4 rounded-2xl p-4" data-id="modalView">
-                  <Text className="text-2xl font-psemibold self-center text-white">Height</Text>
+                  <Text className="underline underline-offset-4 mb-2 text-2xl font-psemibold self-center text-white">Height</Text>
                   
 
                     <View className="flex flex-row justify-evenly h-2/3">
@@ -291,12 +283,14 @@ export default function Start() {
                           data={[1,2,3,4,5,6,7,8]}
                           selectedOption={selectedFeet}
                           setOptionFN={setFeet}
+                          Title={"Feet"}
                           />
   
                           <WheelPicker
                           data={[1,2,3,4,5,6,7,8,9,10,11]}
                           selectedOption={selectedInches}
                           setOptionFN={setInches}
+                          Title={"Inches"}
                           />
                           </>
                         ) : (
@@ -304,6 +298,7 @@ export default function Start() {
                           data={Array.from({length: 350}, (_, i) => i + 140)}
                           selectedOption={selectedCentimeters}
                           setOptionFN={setCentimeters}
+                          Title={"Centimeters"}
                           />
                         )}
 
@@ -361,9 +356,16 @@ export default function Start() {
               }}>
               <View className="justify-center items-center flex-1 bg-backGround/50">
                 <View className="bg-backGround-300 h-1/3 w-3/4 rounded-2xl p-4" data-id="modalView">
-                  <Text className="text-2xl font-psemibold self-center text-white">Weight</Text>
+                  <Text className="underline underline-offset-4 mb-2 text-2xl font-psemibold self-center text-white">Weight</Text>
                   
-                  <WheelPicker
+                  {/* <WheelPicker
+                  data={["Pounds","Stone","Kilograms"]}
+                  selectedOption={selectedWeightUnit}
+                  setOptionFN={setWeightUnit}
+                  
+                  /> */}
+
+                  <PillList
                   data={["Pounds","Stone","Kilograms"]}
                   selectedOption={selectedWeightUnit}
                   setOptionFN={setWeightUnit}
