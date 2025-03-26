@@ -12,6 +12,8 @@ import {convertToHeightString} from '../../Utilities/heightCalulations'
 import { useGlobalContext } from '../../context/globalProvider';
 import { updateFitnessData } from '../../Database/FitnessData';
 import PillList from '../../components/pillList';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function Start() {
 
@@ -32,6 +34,8 @@ export default function Start() {
   const [selectedWeightUnit , setWeightUnit] = useState('Pounds');
 
   const [heightModalVisible, setHeightModalVisible] = useState(false);
+
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -82,7 +86,7 @@ export default function Start() {
     Gender: '',
     Weight: '',
     Height: '',
-    Age: user.firstName ? user.firstName : '',
+    Age: '',
     BodyFat: 0
     });
 
@@ -105,13 +109,22 @@ export default function Start() {
     }, [bodyFat]);
 
 
-    const navigateToBodyFat = useCallback(() => {
+    // const navigateToBodyFat = useCallback(() => {
+    //   console.log("Form", form);
+    //   if (!form.Gender) return alert("Please select Gender");
+    //   if (form.Height == "0'0") return alert("Please enter Height");
+    //   console.log("Navigating to Body Fat");
+    //   navigation.navigate("waistMeasurement", { form });
+    // }, [form.Gender]);
+
+    const handleNavigateToBodyFat = () => {
       console.log("Form", form);
       if (!form.Gender) return alert("Please select Gender");
-      if (!form.Height) return alert("Please enter Height");
+      if (form.Height == "0'0") return alert("Please enter Height");
       console.log("Navigating to Body Fat");
       navigation.navigate("waistMeasurement", { form });
-    }, [form.Gender]);
+    }
+
 
     const submitForm = () => {
       console.log("Current Form:\n" , form)
@@ -178,7 +191,13 @@ export default function Start() {
           <Select optionOne="Male" defaultOption={form.Gender} optionTwo="Female" onSelect={(option) => { setForm({...form, Gender: option})}} />
 
           <View className="w-full p-1 mt-7">
-            <Text className="font-pmedium text-white text-lg">Body Fat</Text>
+            {/* <Text className="font-pmedium text-white text-lg">Body Fat <Ionicons name="information-circle-outline" size={24} color="black" /> </Text> */}
+            <View className="flex-row items-center">
+              <Text className="font-pmedium text-white text-lg">Body Fat </Text>
+              <Pressable onPress={() => setInfoModalVisible(true)}>
+                <Ionicons name="information-circle-outline" size={20} color="white" />
+              </Pressable>
+            </View>
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setBodyFatModalVisible(true)}>
@@ -188,7 +207,7 @@ export default function Start() {
             </Pressable>
             <Button
             title="Don't Know Body Fat? Tap Here"
-            onPress={ navigateToBodyFat }
+            onPress={ handleNavigateToBodyFat }
             className="text-darkGold font-pmedium text-lg mt-2"
             />
           </View>
@@ -236,20 +255,22 @@ export default function Start() {
               </View>
 
 
-              <View className="flex flex-row justify-evenly mt-5">
-                <CustomBTN
-                    Title="Cancel"
-                    otherStyles="bg-darkGold mt-5 mx-2"
-                    handlePress={() => setBodyFatModalVisible(!bodyFatModalVisible)}
-                    width={100}
+              <View className="flex flex-row justify-evenly mt-3">
+
+                  <CustomBTN
+                  Title="Cancel"
+                  otherStyles="bg-darkGold mt-5 mr-2"
+                  handlePress={() => setBodyFatModalVisible(!bodyFatModalVisible)}
+                  width={100}
                   />
-                    <CustomBTN
-                    Title="Set Body Fat"
-                    otherStyles="bg-darkGold mt-5 mx-3"
-                    handlePress={() => {
-                      setForm({...form, BodyFat: bodyFatInput});
-                      setBodyFatModalVisible(!bodyFatModalVisible);
-                    }}
+
+                  <CustomBTN
+                  Title="Set Body Fat"
+                  otherStyles="bg-darkGold mt-5 ml-2"
+                  handlePress={() => {
+                    setForm({...form, BodyFat: bodyFatInput});
+                    setBodyFatModalVisible(!bodyFatModalVisible);
+                  }}
                   width={100}
                   />
               </View>
@@ -331,7 +352,7 @@ export default function Start() {
                           setHeightModalVisible(!heightModalVisible);
                         } else {
                         setForm({...form, Height: selectedFeet + "'" + selectedInches});
-                        setHeightModalVisible(!heightModalVisible);
+                        setHeightModalVisible(!heightModalVisible); 
                       }
                     }}
                     width={125}
@@ -342,6 +363,44 @@ export default function Start() {
 
                 </View>
               </View>
+
+          </Modal>
+
+          <Modal
+          animationType='slide'
+          transparent={true}
+          visible={infoModalVisible}
+          onRequestClose={() =>{
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!infoModalVisible);
+          }}>
+            <View className="justify-center items-center flex-1 bg-backGround/50">
+              <View className="bg-backGround-300 h-1/3 w-3/4 rounded-2xl p-4" data-id="modalView">
+                
+                <View className="flex flex-row justify-end">
+                  <Pressable
+                  onPress={() => setInfoModalVisible(!infoModalVisible)}
+                  >
+                    <MaterialCommunityIcons name="close-circle" size={24} color="white" />
+                  </Pressable>
+                </View>
+                
+                <View className="flex flex-row justify-center items-center mt-3">
+                  <Text className="text-white text-lg font-psemibold self-center">
+                  "Actual body fat percentage may vary based on muscle mass, hydration, and distribution of fat in different areas.
+                  This is an estimate based on the U.S. Navy Body Fat formula." 
+                  </Text>
+                </View>
+
+                <CustomBTN
+                Title="Okay"
+                otherStyles="bg-darkGold self-center mt-2"
+                handlePress={() => {
+                  setInfoModalVisible(!infoModalVisible)
+                }}
+                width={125}/>
+              </View>
+            </View>
 
           </Modal>
 
