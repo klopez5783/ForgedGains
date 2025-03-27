@@ -49,6 +49,8 @@ export default function Start() {
 
   const { user, updateUser } = useGlobalContext();
 
+  const [activityLevelModalVisible, setActivityLevelModalVisible] = useState(false);
+
   useEffect(() => {
     console.log("Use Effect Triggered")
     if (user) {
@@ -108,15 +110,6 @@ export default function Start() {
       }
     }, [bodyFat]);
 
-
-    // const navigateToBodyFat = useCallback(() => {
-    //   console.log("Form", form);
-    //   if (!form.Gender) return alert("Please select Gender");
-    //   if (form.Height == "0'0") return alert("Please enter Height");
-    //   console.log("Navigating to Body Fat");
-    //   navigation.navigate("waistMeasurement", { form });
-    // }, [form.Gender]);
-
     const handleNavigateToBodyFat = () => {
       console.log("Form", form);
       if (!form.Gender) return alert("Please select Gender");
@@ -144,7 +137,7 @@ export default function Start() {
         updateFitnessData(user, form);
 
       } else {
-        console.log("Please fill out all fields.");
+        alert("Please fill out all fields before submitting.");
       }
       
     }
@@ -189,6 +182,19 @@ export default function Start() {
           </Text>
 
           <Select optionOne="Male" defaultOption={form.Gender} optionTwo="Female" onSelect={(option) => { setForm({...form, Gender: option})}} />
+
+
+          <View className="w-full p-1 mt-7">
+            {/* <Text className="font-pmedium text-white text-lg">Body Fat <Ionicons name="information-circle-outline" size={24} color="black" /> </Text> */}
+              <Text className="font-pmedium text-white text-lg">Activity Level</Text>
+            <Pressable
+              className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
+              onPress={() => {setActivityLevelModalVisible(true); console.log("Button Pressed")}}>
+                <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                {form.ActivityLevel ? `${form.ActivityLevel}` : 'Enter Activity Level'}
+                </Text>
+            </Pressable>
+          </View>
 
           <View className="w-full p-1 mt-7">
             {/* <Text className="font-pmedium text-white text-lg">Body Fat <Ionicons name="information-circle-outline" size={24} color="black" /> </Text> */}
@@ -464,6 +470,37 @@ export default function Start() {
 
                 </View>
               </View>
+          </Modal>
+
+
+
+          <Modal
+              animationType="slide"
+              transparent={true}
+              visible={activityLevelModalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!activityLevelModalVisible);
+              }}>
+              <View className="justify-center items-center flex-1 bg-backGround/50">
+                <View className="bg-backGround-300 h-2/3 w-4/5 rounded-2xl p-4" data-id="modalView">
+
+                  <Text className="underline underline-offset-4 mb-2 text-2xl font-psemibold self-center text-white">Activity Level</Text>
+
+                  <PillList
+                  data={["Sedentary","Slightly Active","Moderately Active", "Very Active"]}
+                  descriptions={["Little or no physical activity, typically a desk job or minimal movement throughout the day.Example: Office work, watching TV, and minimal walking.",
+                    "A job that involves some physical activity or light intensity exercise 1-3 days per week. Example: Light walking, casual biking, or household chores.",
+                    "Moderately Active Jobs that keep you on your feet most of the day, or moderate intensity exercise 3-5 days per week. Example: Gym sessions, running, or active jobs like retail.",
+                    "A physical job, very hard exercise, or physical training. Example: Pro athletes, military training, or jobs with continuous high physical activity.",
+                  ]}
+                  selectedOption={selectedWeightUnit}
+                  setOptionFN={setWeightUnit}
+                  />
+                
+                </View>
+              </View>
+
           </Modal>
 
 

@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useState } from 'react'
 
-export default function PillList({data = ["insert" , "Data" , "Here"], selectedOption , setOptionFN}) {
+export default function PillList({descriptions , data = ["insert" , "Data" , "Here"], selectedOption , setOptionFN}) {
   return (
     <View>
       {data.map((item, index) => (
@@ -13,6 +13,9 @@ export default function PillList({data = ["insert" , "Data" , "Here"], selectedO
             }`}
             >
             <Text className="text-center text-white font-xl font-bold">{item}</Text>
+            {descriptions && descriptions.length > 0 && (
+                <Text className="text-center text-white font-md font-plight">{descriptions[index]}</Text>
+            )}
             </View>
         </TouchableOpacity>
         ))}

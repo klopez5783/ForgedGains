@@ -9,7 +9,7 @@ export default function FormField({title , value , placeholder , handleChangeTex
 
   return (
     <View className={`w-full ${otherStyles}`}>
-      <Text className="text-base text-gray-100 font-pmedium">{title}</Text>
+      <Text className="text-lg text-gray-100 font-pmedium">{title}</Text>
       <View className="
       w-full h-16 px-4 
       bg-backGround-300
