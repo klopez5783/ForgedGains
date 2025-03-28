@@ -1,6 +1,7 @@
 import { View, Text, Image } from 'react-native'
 import { Tabs, Redirect } from 'expo-router'
 import { icons } from '../../constants'
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 function TabIcon({ icon, color, name, focused }) {
     return (
@@ -50,7 +51,7 @@ const TabsLayout = () => {
             Title: 'Caclulator',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-                <TabIcon icon={icons.play} color={color} name="Calculator" focused={focused}/>
+                <TabIcon icon={icons.calculator} color={color} name="Calc" focused={focused}/>
             )
         }}
         />
