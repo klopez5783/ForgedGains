@@ -23,6 +23,7 @@ const TabsLayout = () => {
    <>
     <Tabs
     screenOptions={{
+        headerShown: false, // Added to remove the default header space
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#FFC300',
         tabBarInactiveTintColor: '#996B00',
@@ -44,21 +45,12 @@ const TabsLayout = () => {
             )
         }}
         />
-        <Tabs.Screen name="Profile"
+        <Tabs.Screen name="Calculator"
         options={{
-            Title: 'Profile',
+            Title: 'Caclulator',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-                <TabIcon icon={icons.profile} color={color} name="Profile" focused={focused}/>
-            )
-        }}
-        />
-        <Tabs.Screen name="Start"
-        options={{
-            Title: 'Start',
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-                <TabIcon icon={icons.play} color={color} name="Start" focused={focused}/>
+                <TabIcon icon={icons.play} color={color} name="Calculator" focused={focused}/>
             )
         }}
         />

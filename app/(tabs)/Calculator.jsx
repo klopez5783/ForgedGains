@@ -15,7 +15,7 @@ import PillList from '../../components/pillList';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-export default function Start() {
+export default function Calculator() {
 
   const route = useRoute();
   
@@ -48,6 +48,8 @@ export default function Start() {
   const [bodyFatInput , setBodyFatInput] = useState("");
 
   const { user, updateUser } = useGlobalContext();
+
+  const [selectedActivityLevel, setActivityLevel] = useState()
 
   const [activityLevelModalVisible, setActivityLevelModalVisible] = useState(false);
 
@@ -89,7 +91,8 @@ export default function Start() {
     Weight: '',
     Height: '',
     Age: '',
-    BodyFat: 0
+    BodyFat: 0,
+    ActivityLevel: ''
     });
 
     useEffect(() => {
@@ -146,7 +149,7 @@ export default function Start() {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-        <View className="w-full justify-center px-4 my-6">
+      <View className="w-full justify-center px-4">
           <Text className="text-3xl text-darkGold font-bold mt-10">
             Defecit Calculator
           </Text>
@@ -158,7 +161,7 @@ export default function Start() {
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setModalVisible(true)}>
-              <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+              <Text className={`text-white ${form.Weight ? `font-pmedium` : `font-pextralight` } self-center text-xl self h-full pt-3`} >
                 {form.Weight ? `${form.Weight} ${selectedWeightUnit}` : 'Enter Weight'}
               </Text>
             </Pressable>
@@ -169,7 +172,7 @@ export default function Start() {
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setHeightModalVisible(true)}>
-                <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                <Text className={`text-white ${form.Height != "0'0" ? `font-pmedium` : `font-pextralight` } self-center text-xl self h-full pt-3`} >
                 {form.Height != "0'0" ? `${form.Height} ${selectedHeightUnit}` : 'Enter Height'}
                 </Text>
             </Pressable>
@@ -190,7 +193,7 @@ export default function Start() {
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => {setActivityLevelModalVisible(true); console.log("Button Pressed")}}>
-                <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                <Text className={`text-white ${form.ActivityLevel ? `font-pmedium` : `font-pextralight` } self-center text-xl self h-full pt-3`}>
                 {form.ActivityLevel ? `${form.ActivityLevel}` : 'Enter Activity Level'}
                 </Text>
             </Pressable>
@@ -207,7 +210,7 @@ export default function Start() {
             <Pressable
               className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
               onPress={() => setBodyFatModalVisible(true)}>
-                <Text className="text-white font-pmedium self-center text-xl self h-full pt-3">
+                <Text className={`text-white ${form.BodyFat ? `font-pmedium` : `font-pextralight` } self-center text-xl self h-full pt-3`} >
                 {form.BodyFat ? `${form.BodyFat}%` : 'Enter Body Fat %'}
                 </Text>
             </Pressable>
@@ -227,13 +230,15 @@ export default function Start() {
               otherStyles="text-lg"
               keyboardType="numeric"
             />
-          <CustomBTN
-              Title="Submit"
-              otherStyles="bg-darkGold mt-5 mx-2"
-              handlePress={() => submitForm()}
-              width={100}
-            />
           </View>
+
+
+          <CustomBTN
+              Title="Submit Form"
+              otherStyles="bg-darkGold mt-4 mx-2"
+              handlePress={() => submitForm()}
+              width={125}
+            />
           
 
           <Modal
@@ -487,16 +492,26 @@ export default function Start() {
 
                   <Text className="underline underline-offset-4 mb-2 text-2xl font-psemibold self-center text-white">Activity Level</Text>
 
-                  <PillList
+                  <WheelPicker
                   data={["Sedentary","Slightly Active","Moderately Active", "Very Active"]}
                   descriptions={["Little or no physical activity, typically a desk job or minimal movement throughout the day.Example: Office work, watching TV, and minimal walking.",
                     "A job that involves some physical activity or light intensity exercise 1-3 days per week. Example: Light walking, casual biking, or household chores.",
                     "Moderately Active Jobs that keep you on your feet most of the day, or moderate intensity exercise 3-5 days per week. Example: Gym sessions, running, or active jobs like retail.",
                     "A physical job, very hard exercise, or physical training. Example: Pro athletes, military training, or jobs with continuous high physical activity.",
                   ]}
-                  selectedOption={selectedWeightUnit}
-                  setOptionFN={setWeightUnit}
+                  selectedOption={selectedActivityLevel}
+                  setOptionFN={setActivityLevel}
                   />
+
+                  <CustomBTN
+                  Title="Set Activity Level"
+                  otherStyles="bg-darkGold self-center mt-2"
+                  handlePress={() => {
+                    setForm({...form, ActivityLevel: selectedActivityLevel});
+                    console.log("Form " + form)
+                    setActivityLevelModalVisible(!activityLevelModalVisible);
+                  }}
+                  width={125} />
                 
                 </View>
               </View>
