@@ -18,13 +18,10 @@ export default function App() {
   const router = useRouter();
   
   if(user) {
-    console.log("Redirecting to Home Page...")
-    console.log("Index Page \nUser: ", user);
-    console.log("Fetching User Data...");
     getUserData(user);
     setTimeout(() => {
     router.replace("/(tabs)/Home");
-    }, 100);
+    }, 1);
   }
 
   return (

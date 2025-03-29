@@ -139,6 +139,9 @@ export default function Calculator() {
         updateUser(updatedUser);
         updateFitnessData(user, form);
 
+        router.push('/Home');
+
+
       } else {
         alert("Please fill out all fields before submitting.");
       }
@@ -151,7 +154,7 @@ export default function Calculator() {
       <ScrollView>
       <View className="w-full justify-center px-4">
           <Text className="text-3xl text-darkGold font-bold mt-10">
-            Defecit Calculator
+            Deficit Calculator
           </Text>
           
           <View className="flex flex-row justify-evenly w-full mt-7">
