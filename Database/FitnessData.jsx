@@ -1,4 +1,4 @@
-import {doc, getDoc, updateDoc} from "firebase/firestore";
+import {doc, getDoc, updateDoc, serverTimestamp} from "firebase/firestore";
 import {db} from "../fireBaseConfig";
 
 
@@ -43,7 +43,9 @@ export const updateFitnessData = async (user, updatedFitnessData) => {
       weight: updatedFitnessData.Weight,
       height: updatedFitnessData.Height,
       age: updatedFitnessData.Age,
-      gender: updatedFitnessData.Gender
+      gender: updatedFitnessData.Gender,
+      bodyFatUpdatedAt: serverTimestamp(),
+      weightUpdatedAt: serverTimestamp()
     });
 
     console.log("Fitness data updated successfully!");
@@ -51,4 +53,3 @@ export const updateFitnessData = async (user, updatedFitnessData) => {
     console.error("Error updating fitness data:", error);
   }
 };
-

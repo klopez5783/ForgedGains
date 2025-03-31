@@ -29,6 +29,16 @@ useEffect(() => {
       try {
         const data = await getUserData(user);
         if (data) {
+
+          const bodyFatDate = data.bodyFatUpdatedAt.toDate();
+
+          const bodyFatFormattedDate = `${(bodyFatDate.getMonth() + 1).toString().padStart(2, '0')}/${bodyFatDate.getDate().toString().padStart(2, '0')}/${bodyFatDate.getFullYear()}`;
+          
+          const weightDate = data.weightUpdatedAt.toDate();
+
+          const WeightFormattedDate = `${(weightDate.getMonth() + 1).toString().padStart(2, '0')}/${weightDate.getDate().toString().padStart(2, '0')}/${weightDate.getFullYear()}`;
+
+
           setUserFitnessData({
             firstName: data.firstName || "User",
             age: data.age || "",
@@ -36,6 +46,8 @@ useEffect(() => {
             weight: data.weight || "",
             height: data.height || "",
             bodyFat: data.bodyFat || "",
+            bodyFatTimeStamp: bodyFatFormattedDate || "",
+            weightTimeStamp: WeightFormattedDate || "",
           });
         }
       } catch (error) {
@@ -120,8 +132,9 @@ useEffect(() => {
                         <Text className="text-white font-psemibold">Height: {userFitnessData?.height || ""}</Text>
                       </View>
 
-                      <View>
-                        <Text className="text-white">Time Stamps</Text>
+                      <View className="h-full grid grid-cols-3 content-start ">
+                        <Text className="text-white">Updated: {userFitnessData?.bodyFatTimeStamp}</Text>
+                        <Text className="text-white">Updated: {userFitnessData?.weightTimeStamp}</Text>
                       </View>
 
                     </View>
@@ -170,9 +183,6 @@ useEffect(() => {
                 <Text className="text-white text-lg font-bold">Your TDEE: {tdee ? `${tdee} kcal/day` : "Calculating..."}</Text>
               </View>
             </View>
-
-
-            
 
 
 

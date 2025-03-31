@@ -11,9 +11,6 @@ import {getUserData} from '../Database/FitnessData';
 
 
 export default function App() {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const {user} = useGlobalContext();
   const router = useRouter();
   

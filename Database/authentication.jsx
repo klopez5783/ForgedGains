@@ -2,7 +2,7 @@ import { getAuth,
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   sendPasswordResetEmail,
-  signOut } from "firebase/auth";
+  signOut, serverTimestamp } from "firebase/auth";
 import { app } from "../fireBaseConfig"; // Import your Firebase app instance
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
@@ -32,7 +32,9 @@ export const signup = async (email, password, firstName,
         bodyFat,
         weight,
         gender,
-        email
+        email,
+        bodyFatUpdatedAt: serverTimestamp(), // Timestamp for bodyFat
+        weightUpdatedAt: serverTimestamp() // Timestamp for weight
     });
 
 
