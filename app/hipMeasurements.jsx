@@ -33,7 +33,7 @@ export default function hipMeasurements() {
               - 97.684 * Math.log10(heightNum) 
               - 78.387;  // Corrected subtraction
         console.log("Calulated Body Fat:", bodyFat);
-        navigation.navigate("(tabs)", { screen: "Start", params: { form, bodyFat } });
+        navigation.navigate("(tabs)", { screen: "Calculator", params: { form , bodyFat } });
       };
     
     return (

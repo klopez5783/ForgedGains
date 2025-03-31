@@ -25,7 +25,7 @@ export default function neckMeasurement() {
                   + 36.76;
     console.log("Navigating to Start");
     console.log("Form Data:", form);
-    navigation.navigate("(tabs)", { screen: "Start", params: { form , bodyFat } });
+    navigation.navigate("(tabs)", { screen: "Calculator", params: { form , bodyFat } });
   };
 
   return (
