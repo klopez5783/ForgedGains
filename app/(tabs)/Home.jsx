@@ -6,6 +6,7 @@ import { SignUserOut } from '../../Database/authentication'
 import { useRouter } from 'expo-router'
 import { useGlobalContext } from "../../context/globalProvider"
 import {getUserData} from '../../Database/FitnessData';
+import PieChart from '../../components/MacroPieChart'
 
 
 
@@ -154,7 +155,7 @@ useEffect(() => {
 
             <View className="rounded-lg p-4 mt-2 bg-backGround-300">
               <View className="flex-row justify-evenly">
-                <View className="w-1/4 grid grid-cols-3 gap-1">
+                <View className="w-1/4 grid grid-cols-3 gap-1 justify-center ">
 
                     <View className="flex-row justify-between">
                       <Text className="text-green-500 font-psemibold">Protien: </Text><Text className="text-right text-green-500 font-psemibold">150g</Text>
@@ -168,7 +169,7 @@ useEffect(() => {
                     
                 </View>
                 <View>
-                    <Text className="text-white">Macro Circle</Text>
+                    <PieChart/>
                 </View>
               </View>
             </View>
