@@ -19,6 +19,8 @@ export default function Home() {
   const [tdee,setTdee] = useState(null);
   const [bmr, setBmr] = useState(null);
 
+  const [Macros, setMacros] = useState({});
+
  
 const [userFitnessData, setUserFitnessData] = useState(null);
 
@@ -80,6 +82,16 @@ useEffect(() => {
     // Assume Moderate Exercise (adjust as needed)
     const calculatedTDEE = calculatedBMR * 1.55;
     setTdee(Math.round(calculatedTDEE));
+
+    const protein = Math.round(((calculatedTDEE - 500) * 0.3) / 4); // 30% of TDEE from protein
+    const fats = Math.round(((calculatedTDEE - 500) * 0.2) / 9); // 25% of TDEE from fats
+    const carbs = Math.round(((calculatedTDEE - 500) * 0.45) / 4); // 45% of TDEE from carbs
+    setMacros({ // ✅ Use state setter to trigger re-render
+      "Fats": fats,
+      "Carbs": carbs,
+      "Protein": protein
+    });
+
   }
 }, [userFitnessData]);
 
@@ -158,18 +170,21 @@ useEffect(() => {
                 <View className="w-1/4 grid grid-cols-3 gap-1 justify-center ">
 
                     <View className="flex-row justify-between">
-                      <Text className="text-green-500 font-psemibold">Protien: </Text><Text className="text-right text-green-500 font-psemibold">150g</Text>
+                      <Text className="text-green-500 font-psemibold">Protein: </Text><Text className="text-right text-green-500 font-psemibold">{Macros.Protein}g</Text>
                     </View>
                     <View className="flex-row justify-evenly">
-                      <Text className="text-blue-500 font-psemibold">Fats:</Text><Text className="text-blue-500 font-psemibold">50g</Text>
+                      <Text className="text-red-500 font-psemibold">Fats:</Text><Text className="text-red-500 font-psemibold">{Macros.Fats}g</Text>
                     </View>
                     <View className="flex-row justify-between">
-                      <Text className="text-red-500 font-psemibold">Carbs: </Text><Text className="text-right text-red-500 font-psemibold">250g</Text>
+                      <Text className="text-blue-500 font-psemibold">Carbs: </Text><Text className="text-right text-blue-500 font-psemibold">{Macros.Carbs}g</Text>
                     </View>
                     
                 </View>
                 <View>
-                    <PieChart/>
+                    <PieChart
+                    Data={Macros}
+                    Calories={tdee - 500}
+                    />
                 </View>
               </View>
             </View>
@@ -196,6 +211,7 @@ useEffect(() => {
         Title="Sign Out"
         handlePress={ handleSignOut }
         width={200}
+        otherStyles={"mt-5"}
         />
           <View className="flex-1 justify-center items-center">
           {loading ? (

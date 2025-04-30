@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { Alert } from "react-native";
+import { app } from "../fireBaseConfig";
 
 const GlobalContext = createContext({
   user: null,

@@ -4,7 +4,10 @@ import Svg, { Path , Circle, Text } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
 
-export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protein" : 150}} , ) {
+export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protein" : 150} , Calories = 1600}) {
+
+  console.log("Data", Data);
+  console.log("Calories", Calories);
 
   const cx = 50, cy = 50, r = 45; // Center and radius of the circle
   
@@ -15,7 +18,7 @@ export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protei
   const total = Object.values(Data).reduce((acc, value) => acc + value, 0);
   const angles = Object.values(Data).map((value) => (value / total) * 360);
 
-  console.log("Angles", angles);
+  
 
   function anglesToCoordinates(angles, cx = 50, cy = 50, r = 45) {
     return angles.map(angle => {
@@ -27,7 +30,7 @@ export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protei
   }
 
   const coordinates = anglesToCoordinates(angles);
-  console.log("Coordinates" ,coordinates)
+  
 
 
   coordinates.forEach((coord, index) => {
@@ -75,7 +78,7 @@ export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protei
           textAnchor="middle" 
           fill="white"
         >
-          1600
+          {Calories}
         </Text>
         <Text
         x={cx} 
@@ -89,3 +92,4 @@ export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protei
     </View>
   );
 }
+
