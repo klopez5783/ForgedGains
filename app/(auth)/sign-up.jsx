@@ -1,6 +1,15 @@
 import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
-import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomBTN from '../../components/CustomBTN'
 import FormField from '../../components/FormField'
@@ -58,11 +67,11 @@ export default function SignUp() {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView>
-          <View className="w-full justify-center min-h-[70vh] px-4 my-6">
+          <View className="mx-auto justify-center min-h-[70vh] px-4 my-6">
 
             <Image 
             source={images.logoV4} 
-            className="w-[175px] h-[15vh] mx-auto" 
+            className={Platform.isPad ? "w-[225px] h-[20vh] mx-auto" : "w-[175px] h-[15vh] mx-auto"}
             resizeMode='contain' />
             
             <Text className="text-3xl text-darkGold font-bold mt-10">Sign Up for Forged Fitness</Text>
@@ -99,12 +108,25 @@ export default function SignUp() {
 
           <CustomBTN
           Title="Sign Up"
-          width={300}
+          width={400}
           handlePress={handleSignUp}
-          otherStyles={"mt-4"}
+          otherStyles={Platform.isPad ? "mt-6" : "mt-4"}
           />
 
-          <View className="flex justify-center pt-5 flex-row gap-2">
+          { Platform.isPad ? (
+            <View className="flex justify-center pt-4 flex-row gap-2">
+              <Text className="text-2xl text-gray-100 font-pregular">
+                Already have an account?
+              </Text>
+              <Link
+                href="/sign-in"
+                className="text-2xl font-psemibold text-darkGold"
+              >
+                Sign in
+              </Link>
+            </View>
+          ) : (
+            <View className="flex justify-center pt-5 flex-row gap-2">
               <Text className="text-lg text-gray-100 font-pregular">
                 Already have an account?
               </Text>
@@ -115,6 +137,7 @@ export default function SignUp() {
                 Sign in
               </Link>
             </View>
+          )}
           
 
           </View>

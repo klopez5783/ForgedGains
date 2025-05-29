@@ -1,5 +1,4 @@
-import { TouchableOpacity, Text } from 'react-native'
-import React from 'react'
+import { Platform, Text, TouchableOpacity } from 'react-native'
 
 const CustomBTN = ({ width , Title , handlePress , containerStyles , textStyles, isLoading, otherStyles }) => {
   return (
@@ -18,7 +17,11 @@ const CustomBTN = ({ width , Title , handlePress , containerStyles , textStyles,
         disabled={isLoading}
       style={{ width: width }}
     >
-      <Text className={`text-backGround font-psemibold ${textStyles}`}>{Title}</Text>
+      {Platform.isPad ? (
+        <Text className={`text-backGround text-xl font-pbold ${textStyles}`}>{Title}</Text>
+      ) : (
+        <Text className={`text-backGround font-psemibold ${textStyles}`}>{Title}</Text>
+      )}
     </TouchableOpacity>
   )
 }
