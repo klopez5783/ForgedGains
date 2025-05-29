@@ -108,7 +108,7 @@ export default function SignUp() {
 
           <CustomBTN
           Title="Sign Up"
-          width={400}
+          width={Platform.isPad ? 400 : 300}
           handlePress={handleSignUp}
           otherStyles={Platform.isPad ? "mt-6" : "mt-4"}
           />
