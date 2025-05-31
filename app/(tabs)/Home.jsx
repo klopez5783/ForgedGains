@@ -1,12 +1,12 @@
-import { View, ActivityIndicator, Text, ScrollView } from 'react-native'
-import {React , useEffect, useState} from 'react'
+import { useRouter } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Platform, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomBTN from '../../components/CustomBTN'
-import { SignUserOut } from '../../Database/authentication'
-import { useRouter } from 'expo-router'
-import { useGlobalContext } from "../../context/globalProvider"
-import {getUserData} from '../../Database/FitnessData';
 import PieChart from '../../components/MacroPieChart'
+import { useGlobalContext } from "../../context/globalProvider"
+import { SignUserOut } from '../../Database/authentication'
+import { getUserData } from '../../Database/FitnessData'
 
 
 
@@ -115,7 +115,7 @@ useEffect(() => {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-      <View className="w-full justify-center px-4">
+      <View   className={`justify-center ${Platform.isPad ? 'w-3/4' : 'w-full'} mx-auto px-4`}>
         <Text className="text-3xl text-darkGold font-bold mt-10">
           Home
         </Text>
