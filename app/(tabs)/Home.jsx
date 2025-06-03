@@ -133,21 +133,33 @@ useEffect(() => {
                 </View>
                 ) : (
                   <View>
-                    <Text className="text-lg font-pbold text-white font-bold mt-2 ml-4">
+                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg" } font-pbold text-white font-bold mt-2 ml-4`}>
                       Hello {userFitnessData?.firstName || "User"},
                     </Text>
                     <View className="mt-3 flex-row justify-evenly items-center">
 
                       <View>
-                        <Text className="text-white font-psemibold">Body Fat: {userFitnessData?.bodyFat || ""}%</Text>
-                        <Text className="text-white font-psemibold">Weight: {userFitnessData?.weight || ""}</Text>
-                        <Text className="text-white font-psemibold">Age: {userFitnessData?.age || ""}</Text>
-                        <Text className="text-white font-psemibold">Height: {userFitnessData?.height || ""}</Text>
+                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                          Body Fat: {userFitnessData?.bodyFat || ""}%
+                        </Text>
+                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                          Weight: {userFitnessData?.weight || ""}
+                        </Text>
+                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                          Age: {userFitnessData?.age || ""}
+                        </Text>
+                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                          Height: {userFitnessData?.height || ""}
+                        </Text>
                       </View>
 
-                      <View className="h-full grid grid-cols-3 content-start ">
-                        <Text className="text-white">Updated: {userFitnessData?.bodyFatTimeStamp}</Text>
-                        <Text className="text-white">Updated: {userFitnessData?.weightTimeStamp}</Text>
+                      <View className="h-full grid grid-cols-3 content-start">
+                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white`}>
+                          Updated: {userFitnessData?.bodyFatTimeStamp}
+                        </Text>
+                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white`}>
+                          Updated: {userFitnessData?.weightTimeStamp}
+                        </Text>
                       </View>
 
                     </View>
@@ -167,20 +179,23 @@ useEffect(() => {
 
             <View className="rounded-lg p-4 mt-2 bg-backGround-300">
               <View className="flex-row justify-evenly">
-                <View className="w-1/4 grid grid-cols-3 gap-1 justify-center ">
+                <View className={`${Platform.isPad ? "" : "w-1/4"} mx-auto grid grid-cols-3 gap-1 justify-center`}>
 
                     <View className="flex-row justify-between">
-                      <Text className="text-green-500 font-psemibold">Protein: </Text><Text className="text-right text-green-500 font-psemibold">{Macros.Protein}g</Text>
+                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-green-500 font-psemibold`}>Protein: </Text>
+                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-green-500 font-psemibold`}>{Macros.Protein}g</Text>
                     </View>
                     <View className="flex-row justify-evenly">
-                      <Text className="text-red-500 font-psemibold">Fats:</Text><Text className="text-red-500 font-psemibold">{Macros.Fats}g</Text>
+                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>Fats:</Text>
+                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>{Macros.Fats}g</Text>
                     </View>
                     <View className="flex-row justify-between">
-                      <Text className="text-blue-500 font-psemibold">Carbs: </Text><Text className="text-right text-blue-500 font-psemibold">{Macros.Carbs}g</Text>
+                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-blue-500 font-psemibold`}>Carbs: </Text>
+                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-blue-500 font-psemibold`}>{Macros.Carbs}g</Text>
                     </View>
                     
                 </View>
-                <View>
+                <View clasName="mx-auto">
                     <PieChart
                     Data={Macros}
                     Calories={tdee - 500}
@@ -192,11 +207,15 @@ useEffect(() => {
 
             <View className="rounded-lg p-4 mt-5 bg-backGround-300">
               <View className="rounded-lg p-2 bg-backGround-300">
-                <Text className="text-white text-lg font-bold">Your BMR: {bmr ? `${bmr} kcal/day` : "Calculating..."}</Text>
+                <Text className={`text-white font-bold ${Platform.isPad ? "text-2xl" : "text-lg"}`}>
+                  Your BMR: {bmr ? `${bmr} kcal/day` : "Calculating..."}
+                </Text>
               </View>
               
               <View className="rounded-lg p-2 mt-2 bg-backGround-300">
-                <Text className="text-white text-lg font-bold">Your TDEE: {tdee ? `${tdee} kcal/day` : "Calculating..."}</Text>
+                <Text className={`text-white font-bold ${Platform.isPad ? "text-2xl" : "text-lg"}`}>
+                  Your TDEE: {tdee ? `${tdee} kcal/day` : "Calculating..."}
+                </Text>
               </View>
             </View>
 

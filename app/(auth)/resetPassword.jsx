@@ -1,14 +1,12 @@
-import { View, Text, ScrollView} from 'react-native'
-import React, { useState } from 'react'
-import { useRouter } from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Image } from 'react-native'
-import { TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
-import FormField from '../../components/FormField'
+import { useRouter } from 'expo-router'
+import { useState } from 'react'
+import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomBTN from '../../components/CustomBTN'
-import { sendPasswordReset } from '../../Database/authentication'
+import FormField from '../../components/FormField'
 import { images } from '../../constants'
+import { sendPasswordReset } from '../../Database/authentication'
 
 
 export default function resetPassword() {
@@ -38,7 +36,7 @@ export default function resetPassword() {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-        <View className="w-full justify-center px-4 my-6">
+        <View className={`${Platform.isPad ? 'w-3/4 mx-auto' : 'w-full'} justify-center px-4 my-6`}>
 
           <View className="mb-15 px-2 pt-10">
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
@@ -48,10 +46,17 @@ export default function resetPassword() {
           </View>
 
 
-          <Image 
-          source={images.logoV4} 
-          className="w-[175px] h-[15vh] mx-auto mt-10" 
-          resizeMode='contain' />
+          {Platform.isPad ?
+             <View>
+                <Image source={images.logoV4}
+                className="w-[275px] h-[40vh]"
+                resizeMode='contain' />
+             </View>
+              :(
+              <Image source={images.logoV4}
+              className="w-[175px] h-[35vh]"
+              resizeMode='contain' />
+              )}
           
           <Text className="text-3xl text-darkGold font-bold mt-10">Reset Password</Text>
 

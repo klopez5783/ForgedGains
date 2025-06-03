@@ -1,6 +1,5 @@
-import { View, Dimensions } from "react-native";
-import React from "react";
-import Svg, { Path , Circle, Text } from "react-native-svg";
+import { Dimensions, Platform, View } from "react-native";
+import Svg, { Circle, Path, Text } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
 
@@ -66,30 +65,36 @@ export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protei
 
   
   return (
-    <View style={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
-      <Svg height={height * 0.10} width={width * 0.35} viewBox="0 0 100 100">
-        {paths}
-        <Circle cx={cx} cy={cy}  r="35" stroke="#1F1F22" fill="#1F1F22" />
-        <Text 
-          x={cx} 
-          y={cy - 5} 
-          fontSize="18" 
-          fontWeight="bold" 
-          textAnchor="middle" 
-          fill="white"
-        >
-          {Calories}
-        </Text>
-        <Text
-        x={cx} 
-        y={cy + 15} 
-        fontSize="18" 
-        fontWeight="bold" 
-        textAnchor="middle" 
-        fill="white">kcal</Text>
-        
-      </Svg>
-    </View>
-  );
+  <View style={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
+    <Svg
+      height={Platform.isPad ? height * 0.12 : height * 0.10}
+      width={Platform.isPad ? width * 0.30 : width * 0.35}
+      viewBox="0 0 100 100"
+    >
+      {paths}
+      <Circle cx={cx} cy={cy} r="35" stroke="#1F1F22" fill="#1F1F22" />
+      <Text
+        x={cx}
+        y={cy - 5}
+        fontSize="18"
+        fontWeight="bold"
+        textAnchor="middle"
+        fill="white"
+      >
+        {Calories}
+      </Text>
+      <Text
+        x={cx}
+        y={cy + 15}
+        fontSize="18"
+        fontWeight="bold"
+        textAnchor="middle"
+        fill="white"
+      >
+        kcal
+      </Text>
+    </Svg>
+  </View>
+);
 }
 
