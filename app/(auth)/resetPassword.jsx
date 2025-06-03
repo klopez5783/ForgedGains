@@ -36,27 +36,21 @@ export default function resetPassword() {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-        <View className={`${Platform.isPad ? 'w-3/4 mx-auto' : 'w-full'} justify-center px-4 my-6`}>
+        <View className={`mx-auto justify-center px-4 my-6`}>
 
           <View className="mb-15 px-2 pt-10">
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
               <AntDesign name="arrowleft" size={30} color="#FFC300" />
-              <Text className="text-lg font-psemibold text-darkGold ml-2">Sign In</Text>
+              <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Sign Up</Text>
             </TouchableOpacity>
           </View>
 
 
-          {Platform.isPad ?
-             <View>
-                <Image source={images.logoV4}
-                className="w-[275px] h-[40vh]"
-                resizeMode='contain' />
-             </View>
-              :(
+            <View>
               <Image source={images.logoV4}
-              className="w-[175px] h-[35vh]"
-              resizeMode='contain' />
-              )}
+                className={`${Platform.isPad ? "w-[275px] h-[40vh]" : "w-[175px] h-[35vh]"} mx-auto`}
+                resizeMode='contain' />
+            </View>
           
           <Text className="text-3xl text-darkGold font-bold mt-10">Reset Password</Text>
 
