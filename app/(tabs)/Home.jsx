@@ -115,7 +115,7 @@ useEffect(() => {
   return (
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
-      <View   className={`justify-center ${Platform.isPad ? 'w-3/4' : 'w-full'} mx-auto px-4`}>
+      <View className={`justify-center ${Platform.isPad ? 'w-3/4' : 'w-full'} mx-auto px-4`}>
         <Text className="text-3xl text-darkGold font-bold mt-10">
           Home
         </Text>
