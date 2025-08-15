@@ -137,6 +137,8 @@ export default function Calculator() {
         updateUser(updatedUser);
         updateFitnessData(user, form);
 
+        console.log("Moving to Home Page")
+
         router.push('/Home');
 
 
@@ -210,33 +212,32 @@ export default function Calculator() {
        Deficit Calculator
          </Text>
      {/* Weight & Height */}
-         <View className="flex flex-row mx-auto w-3/5 justify-evenly mt-7">
+         <View className="flex flex-row mx-auto w-full justify-evenly mt-7">
             <View className="w-1/2 p-1">
-             <Text className="font-pmedium text-white text-lg">Weight</Text>
-             <Pressable
-              className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
-              onPress={() => setModalVisible(true)}
-            >
-              <Text className={`text-white ${form.Weight ? "font-pmedium" : "font-pextralight"} self-center text-xl h-full pt-3`}>
-                {form.Weight ? `${form.Weight} ${selectedWeightUnit}` : "Enter Weight"}
-              </Text>
-            </Pressable>
-          </View>
-          <View className="w-1/2 p-1">
-            <Text className="font-pmedium text-white text-lg">Height</Text>
-            <Pressable
-              className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
-              onPress={() => setHeightModalVisible(true)}
-            >
-              <Text className={`text-white ${form.Height != "0'0" ? "font-pmedium" : "font-pextralight"} self-center text-xl h-full pt-3`}>
-                {form.Height != "0'0" ? `${form.Height} ${selectedHeightUnit}` : "Enter Height"}
-              </Text>
-            </Pressable>
-          </View> 
+              <Text className="font-pmedium text-white text-lg">Weight</Text>
+              <Pressable
+                className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
+                onPress={() => setModalVisible(true)}>
+                <Text className={`text-white ${form.Weight ? "font-pmedium" : "font-pextralight"} self-center text-xl h-full pt-3`}>
+                  {form.Weight ? `${form.Weight} ${selectedWeightUnit}` : "Enter Weight"}
+                </Text>
+              </Pressable>
+            </View>
+            <View className="w-1/2 p-1">
+              <Text className="font-pmedium text-white text-lg">Height</Text>
+              <Pressable
+                className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
+                onPress={() => setHeightModalVisible(true)}
+              >
+                <Text className={`text-white ${form.Height != "0'0" ? "font-pmedium" : "font-pextralight"} self-center text-xl h-full pt-3`}>
+                  {form.Height != "0'0" ? `${form.Height} ${selectedHeightUnit}` : "Enter Height"}
+                </Text>
+              </Pressable>
+            </View> 
         </View>
 
         {/* Gender */}
-        <View className="w-3/5 p-1">
+        <View className="w-full p-1">
           <Text className="text-lg text-white font-pmedium mt-7">Gender</Text>
         <Select
           optionOne="Male"
