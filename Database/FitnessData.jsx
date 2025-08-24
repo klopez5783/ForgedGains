@@ -1,5 +1,5 @@
-import {doc, getDoc, updateDoc, serverTimestamp} from "firebase/firestore";
-import {db} from "../fireBaseConfig";
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../fireBaseConfig";
 
 
 
@@ -38,6 +38,10 @@ export const updateFitnessData = async (user, updatedFitnessData) => {
 
     const userRef = doc(db, "users", user.uid);
 
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+    // ✅ Document exists → safe to update
     await updateDoc(userRef, {
       bodyFat: updatedFitnessData.BodyFat,
       weight: updatedFitnessData.Weight,
@@ -47,6 +51,18 @@ export const updateFitnessData = async (user, updatedFitnessData) => {
       bodyFatUpdatedAt: serverTimestamp(),
       weightUpdatedAt: serverTimestamp()
     });
+  } else {
+    // ❌ Document doesn’t exist → create it instead
+    await setDoc(userRef, {
+      bodyFat: updatedFitnessData.BodyFat,
+      weight: updatedFitnessData.Weight,
+      height: updatedFitnessData.Height,
+      age: updatedFitnessData.Age,
+      gender: updatedFitnessData.Gender,
+      bodyFatUpdatedAt: serverTimestamp(),
+      weightUpdatedAt: serverTimestamp()
+    });
+  }
 
     console.log("Fitness data updated successfully!");
   } catch (error) {

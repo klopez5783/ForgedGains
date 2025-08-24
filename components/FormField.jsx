@@ -9,11 +9,11 @@ export default function FormField({title , value , placeholder , handleChangeTex
 
   return (
     <View className={`w-full ${otherStyles}`}>
-      {Platform.isPad ? <Text className="text-gray-100 text-2xl font-pmedium">{title}</Text> : <Text className="text-base text-gray-100 font-pmedium">{title}</Text>}
+      {Platform.isPad ? <Text className="text-gray-100 text-xl font-pmedium">{title}</Text> : <Text className="text-base text-gray-100 font-pmedium">{title}</Text>}
       {Platform.isPad ? 
       <View className="
       mx-auto
-      w-3/5 h-16 px-4 
+       h-16 px-4 
       bg-backGround-300
       rounded-2xl
       focus:border-#0A52FF items-center flex-row ">

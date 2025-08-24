@@ -14,7 +14,7 @@
         "light": "./assets/icons/ios-light.png",
         "tinted": "./assets/icons/ios-tinted.png"
       },
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.klopez1.ForgedGains",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false

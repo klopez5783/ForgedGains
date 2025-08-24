@@ -18,7 +18,7 @@ const CustomBTN = ({ width , Title , handlePress , containerStyles , textStyles,
       style={{ width: width }}
     >
       {Platform.isPad ? (
-        <Text className={`text-backGround text-xl font-pbold ${textStyles}`}>{Title}</Text>
+        <Text className={`text-backGround text-xl text-center font-pbold ${textStyles}`}>{Title}</Text>
       ) : (
         <Text className={`text-backGround font-psemibold ${textStyles}`}>{Title}</Text>
       )}
