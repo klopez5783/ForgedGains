@@ -64,7 +64,7 @@ const TabsLayout = () => {
 
         {/* Floating Chat Button */}
       <TouchableOpacity
-        onPress={() => navigation.navigate('chatScreen')} // Navigate to the ChatScreen
+        onPress={() => navigation.navigate('api/chatScreen')} // Navigate to the ChatScreen
         className="absolute bottom-24 right-4 bg-yellow-400 p-4 rounded-full shadow-lg"
       >
         <Image source={icons.chat} className="w-6 h-6" />

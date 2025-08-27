@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, ScrollView, Text, TextInput, View } from "react-native";
 
-export default function ChatScreen() {
+export default function chatScreen() {
   const [messages, setMessages] = useState([]); // chat history
   const [input, setInput] = useState("");       // current text
 

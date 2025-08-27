@@ -39,8 +39,7 @@ export default function RootLayout() {
           <Stack.Screen name="neckMeasurement" options={{ headerShown: false }} />
           <Stack.Screen name="hipMeasurements" options={{ headerShown: false }} />
           <Stack.Screen 
-            name="chatScreen"
-            component={ChatScreen} 
+            name="api/chatScreen"   //
             options={{ 
               headerShown: false,
               presentation: "modal" // 👈 makes it appear as a modal
