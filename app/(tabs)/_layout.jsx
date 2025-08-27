@@ -1,7 +1,6 @@
-import { View, Text, Image } from 'react-native'
-import { Tabs, Redirect } from 'expo-router'
-import { icons } from '../../constants'
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { Tabs } from 'expo-router';
+import { Image, Text, View } from 'react-native';
+import { icons } from '../../constants';
 
 function TabIcon({ icon, color, name, focused }) {
     return (
@@ -29,10 +28,11 @@ const TabsLayout = () => {
         tabBarActiveTintColor: '#FFC300',
         tabBarInactiveTintColor: '#996B00',
         tabBarStyle: {
-            backgroundColor: '#000814',
+            backgroundColor: '#000814', // or white if you want
             borderTopWidth: 1,
             borderTopColor: '#996B00',
-            height: 84,
+            height: 84,        // keep at a normal size
+            position: 'absolute', // 👈 forces it to sit above content
         }
     }}
     >

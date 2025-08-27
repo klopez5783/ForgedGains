@@ -153,7 +153,7 @@ export default function Calculator() {
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
 
-        <View className={`mx-auto justify-center px-4 my-6`}>
+        <View className={`mx-auto justify-center px-4`}>
     
            <Text className="text-3xl text-darkGold font-bold mt-10">
        Deficit Calculator

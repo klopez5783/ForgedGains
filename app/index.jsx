@@ -9,9 +9,6 @@ import { useGlobalContext } from '../context/globalProvider';
 import { getUserData } from '../Database/FitnessData';
 import "../global.css";
 
-
-
-
 export default function App() {
   
   const {user} = useGlobalContext();
