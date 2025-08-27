@@ -1,57 +1,77 @@
 import { useState } from "react";
 import { Button, ScrollView, Text, TextInput, View } from "react-native";
 
-// Chat screen component
 export default function ChatScreen() {
-  // State to store chat history (array of messages)
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]); // chat history
+  const [input, setInput] = useState("");       // current text
 
-  // State to store the text currently typed in the input box
-  const [input, setInput] = useState("");
+  // Send message to backend
+  const sendMessage = async () => {
+    if (!input.trim()) return; // don't send empty
 
-  // Example fetch call in your Expo app
-const sendMessage = async (userMessage) => {
-  const response = await fetch("http://192.168.1.50:5000/chat", {
-    method: "POST", // Send a POST request
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      messages: [{ role: "user", content: userMessage }], // Send user’s message
-    }),
-  });
+    // Add user message immediately to chat
+    const userMessage = { role: "user", content: input };
+    setMessages((prev) => [...prev, userMessage]);
 
-  const data = await response.json(); // Parse JSON reply
-  return data.reply; // Return reply text from backend
-};
+    // Clear input field
+    setInput("");
 
+    try {
+      // Call backend
+      const response = await fetch("http://192.168.1.50:5000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [{ role: "user", content: userMessage.content }],
+        }),
+      });
 
-  // The UI layout of the chat screen
+      const data = await response.json();
+
+      // Add assistant reply
+      const botMessage = { role: "assistant", content: data.reply };
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // fallback message if server fails
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "⚠️ Sorry, I couldn’t reach the server." },
+      ]);
+    }
+  };
+
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      {/* Scrollable area to display all messages */}
-      <ScrollView style={{ flex: 1 }}>
+      {/* Chat messages */}
+      <ScrollView style={{ flex: 1, marginBottom: 8 }}>
         {messages.map((msg, i) => (
           <Text
             key={i}
-            // User messages are blue, assistant messages are green
-            style={{ color: msg.role === "user" ? "blue" : "green" }}
+            style={{
+              color: msg.role === "user" ? "blue" : "green",
+              marginBottom: 4,
+            }}
           >
-            {/* Display who sent the message and its content */}
             {msg.role}: {msg.content}
           </Text>
         ))}
       </ScrollView>
 
-      {/* Input box for typing a new message */}
+      {/* Input + Send */}
       <TextInput
-        style={{ borderWidth: 1, marginBottom: 8, padding: 8 }}
-        value={input}                 // value comes from state
-        onChangeText={setInput}       // update state whenever user types
-        placeholder="Type a message..." // gray hint text when empty
+        style={{
+          borderWidth: 1,
+          padding: 8,
+          marginBottom: 8,
+          borderRadius: 4,
+        }}
+        value={input}
+        onChangeText={setInput}
+        placeholder="Type a message..."
       />
 
-      {/* Button to send the message */}
       <Button title="Send" onPress={sendMessage} />
     </View>
   );
 }
-

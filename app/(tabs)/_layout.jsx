@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { icons } from '../../constants';
 
 function TabIcon({ icon, color, name, focused }) {
@@ -19,6 +20,10 @@ function TabIcon({ icon, color, name, focused }) {
 }
 
 const TabsLayout = () => {
+
+      const navigation = useNavigation();
+
+
   return (
    <>
     <Tabs
@@ -56,6 +61,15 @@ const TabsLayout = () => {
         }}
         />
     </Tabs>
+
+        {/* Floating Chat Button */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('chatScreen')} // Navigate to the ChatScreen
+        className="absolute bottom-24 right-4 bg-yellow-400 p-4 rounded-full shadow-lg"
+      >
+        <Image source={icons.chat} className="w-6 h-6" />
+      </TouchableOpacity>
+
    </>
   )
 }

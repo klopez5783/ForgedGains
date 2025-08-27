@@ -2,7 +2,6 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import GlobalProvider from '../context/globalProvider';
-// import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,6 +38,14 @@ export default function RootLayout() {
           <Stack.Screen name="waistMeasurement" options={{ headerShown: false }} />
           <Stack.Screen name="neckMeasurement" options={{ headerShown: false }} />
           <Stack.Screen name="hipMeasurements" options={{ headerShown: false }} />
+          <Stack.Screen 
+            name="chatScreen"
+            component={ChatScreen} 
+            options={{ 
+              headerShown: false,
+              presentation: "modal" // 👈 makes it appear as a modal
+            }} 
+          />
         </Stack>
     </GlobalProvider>
   );
