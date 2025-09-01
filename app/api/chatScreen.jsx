@@ -1,64 +1,85 @@
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Button, ScrollView, Text, TextInput, View } from "react-native";
+import { Button, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 
 export default function chatScreen() {
   const [messages, setMessages] = useState([]); // chat history
   const [input, setInput] = useState("");       // current text
+  const navigation = useNavigation();           // navigation instance
 
   // Send message to backend
   const sendMessage = async () => {
-    if (!input.trim()) return; // don't send empty
+  if (!input.trim()) return;
 
-    // Add user message immediately to chat
-    const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+  // Add user message immediately to chat
+  const userMessage = { role: "user", parts: [{ text: input }] };
+  setMessages((prev) => [...prev, userMessage]);
+  setInput("");
 
-    // Clear input field
-    setInput("");
+  try {
+    // Call backend
+    const response = await fetch("http://192.168.1.50:5000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `You are an expert fitness coach and certified nutritionist. 
+                    Only provide advice related to fitness, exercise, diet, and nutrition. 
+                    Do not answer questions on topics outside of this domain. 
+                    If a user asks for information outside of your expertise, politely state that you can only help with fitness and nutrition.
+                    The user's data is: Weight: 180 lbs, Height: 5'10", Gender: Male, Caloric Maintenance: 2500, Activity Level: Moderately Active.`
+              }
+            ]
+          },
+          ...messages,
+          userMessage
+        ],
+      }),
+    });
 
-    try {
-      // Call backend
-      const response = await fetch("http://192.168.1.50:5000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "user", content: userMessage.content }],
-        }),
-      });
-
-      const data = await response.json();
-
-      // Add assistant reply
-      const botMessage = { role: "assistant", content: data.reply };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      // fallback message if server fails
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "⚠️ Sorry, I couldn’t reach the server." },
-      ]);
-    }
-  };
+    const data = await response.json();
+    const botMessage = { role: "assistant", parts: [{ text: data.reply }] };
+    setMessages((prev) => [...prev, botMessage]);
+  } catch (error) {
+    console.error("Error sending message:", error);
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "⚠️ Sorry, I couldn’t reach the server." },
+    ]);
+  }
+};
 
   return (
+    <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={10}
+          style={{ flex: 1 }}
+        >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <View style={{ flex: 1, padding: 16 }}>
+              <Button title="Exit Chat" onPress={() => navigation.goBack()} />
       {/* Chat messages */}
       <ScrollView style={{ flex: 1, marginBottom: 8 }}>
-        {messages.map((msg, i) => (
-          <Text
-            key={i}
-            style={{
-              color: msg.role === "user" ? "blue" : "green",
-              marginBottom: 4,
-            }}
-          >
-            {msg.role}: {msg.content}
-          </Text>
-        ))}
+          {messages.map((msg, i) => (
+              <Text
+                  key={i}
+                  style={{
+                      color: msg.role === "user" ? "blue" : "green",
+                      marginBottom: 4,
+                  }}
+              >
+                  {/* ⚠️ Change msg.content to msg.parts[0].text */}
+                  {msg.role}: {msg.parts[0].text} 
+              </Text>
+          ))}
       </ScrollView>
-
       {/* Input + Send */}
+      
+      
       <TextInput
         style={{
           borderWidth: 1,
@@ -71,7 +92,12 @@ export default function chatScreen() {
         placeholder="Type a message..."
       />
 
+      
+
       <Button title="Send" onPress={sendMessage} />
-    </View>
+      </View>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    
   );
 }

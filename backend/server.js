@@ -16,12 +16,13 @@ const client = new OpenAI({
 // POST /chat endpoint
 app.post("/chat", async (req, res) => {
   try {
-    const { messages } = req.body; // Get messages array from frontend
+    const { messages } = req.body; // This array now has the correct format
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o", // ✅ Using GPT-4o
-      messages, // Pass messages directly
-    });
+    // Use Gemini
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // ⚠️ Pass the entire messages array directly
+    const result = await model.generateContent({ contents: messages });
 
     const reply = completion.choices[0].message.content;
 
