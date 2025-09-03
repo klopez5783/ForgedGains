@@ -59,7 +59,7 @@ export default function Calculator() {
         Age: user?.age || prevForm.Age || "",
         Gender: user?.gender || prevForm.Gender || "",
         Weight: user?.weight || prevForm.Weight || "",
-        Height: user?.height || prevForm.Height || "",
+        height: user?.height || prevForm.height || "",
       }));
     }else{
       console.log("User is not defined")
@@ -77,9 +77,9 @@ export default function Calculator() {
     console.log("Feet and Inches changed:", selectedFeet, selectedInches);
     
     if (selectedHeightUnit === "CM") {
-      setForm({...form, Height: selectedCentimeters});
+      setForm({...form, height: selectedCentimeters});
     } else {
-      setForm({...form, Height: selectedFeet + "'" + selectedInches});
+      setForm({...form, height: selectedFeet + "'" + selectedInches});
     }
   }, [selectedFeet, selectedInches]); // Runs when selectedFeet or selectedInches change
   
@@ -87,7 +87,7 @@ export default function Calculator() {
   const [form, setForm] = useState({
     Gender: '',
     Weight: '',
-    Height: '',
+    height: '',
     Age: '',
     BodyFat: 0,
     ActivityLevel: ''
@@ -114,7 +114,7 @@ export default function Calculator() {
     const handleNavigateToBodyFat = () => {
       console.log("Form", form);
       if (!form.Gender) return alert("Please select Gender");
-      if (form.Height == "0'0") return alert("Please enter Height");
+      if (form.height == "0'0") return alert("Please enter Height");
       console.log("Navigating to Body Fat");
       navigation.navigate("waistMeasurement", { form });
     }
@@ -128,7 +128,7 @@ export default function Calculator() {
         const updatedUser = {
           ...user,
           gender: form.Gender || user.gender, // Use form value if available, else keep existing value
-          height: Number(form.Height) || user.height,
+          height: Number(form.height) || user.height,
           weight: Number(form.Weight) || user.weight,
           bodyFat: Number(form.BodyFat) || user.bodyFat,
           firstName: form.FirstName,
@@ -177,8 +177,8 @@ export default function Calculator() {
                 className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
                 onPress={() => setHeightModalVisible(true)}
               >
-                <Text className={`text-white ${form.Height != "0'0" ? "font-pmedium" : "font-pextralight"} self-center text-xl h-full pt-3`}>
-                  {form.Height != "0'0" ? `${form.Height} ${selectedHeightUnit}` : "Enter Height"}
+                <Text className={`text-white ${form.height != "0'0" ? "font-pmedium" : "font-pextralight"} self-center text-xl h-full pt-3`}>
+                  {form.height != "0'0" ? `${form.height} ${selectedHeightUnit}` : "Enter Height"}
                 </Text>
               </Pressable>
             </View> 
@@ -350,10 +350,10 @@ export default function Calculator() {
                   otherStyles="bg-darkGold self-center mt-2"
                   handlePress={() => {
                     if (selectedHeightUnit === "CM") {
-                      setForm({ ...form, Height: selectedCentimeters });
+                      setForm({ ...form, height: selectedCentimeters });
                       setHeightModalVisible(!heightModalVisible);
                     } else {
-                      setForm({ ...form, Height: selectedFeet + "'" + selectedInches });
+                      setForm({ ...form, height: selectedFeet + "'" + selectedInches });
                       setHeightModalVisible(!heightModalVisible);
                     }
                   }}
