@@ -1,11 +1,25 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { useGlobalContext } from "../../context/globalProvider";
+import { getUserData } from "../../Database/FitnessData";
 
-export default function chatScreen() {
+
+export default function ChatScreen() {
+  const { user } = useGlobalContext();
+  const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]); // chat history
   const [input, setInput] = useState("");       // current text
   const navigation = useNavigation();           // navigation instance
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await getUserData(user);
+      console.log("User Data in ChatScreen:", data);
+      setUserData(data);
+    };
+    fetchUserData();
+  }, [user]);
 
   // Send message to backend
   const sendMessage = async () => {
@@ -31,7 +45,7 @@ export default function chatScreen() {
                     Only provide advice related to fitness, exercise, diet, and nutrition. 
                     Do not answer questions on topics outside of this domain. 
                     If a user asks for information outside of your expertise, politely state that you can only help with fitness and nutrition.
-                    The user's data is: Weight: 180 lbs, Height: 5'10", Gender: Male, Caloric Maintenance: 2500, Activity Level: Moderately Active.`
+                    The user's data is: Weight: ${data.weight}, Height: ${data.height}, Gender: ${data.gender}, Activity Level: ${data.activityLevel}.`
               }
             ]
           },

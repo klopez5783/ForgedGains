@@ -127,17 +127,18 @@ export default function Calculator() {
         
         const updatedUser = {
           ...user,
-          gender: form.Gender || user.gender, // Use form value if available, else keep existing
+          gender: form.Gender || user.gender, // Use form value if available, else keep existing value
           height: Number(form.Height) || user.height,
           weight: Number(form.Weight) || user.weight,
           bodyFat: Number(form.BodyFat) || user.bodyFat,
-          firstName: form.FirstName
+          firstName: form.FirstName,
+          activityLevel: form.ActivityLevel || user.activityLevel,
+          age: Number(form.Age) || user.age,
         };
     
         updateUser(updatedUser);
         updateFitnessData(user, form);
-
-        console.log("Moving to Home Page")
+        
 
         router.push('/Home');
 

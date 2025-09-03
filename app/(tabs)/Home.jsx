@@ -67,29 +67,32 @@ useEffect(() => {
 
 useEffect(() => {
   if (userFitnessData) {
-    const weightKg = userFitnessData.weight * 0.453592; // Convert lbs to kg
-    const heightCm = (5 * 30.48) + (9 * 2.54); // Convert 5'9" to cm
+    // const weightKg = userFitnessData.weight * 0.453592; // Convert lbs to kg
+    // const heightCm = (5 * 30.48) + (9 * 2.54); // Convert 5'9" to cm
 
-    let calculatedBMR;
-    if (userFitnessData.gender === "Male") {
-      calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) + 5;
-    } else {
-      calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) - 161;
-    }
+    // let calculatedBMR;
+    // if (userFitnessData.gender === "Male") {
+    //   calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) + 5;
+    // } else {
+    //   calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) - 161;
+    // }
 
-    setBmr(Math.round(calculatedBMR));
+    // setBmr(Math.round(calculatedBMR));
 
-    // Assume Moderate Exercise (adjust as needed)
-    const calculatedTDEE = calculatedBMR * 1.55;
-    setTdee(Math.round(calculatedTDEE));
+    // // Assume Moderate Exercise (adjust as needed)
+    // const calculatedTDEE = calculatedBMR * 1.55;
+    // setTdee(Math.round(calculatedTDEE));
 
-    const protein = Math.round(((calculatedTDEE - 500) * 0.3) / 4); // 30% of TDEE from protein
-    const fats = Math.round(((calculatedTDEE - 500) * 0.2) / 9); // 25% of TDEE from fats
-    const carbs = Math.round(((calculatedTDEE - 500) * 0.45) / 4); // 45% of TDEE from carbs
+    // const protein = Math.round(((calculatedTDEE - 500) * 0.3) / 4); // 30% of TDEE from protein
+    // const fats = Math.round(((calculatedTDEE - 500) * 0.2) / 9); // 25% of TDEE from fats
+    // const carbs = Math.round(((calculatedTDEE - 500) * 0.45) / 4); // 45% of TDEE from carbs
+
+    console.log("userFitnessData", userFitnessData);
+
     setMacros({ // ✅ Use state setter to trigger re-render
-      "Fats": fats,
-      "Carbs": carbs,
-      "Protein": protein
+      "Fats": userFitnessData.fats,
+      "Carbs": userFitnessData.carbs,
+      "Protein": userFitnessData.protein
     });
 
   }
@@ -99,7 +102,7 @@ useEffect(() => {
 
 
 useEffect(() => {
-  console.log("User Fitness Data Set:", userFitnessData);
+  console.log("User Fitness Data Set");
 }, [userFitnessData]); // Logs when `userFitnessData` changes
 
   const handleSignOut = async() => {

@@ -5,9 +5,6 @@ const { width, height } = Dimensions.get("window");
 
 export default function PieChart({ Data = {"Fats" : 50 , "Carbs" : 200 , "Protein" : 150} , Calories = 1600}) {
 
-  console.log("Data", Data);
-  console.log("Calories", Calories);
-
   const cx = 50, cy = 50, r = 45; // Center and radius of the circle
   
   let startAngle = 0; // Starting angle for the first segment
