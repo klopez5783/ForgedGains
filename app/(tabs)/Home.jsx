@@ -51,6 +51,10 @@ useEffect(() => {
             bodyFat: data.bodyFat || "",
             bodyFatTimeStamp: bodyFatFormattedDate || "",
             weightTimeStamp: WeightFormattedDate || "",
+            activityLevel: data.activityLevel || "",
+            protein: data.protein || "",
+            carbs: data.carbs || "",
+            fats: data.fats || ""
           });
         }
       } catch (error) {
@@ -67,25 +71,25 @@ useEffect(() => {
 
 useEffect(() => {
   if (userFitnessData) {
-    // const weightKg = userFitnessData.weight * 0.453592; // Convert lbs to kg
-    // const heightCm = (5 * 30.48) + (9 * 2.54); // Convert 5'9" to cm
+    const weightKg = userFitnessData.weight * 0.453592; // Convert lbs to kg
+    const heightCm = (5 * 30.48) + (9 * 2.54); // Convert 5'9" to cm
 
-    // let calculatedBMR;
-    // if (userFitnessData.gender === "Male") {
-    //   calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) + 5;
-    // } else {
-    //   calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) - 161;
-    // }
+    let calculatedBMR;
+    if (userFitnessData.gender === "Male") {
+      calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) + 5;
+    } else {
+      calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) - 161;
+    }
 
-    // setBmr(Math.round(calculatedBMR));
+    setBmr(Math.round(calculatedBMR));
 
-    // // Assume Moderate Exercise (adjust as needed)
-    // const calculatedTDEE = calculatedBMR * 1.55;
-    // setTdee(Math.round(calculatedTDEE));
+    // Assume Moderate Exercise (adjust as needed)
+    const calculatedTDEE = calculatedBMR * 1.55;
+    setTdee(Math.round(calculatedTDEE));
 
-    // const protein = Math.round(((calculatedTDEE - 500) * 0.3) / 4); // 30% of TDEE from protein
-    // const fats = Math.round(((calculatedTDEE - 500) * 0.2) / 9); // 25% of TDEE from fats
-    // const carbs = Math.round(((calculatedTDEE - 500) * 0.45) / 4); // 45% of TDEE from carbs
+    const protein = Math.round(((calculatedTDEE - 500) * 0.3) / 4); // 30% of TDEE from protein
+    const fats = Math.round(((calculatedTDEE - 500) * 0.2) / 9); // 25% of TDEE from fats
+    const carbs = Math.round(((calculatedTDEE - 500) * 0.45) / 4); // 45% of TDEE from carbs
 
     console.log("userFitnessData", userFitnessData);
 
@@ -185,25 +189,36 @@ useEffect(() => {
               <View className="flex-row justify-evenly">
                 <View className={`${Platform.isPad ? "" : "w-1/4"} mx-auto grid grid-cols-3 gap-1 justify-center`}>
 
-                    <View className="flex-row justify-between">
-                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-green-500 font-psemibold`}>Protein: </Text>
-                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-green-500 font-psemibold`}>{Macros.Protein}g</Text>
-                    </View>
-                    <View className="flex-row justify-evenly">
-                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>Fats:</Text>
-                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>{Macros.Fats}g</Text>
-                    </View>
-                    <View className="flex-row justify-between">
-                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-blue-500 font-psemibold`}>Carbs: </Text>
-                      <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-blue-500 font-psemibold`}>{Macros.Carbs}g</Text>
-                    </View>
+                    {/* ✅ Add this conditional check */}
+                    {Macros && (
+                        <View className="flex-col"> {/* Use flex-col to stack the rows */}
+                            <View className="flex-row justify-between">
+                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-green-500 font-psemibold`}>Protein: </Text>
+                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-green-500 font-psemibold`}>{Macros.Protein}g</Text>
+                            </View>
+                            <View className="flex-row justify-between"> {/* Changed from justify-evenly */}
+                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>Fats:</Text>
+                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>{Macros.Fats}g</Text>
+                            </View>
+                            <View className="flex-row justify-between">
+                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-blue-500 font-psemibold`}>Carbs: </Text>
+                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-blue-500 font-psemibold`}>{Macros.Carbs}g</Text>
+                            </View>
+                        </View>
+                    )}
+
+                    {/* Or you can use a loading indicator */}
+                    {!Macros && <ActivityIndicator size="large" />}
                     
                 </View>
-                <View clasName="mx-auto">
-                    <PieChart
-                    Data={Macros}
-                    Calories={tdee - 500}
-                    />
+                  <View className="mx-auto">
+                    {/* ✅ Conditional check: Render the chart only if Macros is not null */}
+                    {Macros && (
+                        <PieChart
+                            Data={Macros}
+                            Calories={tdee - 500}
+                        />
+                    )}
                 </View>
               </View>
             </View>
