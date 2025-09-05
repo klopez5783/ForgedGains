@@ -54,7 +54,12 @@ useEffect(() => {
             activityLevel: data.activityLevel || "",
             protein: data.protein || "",
             carbs: data.carbs || "",
-            fats: data.fats || ""
+            fats: data.fats || "",
+            bmr: data.bmr || "",
+            calories: data.calories || "",
+            fats: data.fats || "",
+            carbs: data.carbs || "",
+            protein: data.protein || "",
           });
         }
       } catch (error) {
@@ -81,11 +86,11 @@ useEffect(() => {
       calculatedBMR = (10 * weightKg) + (6.25 * heightCm) - (5 * userFitnessData.age) - 161;
     }
 
-    setBmr(Math.round(calculatedBMR));
+    setBmr(userFitnessData.bmr ? Math.round(userFitnessData.bmr) : Math.round(calculatedBMR));
 
     // Assume Moderate Exercise (adjust as needed)
-    const calculatedTDEE = calculatedBMR * 1.55;
-    setTdee(Math.round(calculatedTDEE));
+    const calculatedTDEE = userFitnessData.bmr * 1.55;
+    setTdee(userFitnessData.calories ? Math.round(userFitnessData.calories) : Math.round(calculatedTDEE));
 
     const protein = Math.round(((calculatedTDEE - 500) * 0.3) / 4); // 30% of TDEE from protein
     const fats = Math.round(((calculatedTDEE - 500) * 0.2) / 9); // 25% of TDEE from fats
@@ -94,9 +99,9 @@ useEffect(() => {
     console.log("userFitnessData", userFitnessData);
 
     setMacros({ // ✅ Use state setter to trigger re-render
-      "Fats": userFitnessData.fats,
-      "Carbs": userFitnessData.carbs,
-      "Protein": userFitnessData.protein
+      "Fats": userFitnessData.fats ? userFitnessData.fats : fats,
+      "Carbs": userFitnessData.carbs ? userFitnessData.carbs : carbs,
+      "Protein": userFitnessData.protein ? userFitnessData.protein : protein
     });
 
   }
@@ -237,13 +242,7 @@ useEffect(() => {
                 </Text>
               </View>
             </View>
-
-
-
           </View>
-
-
-
 
         <CustomBTN
         Title="Sign Out"
