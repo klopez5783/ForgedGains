@@ -43,15 +43,16 @@ export default function Home() {
                             activityLevel: data.activityLevel || "",
                             // Use parsed values with a fallback to 0
                             bmr: parseFloat(data.bmr) || 0,
-                            calories: parseFloat(data.calories) || 0,
                             protein: parseFloat(data.protein) || 0,
                             carbs: parseFloat(data.carbs) || 0,
                             fats: parseFloat(data.fats) || 0,
+                            tdee: parseFloat(data.tdee) || 0,
                         };
 
                         setUserFitnessData(parsedData);
+                        console.log("User Fitness Data:", parsedData);
                         setBmr(parsedData.bmr);
-                        setTdee(parsedData.tedee);
+                        setTdee(parsedData.tdee);
                         setMacros({
                             "Fats": parsedData.fats,
                             "Carbs": parsedData.carbs,
