@@ -6,11 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../components/CustomBTN';
 import { images } from '../constants';
 import { useGlobalContext } from '../context/globalProvider';
-import { getUserData } from '../Database/FitnessData';
 import "../global.css";
-
-
-
 
 export default function App() {
   
@@ -18,7 +14,6 @@ export default function App() {
   const router = useRouter();
   
   if(user) {
-    getUserData(user);
     setTimeout(() => {
     router.replace("/(tabs)/Home");
     }, 1);
