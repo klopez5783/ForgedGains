@@ -18,6 +18,7 @@ export default function ChatScreen() {
         try {
           const data = await getUserData(user);
           console.log("User Data in ChatScreen:\n", data);
+          console.log("\n\nUser ID in ChatScreen:\n", user);
           console.log("********************************************************************************");
           setUserData(data); // Set the fetched data to state
         } catch (error) {
@@ -29,12 +30,26 @@ export default function ChatScreen() {
     fetchUserData();
   }, [user]); // Re-run if user changes
 
+   // 2. Send the initial greeting message automatically
+ useEffect(() => {
+ if (userData && messages.length === 0) {
+      const systemPrompt = `Hello! I'm your virtual fitness coach and nutritionist. \n\nBased on the data you provided, I can see your weight is ${userData?.weight || 'N/A'}, your height is ${userData?.height || 'N/A'}, your gender is ${userData?.gender || 'N/A'}, and your activity level is ${userData?.activityLevel || 'N/A'}.\n\nI'm here to provide personalized guidance to help you reach your goals. How can I assist you today?`
+      const initialMessage = { 
+        role: "Fitbot", 
+        parts: [{ text: systemPrompt }] 
+ };
+
+     // Send the greeting by setting the messages state
+     setMessages([initialMessage]);
+ }
+ }, [userData, messages]); // Re-run when userData is populated
+
   // Send message to backend
   const sendMessage = async () => {
     if (!input.trim() || !userData) return; // Prevent sending if input is empty OR userData is not loaded
 
     // Add user message immediately to chat
-    const userMessage = { role: "user", parts: [{ text: input }] };
+    const userMessage = { role: `${userData.firstName}`, parts: [{ text: input }] };
     setMessages((prev) => [...prev, userMessage]);
     setInput(""); // Clear input field
 
@@ -49,14 +64,17 @@ export default function ChatScreen() {
           // This example assumes the backend will handle the system prompt.
           messages: [
             { // This is your system prompt/context
-              role: "user", // Or "system", depending on backend interpretation
+              role: "Fitbot", // Or "system", depending on backend interpretation
               parts: [
                 {
                   text: `You are an expert fitness coach and certified nutritionist. 
-                    Only provide advice related to fitness, exercise, diet, and nutrition. 
-                    Do not answer questions on topics outside of this domain. 
-                    If a user asks for information outside of your expertise, politely state that you can only help with fitness and nutrition.
-                    The user's data is: Weight: ${userData.weight || ''}, Height: ${userData.height || ''}, Gender: ${userData.gender || ''}, Activity Level: ${userData.activityLevel || ''}.`
+                        Only provide advice related to fitness, exercise, diet, and nutrition. 
+                        Do not answer questions on topics outside of this domain. 
+                        If a user asks for information outside of your expertise, politely state that you can only help with fitness and nutrition.
+
+                        Hello! I'm your virtual fitness coach and nutritionist. 
+                        Based on the data you provided, I can see your weight is ${userData?.weight || 'N/A'}, your height is ${userData?.height || 'N/A'}, your gender is ${userData?.gender || 'N/A'}, and your activity level is ${userData?.activityLevel || 'N/A'}. 
+                        I'm here to provide personalized guidance to help you reach your goals. How can I assist you today?`
                 }
               ]
             },
@@ -82,7 +100,7 @@ export default function ChatScreen() {
       // Provide a user-friendly error message
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", parts: [{ text: "⚠️ Sorry, I couldn't reach the server or process your request." }] },
+        { role: "Assistant", parts: [{ text: "⚠️ Sorry, I couldn't reach the server or process your request." }] },
       ]);
     }
   };
@@ -100,16 +118,30 @@ export default function ChatScreen() {
           {/* Chat messages */}
           <ScrollView style={{ flex: 1, marginBottom: 8 }}>
             {messages.map((msg, i) => (
-              <Text
-                key={i}
-                style={{
-                  color: msg.role === "user" ? "blue" : "green", // Example styling
-                  marginBottom: 4,
-                }}
+              <View key={i} style={{ flexDirection: 'row', marginBottom: 4 }}>
+              {/* Bold the role using a separate Text component with bold font weight */}
+              {/* <Text style={{ fontWeight: 'bold', color: msg.role === 'Fitbot' ? 'blue' : 'green' }}>
+                {msg.role}: 
+              </Text> */}
+              <View
+              style={{
+                maxWidth: '80%', // Ensures the bubble doesn't take up the whole width
+                padding: 10,
+                borderRadius: 15,
+                // ✅ Sets the background color based on the role
+                backgroundColor: msg.role === 'Fitbot' ? '#E5E5EA' : '#007AFF',
+                textAlign: 'left',
+                marginLeft: msg.role === 'Fitbot' ? 0 : 'auto', // Aligns user messages to the right
+                marginRight: msg.role === 'Fitbot' ? 'auto' : 0, // Aligns Fitbot messages to the left
+              }}
               >
-                {/* Correctly render text from parts array */}
-                {msg.role}: {msg.parts && msg.parts.length > 0 ? msg.parts[0].text : "..."}
-              </Text>
+              {/* Display the message content in a separate Text component */}
+                <Text style={{ color: msg.role === 'Fitbot' ? 'blue' : 'white'}}>
+                  {msg.parts && msg.parts.length > 0 ? msg.parts[0].text : '...'}
+                </Text>
+
+              </View>  
+            </View>
             ))}
           </ScrollView>
 

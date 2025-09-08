@@ -131,7 +131,6 @@ export default function Calculator() {
           height: Number(form.height) || user.height,
           weight: Number(form.Weight) || user.weight,
           bodyFat: Number(form.BodyFat) || user.bodyFat,
-          firstName: form.FirstName,
           activityLevel: form.ActivityLevel || user.activityLevel,
           age: Number(form.Age) || user.age,
         };
