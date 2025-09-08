@@ -108,7 +108,7 @@ export default function ChatScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={10}
+      keyboardVerticalOffset={50}
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -129,14 +129,14 @@ export default function ChatScreen() {
                 padding: 10,
                 borderRadius: 15,
                 // ✅ Sets the background color based on the role
-                backgroundColor: msg.role === 'Fitbot' ? '#E5E5EA' : '#007AFF',
+                backgroundColor: msg.role === 'Fitbot' || msg.role === "Assistant" ? '#E5E5EA' : '#007AFF',
                 textAlign: 'left',
-                marginLeft: msg.role === 'Fitbot' ? 0 : 'auto', // Aligns user messages to the right
+                marginLeft: msg.role === 'Fitbot' || msg.role === "Assistant" ? 0 : 'auto', // Aligns user messages to the right
                 marginRight: msg.role === 'Fitbot' ? 'auto' : 0, // Aligns Fitbot messages to the left
               }}
               >
               {/* Display the message content in a separate Text component */}
-                <Text style={{ color: msg.role === 'Fitbot' ? 'blue' : 'white'}}>
+                <Text style={{ color: msg.role === 'Fitbot' || msg.role === "Assistant" ? 'blue' : 'white'}}>
                   {msg.parts && msg.parts.length > 0 ? msg.parts[0].text : '...'}
                 </Text>
 

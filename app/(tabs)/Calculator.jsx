@@ -3,7 +3,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { Button, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native'
+import { Button, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { updateFitnessData } from '../../Database/FitnessData'
 import CustomBTN from '../../components/CustomBTN'
@@ -150,6 +150,10 @@ export default function Calculator() {
       
 
   return (
+    <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
 
@@ -484,5 +488,6 @@ export default function Calculator() {
         </View>
       </ScrollView>
     </SafeAreaView>
+  </KeyboardAvoidingView>
 )
 }
