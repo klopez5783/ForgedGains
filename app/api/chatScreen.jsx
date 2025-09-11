@@ -27,67 +27,58 @@ export default function ChatScreen() {
   }, [user]);
 
   // Send the initial greeting message automatically
-  useEffect(() => {
-    if (userData && messages.length === 0) {
-      const systemPrompt = `Hello! I'm your virtual fitness coach and nutritionist. 
-      \n\nBased on the data you provided, I can see your weight is ${userData?.weight || 'N/A'}, your height is ${userData?.height || 'N/A'}, your gender is ${userData?.gender || 'N/A'}, and your activity level is ${userData?.activityLevel || 'N/A'}. 
-      \n\nI'm here to provide personalized guidance to help you reach your goals. How can I assist you today?`;
-      
-      // Use 'model' for the AI's initial greeting
-      const initialMessage = { 
-        role: "model", 
-        parts: [{ text: systemPrompt }] 
-      };
-      setMessages([initialMessage]);
-    }
-  }, [userData, messages]);
+  // Front-end code (in your ChatScreen.js)
+
+useEffect(() => {
+  // Only send the greeting once the user data is loaded and the messages array is empty
+  if (userData && messages.length === 0) {
+    const greeting = `Hello! I'm your virtual fitness coach and nutritionist. I'm here to provide personalized guidance to help you reach your goals. How can I assist you today?`;
+    
+    // The initial message is a bot response, so its role should be 'model'
+    const initialMessage = { 
+      role: "model", 
+      parts: [{ text: greeting }] 
+    };
+    setMessages([initialMessage]);
+  }
+}, [userData, messages]);
 
   // Send message to backend
   const sendMessage = async () => {
     if (!input.trim() || !userData) return;
 
-    // Use 'user' for the user's message
+    // ✅ Correctly define and add the user's message to the state
     const userMessage = { role: "user", parts: [{ text: input }] };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
     try {
-      const response = await fetch("http://192.168.1.50:5000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // Ensure the messages array sent to the backend has consistent roles ('user', 'model')
-          // The system prompt is often sent as the first 'user' message or a separate 'system' message.
-          // Here, we're sending it as part of the initial messages.
-          messages: [
-            // If you had a separate system instruction that needs to always be first,
-            // you might send it like this:
-            // { role: "system", parts: [{ text: "Your system instructions here." }] },
-            // ...followed by the conversation history.
-            // For Gemini's generateContent, it often expects a history of {role: 'user', parts: [...]}, {role: 'model', parts: [...]}, etc.
-            // The initial greeting is sent as 'model' role to start the conversation.
-            ...messages, // Previous conversation history
-            userMessage // The current user input
-          ],
-        }),
-      });
+        const response = await fetch("http://192.168.1.50:5000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [...messages, userMessage],
+            userData: userData,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      const data = await response.json();
-      // Ensure the received role from backend is consistent, e.g., 'model'
-      const botMessage = { role: "model", parts: [{ text: data.reply || "Sorry, I didn't get a response." }] };
-      setMessages((prev) => [...prev, botMessage]);
+        const data = await response.json();
+        
+        // ✅ The bot's message is created here, after the response is received
+        const botMessage = { role: "model", parts: [{ text: data.reply || "Sorry, I didn't get a response." }] };
+        setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages((prev) => [
-        ...prev,
-        { role: "model", parts: [{ text: "⚠️ Sorry, I couldn't reach the server or process your request." }] },
-      ]);
+        console.error("Error sending message:", error);
+        setMessages((prev) => [
+            ...prev,
+            { role: "model", parts: [{ text: "⚠️ Sorry, I couldn't reach the server or process your request." }] },
+        ]);
     }
-  };
+};
 
   // --- JSX Rendering ---
   return (
@@ -100,7 +91,7 @@ export default function ChatScreen() {
         <View style={{ flex: 1, padding: 16 }}>
           <Button title="Exit Chat" onPress={() => navigation.goBack()} />
 
-          <ScrollView style={{ flex: 1, marginBottom: 8 }}>
+          <ScrollView style={{ flex: 1, marginBottom: 15 }} contentContainerStyle={{ paddingBottom: 20 }}>
             {messages.map((msg, i) => (
               <View
                 key={i}
@@ -131,14 +122,18 @@ export default function ChatScreen() {
               style={{
                 flex: 1,
                 borderWidth: 1,
-                padding: 8,
+                padding: 10,
                 marginRight: 8,
-                borderRadius: 4,
+                borderRadius: 9,
+                textAlignVertical: 'top', // Aligns the text to the top for multiline
+                minHeight: 30, // Ensures a minimum height
               }}
               value={input}
               onChangeText={setInput}
               placeholder="Type a message..."
               editable={!!userData}
+              multiline={true}
+              numberOfLines={1} // Start with one line, expand as needed
             />
             <Button
               title="Send"
