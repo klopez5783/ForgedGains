@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { icons } from '../../constants';
+import { icons, images } from '../../constants';
 
-function TabIcon({ icon, color, name, focused }) {
+function TabIcon({ icon, color, name, focused,size }) {
     return (
         <View className="items-center justify-center mt-4">
             <Image
@@ -11,6 +11,7 @@ function TabIcon({ icon, color, name, focused }) {
                 resizeMode='contain'
                 style={{ tintColor: color }} // Changed tintColor to style prop
                 className="w-6 h-6"
+                size={size ? size : 24}
             />
             <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs w-12 text-center`} style={{ color: color }}>
                 {name}
@@ -62,12 +63,20 @@ const TabsLayout = () => {
         />
     </Tabs>
 
+    {/* <Image
+    source={images.ChatBotImage}/> */}
+
+
         {/* Floating Chat Button */}
       <TouchableOpacity
         onPress={() => navigation.navigate('api/chatScreen')} // Navigate to the ChatScreen
-        className="absolute bottom-24 right-4 bg-yellow-400 p-4 rounded-full shadow-lg"
+        className="absolute bottom-24 right-1 p-4 rounded-full shadow-lg"
       >
-        <Image source={icons.chat} className="w-6 h-6" />
+            <Image
+                source={images.ChatBotImage}
+                resizeMode='contain'
+                style={{ width: 75, height: 60 }} // Changed tintColor to style prop
+            />
       </TouchableOpacity>
 
    </>
