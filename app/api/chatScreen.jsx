@@ -52,7 +52,11 @@ useEffect(() => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
 
-    try {
+    let attempt = 0; // To track retry attempts
+    const maxAttempts = 3; // Maximum number of retry attempts
+    
+    while ( attempt < maxAttempts ) {
+        try {
         const response = await fetch("http://192.168.1.50:5000/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,6 +82,24 @@ useEffect(() => {
             { role: "model", parts: [{ text: "⚠️ Sorry, I couldn't reach the server or process your request." }] },
         ]);
     }
+
+    attempt++;
+    
+    if( attempt >= maxAttempts ) {
+        setMessages((prev) => [
+            ...prev,
+            { role: "model", parts: [{ text: "⚠️ Unable to get a response after multiple attempts. Please try again later." }] },
+        ]);
+        return; // Exit the loop after max attempts
+    }
+
+    const delayTime = Math.pow(2, attempt) * 1000;
+    console.log(`Waiting for ${delayTime / 1000} seconds before retrying...`);
+    await new Promise(resolve => setTimeout(resolve, delayTime));
+
+  }
+
+    
 };
 
   // --- JSX Rendering ---

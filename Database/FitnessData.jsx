@@ -50,7 +50,7 @@ export const updateFitnessData = async (user, updatedFitnessData) => {
     // ✅ Convert all inputs to numbers first
     const weight = parseFloat(updatedFitnessData.Weight);
     const age = parseInt(updatedFitnessData.Age);
-    let heightFeetArr = updatedFitnessData.Height.split("'");
+    let heightFeetArr = updatedFitnessData.height.split("'");
     let heightFeet = parseInt(heightFeetArr[0]);
     let heightInches = parseInt(heightFeetArr[1]) || 0;
     const heightTotalInches = heightFeet * 12 + heightInches;
