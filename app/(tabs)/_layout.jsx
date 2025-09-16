@@ -77,6 +77,9 @@ const TabsLayout = () => {
                 resizeMode='contain'
                 style={{ width: 75, height: 60 }} // Changed tintColor to style prop
             />
+
+            <Text className="text-white text-center text-lg font-pbold -mt-1">Chat Bot</Text>
+
       </TouchableOpacity>
 
    </>
