@@ -1,145 +1,192 @@
+// A. Imports
+// ---------------------------------------------------
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Button, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Button,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { useGlobalContext } from "../../context/globalProvider";
+import { loadChatFromFirestore, saveChatToFirestore } from "../../Database/chatStorage";
 import { getUserData } from "../../Database/FitnessData";
 
+// B. ChatScreen Component
+// ---------------------------------------------------
 export default function ChatScreen() {
+  // C. State Management
+  // ---------------------------------------------------
   const { user } = useGlobalContext();
-  const [userData, setUserData] = useState(null); 
+  const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // Manages loading state for chat history
   const navigation = useNavigation();
 
-  // Fetch user data
+  // D. useEffect Hooks (for side effects)
+  // ---------------------------------------------------
+  // Effect to fetch user data and load chat history when the component mounts
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserDataAndChat = async () => {
       if (user) {
         try {
           const data = await getUserData(user);
           setUserData(data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+          await loadChatFromFirestore(user.uid, setMessages, setIsLoading);
+        }  catch (error) {
+          console.error("Error fetching user data or chat:", error);
+          const greeting = `Hello! I'm your virtual fitness coach and nutritionist...`;
+          setMessages([{ role: "model", parts: [{ text: greeting }] }]);
+        } finally {
+          setIsLoading(false); // Hide the loading indicator
         }
       }
     };
-    fetchUserData();
+    fetchUserDataAndChat();
   }, [user]);
 
-  // Send the initial greeting message automatically
-  // Front-end code (in your ChatScreen.js)
-
-useEffect(() => {
-  // Only send the greeting once the user data is loaded and the messages array is empty
-  if (userData && messages.length === 0) {
-    const greeting = `Hello! I'm your virtual fitness coach and nutritionist. I'm here to provide personalized guidance to help you reach your goals. How can I assist you today?`;
-    
-    // The initial message is a bot response, so its role should be 'model'
-    const initialMessage = { 
-      role: "model", 
-      parts: [{ text: greeting }] 
-    };
-    setMessages([initialMessage]);
-  }
-}, [userData, messages]);
-
-  // Send message to backend
+  // E. sendMessage Function
+  // ---------------------------------------------------
   const sendMessage = async () => {
     if (!input.trim() || !userData) return;
 
-    // ✅ Correctly define and add the user's message to the state
+    // Add user's message to the state immediately for quick UI update
     const userMessage = { role: "user", parts: [{ text: input }] };
-    setMessages((prev) => [...prev, userMessage]);
+    const fullConversation = [...messages, userMessage];
+    setMessages(fullConversation);
     setInput("");
 
-    let attempt = 0; // To track retry attempts
-    const maxAttempts = 3; // Maximum number of retry attempts
-    
-    while ( attempt < maxAttempts ) {
-        try {
+    let attempt = 0;
+    const maxAttempts = 3;
+
+    while (attempt < maxAttempts) {
+      try {
         const response = await fetch("http://192.168.1.50:5000/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: [...messages, userMessage],
+            messages: fullConversation,
             userData: userData,
           }),
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        
-        // ✅ The bot's message is created here, after the response is received
-        const botMessage = { role: "model", parts: [{ text: data.reply || "Sorry, I didn't get a response." }] };
-        setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
+        // Add the bot's reply to the state after a successful response
+        const botMessage = {
+          role: "model",
+          parts: [{ text: data.reply || "Sorry, I didn't get a response." }],
+        };
+        const updatedConversation = [...fullConversation, botMessage];
+
+        setMessages(updatedConversation);
+
+        await saveChatToFirestore(user.uid, updatedConversation);
+        return; // Exit the function on success
+      } catch (error) {
         console.error("Error sending message:", error);
+        // Add a temporary error message to the UI
         setMessages((prev) => [
-            ...prev,
-            { role: "model", parts: [{ text: "⚠️ Sorry, I couldn't reach the server or process your request." }] },
+          ...prev,
+          {
+            role: "model",
+            parts: [
+              {
+                text: "⚠️ Sorry, I couldn't reach the server or process your request.",
+              },
+            ],
+          },
         ]);
-    }
+      }
 
-    attempt++;
-    
-    if( attempt >= maxAttempts ) {
+      attempt++;
+      if (attempt >= maxAttempts) {
+        // Handle max attempts failure
         setMessages((prev) => [
-            ...prev,
-            { role: "model", parts: [{ text: "⚠️ Unable to get a response after multiple attempts. Please try again later." }] },
+          ...prev,
+          {
+            role: "model",
+            parts: [
+              {
+                text: "⚠️ Unable to get a response after multiple attempts. Please try again later.",
+              },
+            ],
+          },
         ]);
-        return; // Exit the loop after max attempts
+        return;
+      }
+
+      // Exponential backoff for retries
+      const delayTime = Math.pow(2, attempt) * 1000;
+      await new Promise((resolve) => setTimeout(resolve, delayTime));
     }
+  };
 
-    const delayTime = Math.pow(2, attempt) * 1000;
-    console.log(`Waiting for ${delayTime / 1000} seconds before retrying...`);
-    await new Promise(resolve => setTimeout(resolve, delayTime));
-
-  }
-
-    
-};
-
-  // --- JSX Rendering ---
+  // F. JSX Rendering (No changes needed here)
+  // ---------------------------------------------------
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 0} // Adjust as needed
+      keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 0}
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={{ flex: 1, padding: 16 }}>
           <Button title="Exit Chat" onPress={() => navigation.goBack()} />
 
-          <ScrollView style={{ flex: 1, marginBottom: 15 }} contentContainerStyle={{ paddingBottom: 20 }}>
-            {messages.map((msg, i) => (
-              <View
-                key={i}
-                style={{
-                  flexDirection: 'row',
-                  marginBottom: 8,
-                  justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', // Align user right, model left
-                }}
-              >
+          {/* Conditional rendering based on loading state */}
+          {isLoading ? (
+            <Text style={{ textAlign: "center", marginTop: 20 }}>
+              Loading chat history...
+            </Text>
+          ) : (
+            <ScrollView
+              style={{ flex: 1, marginBottom: 15 }}
+              contentContainerStyle={{ paddingBottom: 20 }}
+            >
+              {messages.map((msg, i) => (
                 <View
+                  key={i}
                   style={{
-                    maxWidth: '80%',
-                    padding: 10,
-                    borderRadius: 15,
-                    backgroundColor: msg.role === 'user' ? '#007AFF' : '#E5E5EA', // User blue, Model gray
+                    flexDirection: "row",
+                    marginBottom: 8,
+                    justifyContent:
+                      msg.role === "user" ? "flex-end" : "flex-start",
                   }}
                 >
-                  <Text style={{ color: msg.role === 'user' ? 'white' : 'black' }}>
-                    {msg.parts && msg.parts.length > 0 ? msg.parts[0].text : '...'}
-                  </Text>
+                  <View
+                    style={{
+                      maxWidth: "80%",
+                      padding: 10,
+                      borderRadius: 15,
+                      backgroundColor:
+                        msg.role === "user" ? "#007AFF" : "#E5E5EA",
+                    }}
+                  >
+                    <Text style={{ color: msg.role === "user" ? "white" : "black" }}>
+                      {msg.parts && msg.parts.length > 0
+                        ? msg.parts[0].text
+                        : "..."}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))}
-          </ScrollView>
+              ))}
+            </ScrollView>
+          )}
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+          {/* Chat input and send button */}
+          <View
+            style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}
+          >
             <TextInput
               style={{
                 flex: 1,
@@ -147,15 +194,15 @@ useEffect(() => {
                 padding: 10,
                 marginRight: 8,
                 borderRadius: 9,
-                textAlignVertical: 'top', // Aligns the text to the top for multiline
-                minHeight: 30, // Ensures a minimum height
+                textAlignVertical: "top",
+                minHeight: 30,
               }}
               value={input}
               onChangeText={setInput}
               placeholder="Type a message..."
               editable={!!userData}
               multiline={true}
-              numberOfLines={1} // Start with one line, expand as needed
+              numberOfLines={1}
             />
             <Button
               title="Send"
