@@ -1,11 +1,10 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useNavigation, useRoute } from "@react-navigation/native"
-import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { Button, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native'
+import { Button, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { updateFitnessData } from '../../Database/FitnessData'
+import { getUserData, updateFitnessData } from '../../Database/FitnessData'
 import CustomBTN from '../../components/CustomBTN'
 import FormField from '../../components/FormField'
 import Select from '../../components/Select'
@@ -120,7 +119,7 @@ export default function Calculator() {
     }
 
 
-    const submitForm = () => {
+    const submitForm = async () => {
       console.log("Current Form:\n" , form)
       if (Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
         console.log("Form is completely filled out!");
@@ -131,16 +130,17 @@ export default function Calculator() {
           height: Number(form.height) || user.height,
           weight: Number(form.Weight) || user.weight,
           bodyFat: Number(form.BodyFat) || user.bodyFat,
-          firstName: form.FirstName,
           activityLevel: form.ActivityLevel || user.activityLevel,
           age: Number(form.Age) || user.age,
         };
     
-        updateUser(updatedUser);
-        updateFitnessData(user, form);
-        
+        await updateFitnessData(user, form);
+
+        const refreshedUser = await getUserData(user);
+        updateUser(refreshedUser);
 
         router.push('/Home');
+        
 
 
       } else {
@@ -151,6 +151,10 @@ export default function Calculator() {
       
 
   return (
+    <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
     <SafeAreaView className="bg-backGround h-full">
       <ScrollView>
 
@@ -485,5 +489,6 @@ export default function Calculator() {
         </View>
       </ScrollView>
     </SafeAreaView>
+  </KeyboardAvoidingView>
 )
 }

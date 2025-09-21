@@ -37,7 +37,7 @@ export default function Home() {
                             gender: data.gender || "",
                             weight: data.weight || "",
                             height: data.height || "",
-                            bodyFat: data.bodyFat || "",
+                            bodyFat: data.BodyFat || "",
                             bodyFatTimeStamp: bodyFatFormattedDate,
                             weightTimeStamp: WeightFormattedDate,
                             activityLevel: data.activityLevel || "",

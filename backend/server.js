@@ -1,48 +1,70 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-// import OpenAI from "openai"; // You no longer need this for Gemini
-// import genAI from './gemini'; // Assuming you might import Gemini separately
 
-dotenv.config(); // Load .env file
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Access your Gemini API key from environment variables
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
-    console.error("GEMINI_API_KEY is not set. Please check your .env file.");
-    // You might want to exit the process or handle this error gracefully
-    // process.exit(1); 
+  console.error("GEMINI_API_KEY is not set. Please check your .env file.");
+  process.exit(1);
 }
 
-// Initialize Gemini (you might need to import the Gemini SDK)
-// Example: 
-// import { GoogleGenerativeAI } from "@google/generative-ai";
-// const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 // POST /chat endpoint
 app.post("/chat", async (req, res) => {
   try {
-    const { messages } = req.body; // This array now has the correct format
+    // ✅ Receive messages and user data from the frontend
+    const { messages, userData } = req.body;
 
-    // Use Gemini
-    // Ensure genAI is properly initialized and available here
-    // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log("*".repeat(20));
+    console.log("Received userData:", userData);
+    console.log("*".repeat(20));
 
-    // ⚠️ Pass the entire messages array directly
-    // const result = await model.generateContent({ contents: messages });
+    // ✅ Construct the system prompt using the user's data
+    const systemPrompt = `You are an expert fitness coach and certified nutritionist. 
+        Only provide advice related to fitness, exercise, diet, and nutrition. 
+        Do not answer questions on topics outside of this domain. 
+        If a user asks for information outside of your expertise, politely state that you can only help with fitness and nutrition.
+        The user's data is: Weight: ${userData?.weight || 'N/A'}, 
+        Height: ${userData?.height || 'N/A'},
+        Gender: ${userData?.gender || 'N/A'}, 
+        Activity Level: ${userData?.activityLevel || 'N/A'}, 
+        Age: ${userData?.age || 'N/A'},
+        Body Fat Percentage: ${userData?.bodyFat || 'N/A'},
+        BMR: ${userData?.bmr || 'N/A'},
+        TDEE: ${userData?.tdee || 'N/A'}.
+        fats: ${userData?.fats || 'N/A'},
+        carbs: ${userData?.carbs || 'N/A'},
+        protein: ${userData?.protein || 'N/A'}.
+        Use this data to provide personalized fitness and nutrition advice.`;
 
-    // const reply = completion.choices[0].message.content; // This line seems to be from OpenAI, remove/adapt for Gemini
+    // ✅ Create the full conversation array
+    // The system prompt must be a 'user' role message
+    const fullConversation = [
+      {
+        role: "user",
+        parts: [{ text: systemPrompt }],
+      },
+      ...messages
+    ];
+   
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Placeholder for Gemini response
-    const reply = "This is a placeholder response from Gemini."; 
-    
-    res.json({ reply }); // Send reply back to Expo
+    // ✅ Pass the combined conversation to Gemini
+    const result = await model.generateContent({ contents: fullConversation });
+
+    // Extract the text from the result
+    const reply = result.response.text();
+   
+    res.json({ reply });
   } catch (error) {
     console.error("Error in /chat endpoint:", error);
     res.status(500).json({ error: "Something went wrong" });
