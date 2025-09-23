@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Platform, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Modal, Platform, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../../components/CustomBTN';
 import PieChart from '../../components/MacroPieChart';
@@ -17,6 +17,15 @@ export default function Home() {
     const [Macros, setMacros] = useState(null);
     const [userFitnessData, setUserFitnessData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const openModal = () => {
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     // ✅ Single useEffect to fetch all data and set all states
     useEffect(() => {
@@ -78,6 +87,19 @@ export default function Home() {
             alert(err.message);
         }
     };
+
+
+    const handleDeleteAccount = async () => {
+
+        try {
+            console.log("Deleting Account...");
+            // await deleteUserAccount(); // Implement this function in your authentication module
+            router.replace('/');
+        } catch (err) {
+            alert(err.message);
+        }
+
+    }
 
     return (
         <SafeAreaView className="bg-backGround h-full">
@@ -173,14 +195,55 @@ export default function Home() {
                         </View>
                     )}
 
-                    <CustomBTN
+                    <View className="flex flex-row items-center">
+                      <CustomBTN
                         Title="Sign Out"
                         handlePress={handleSignOut}
-                        width={200}
+                        width={175}
                         otherStyles={"mt-5"}
                     />
+
+                    <CustomBTN
+                        Title="Delete Account"
+                        handlePress={openModal}
+                        width={175}
+                        otherStyles={"mt-5 bg-red-600"}
+                    />
+                    </View>
                 </View>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={closeModal}
+                >
+                  <View style="text-center flex-1 justify-center items-center bg-black bg-opacity-50 p-4">
+                    <View style="text-center w-full bg-white rounded-lg p-6">
+                      <Text style="text-center text-xl font-bold mb-4">
+                        Are you sure you want to delete your account? This action cannot be undone.
+                      </Text>
+                      <View style="text-center flex-row justify-around">
+                        {/* Button to confirm the action */}
+                        <Button
+                          title="Yes, Delete"
+                          color="#FF0000" // Red for a destructive action
+                          onPress={() => {
+                            closeModal();
+                            // Call your deletion function here, e.g., handleDeleteAccount()
+                          }}
+                        />
+                        {/* Button to cancel and close the modal */}
+                        <Button
+                          title="Cancel"
+                          onPress={closeModal}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </Modal>
             </ScrollView>
         </SafeAreaView>
+
+        
     );
 }
