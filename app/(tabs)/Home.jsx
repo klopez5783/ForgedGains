@@ -1,13 +1,13 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, Modal, Platform, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Platform, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../../components/CustomBTN';
 import PieChart from '../../components/MacroPieChart';
+import { useModal } from '../../components/Modal';
 import { useGlobalContext } from "../../context/globalProvider";
 import { SignUserOut } from '../../Database/authentication';
 import { getUserData } from '../../Database/FitnessData';
-
 export default function Home() {
     const router = useRouter();
     const { user } = useGlobalContext();
@@ -17,15 +17,8 @@ export default function Home() {
     const [Macros, setMacros] = useState(null);
     const [userFitnessData, setUserFitnessData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [modalVisible, setModalVisible] = useState(false);
+    const { showModal, hideModal } = useModal(); // 👈 Use the hook
 
-    const openModal = () => {
-        setModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-    };
 
     // ✅ Single useEffect to fetch all data and set all states
     useEffect(() => {
@@ -100,6 +93,34 @@ export default function Home() {
         }
 
     }
+
+    const handleShowDeleteModal = () => {
+        const modalContent = (
+            <View style={{ alignItems: 'center' }}>
+                <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 15 }}>
+                    Are you sure you want to delete your account?
+                </Text>
+                <Text style={{ textAlign: 'center', fontSize: 16, marginBottom: 20 }}>
+                    This action cannot be undone.
+                </Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
+                    <Button
+                        title="Yes, Delete"
+                        color="#FF0000"
+                        onPress={() => {
+                            hideModal();
+                            handleDeleteAccount();
+                        }}
+                    />
+                    <Button
+                        title="Cancel"
+                        onPress={hideModal}
+                    />
+                </View>
+            </View>
+        );
+        showModal(modalContent);
+    };
 
     return (
         <SafeAreaView className="bg-backGround h-full">
@@ -205,42 +226,12 @@ export default function Home() {
 
                     <CustomBTN
                         Title="Delete Account"
-                        handlePress={openModal}
+                        handlePress={handleShowDeleteModal}
                         width={175}
                         otherStyles={"mt-5 bg-red-600"}
                     />
                     </View>
                 </View>
-                <Modal
-                  animationType="slide"
-                  transparent={true}
-                  visible={modalVisible}
-                  onRequestClose={closeModal}
-                >
-                  <View style="text-center flex-1 justify-center items-center bg-black bg-opacity-50 p-4">
-                    <View style="text-center w-full bg-white rounded-lg p-6">
-                      <Text style="text-center text-xl font-bold mb-4">
-                        Are you sure you want to delete your account? This action cannot be undone.
-                      </Text>
-                      <View style="text-center flex-row justify-around">
-                        {/* Button to confirm the action */}
-                        <Button
-                          title="Yes, Delete"
-                          color="#FF0000" // Red for a destructive action
-                          onPress={() => {
-                            closeModal();
-                            // Call your deletion function here, e.g., handleDeleteAccount()
-                          }}
-                        />
-                        {/* Button to cancel and close the modal */}
-                        <Button
-                          title="Cancel"
-                          onPress={closeModal}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                </Modal>
             </ScrollView>
         </SafeAreaView>
 
