@@ -6,7 +6,7 @@ import CustomBTN from '../../components/CustomBTN';
 import PieChart from '../../components/MacroPieChart';
 import { useModal } from '../../components/Modal';
 import { useGlobalContext } from "../../context/globalProvider";
-import { SignUserOut } from '../../Database/authentication';
+import { SignUserOut, deleteCurrentUser } from '../../Database/authentication';
 import { getUserData } from '../../Database/FitnessData';
 export default function Home() {
     const router = useRouter();
@@ -85,8 +85,7 @@ export default function Home() {
     const handleDeleteAccount = async () => {
 
         try {
-            console.log("Deleting Account...");
-            // await deleteUserAccount(); // Implement this function in your authentication module
+            await deleteCurrentUser();
             router.replace('/');
         } catch (err) {
             alert(err.message);

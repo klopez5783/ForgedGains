@@ -1,11 +1,12 @@
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   sendPasswordResetEmail,
   serverTimestamp,
   signInWithEmailAndPassword,
   signOut
 } from "firebase/auth";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore";
 import { app, auth } from "../fireBaseConfig"; // Import your Firebase app instance
 
 
@@ -95,3 +96,35 @@ export const SignUserOut = async () => {
     console.error("Sign-out error:", error);
   }
 }
+
+export const deleteCurrentUser = async () => {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+
+      // 1. Delete user's data from Firestore
+      console.log("Deleting Firestore documents for user:", uid);
+      const userDocRef = doc(db, "users", uid);
+      await deleteDoc(userDocRef);
+
+      // (Optional) If you have a separate 'chats' collection, delete that as well
+      const chatDocRef = doc(db, "chats", uid);
+      await deleteDoc(chatDocRef);
+      
+      // 2. Delete the user from Firebase Authentication
+      await deleteUser(user);
+
+      console.log("User account and associated data deleted successfully.");
+      
+    } else {
+      throw new Error("No user is currently signed in.");
+    }
+  } catch (error) {
+    let errorMessage = "Failed to delete user account.";
+    if (error.code === "auth/requires-recent-login") {
+      errorMessage = "Please sign in again to delete your account.";
+    }
+    throw new Error(errorMessage);
+  }
+};
