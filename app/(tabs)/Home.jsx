@@ -24,7 +24,7 @@ export default function Home() {
     useEffect(() => {
         const fetchUserData = async () => {
             console.log("user:", user);
-            if (!user.isAnonymous) {
+            if (user) {
                 try {
                     const data = await getUserData(user);
                     if (data) {
@@ -35,7 +35,7 @@ export default function Home() {
                         const WeightFormattedDate = weightDate ? `${(weightDate.getMonth() + 1).toString().padStart(2, '0')}/${weightDate.getDate().toString().padStart(2, '0')}/${weightDate.getFullYear()}` : "";
 
                         const parsedData = {
-                            firstName: data.firstName || "User",
+                            firstName: data.firstName || "Guest",
                             age: data.age || "",
                             gender: data.gender || "",
                             weight: data.weight || "",

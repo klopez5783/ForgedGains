@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { icons, images } from '../../constants';
+import { useGlobalContext } from '../../context/globalProvider';
 
 function TabIcon({ icon, color, name, focused,size }) {
     return (
@@ -23,6 +24,15 @@ function TabIcon({ icon, color, name, focused,size }) {
 const TabsLayout = () => {
 
       const navigation = useNavigation();
+      const { user } = useGlobalContext();
+
+      const handleChatbotNavigation = () => {
+            if (user.isAnonymous) {
+                alert("Please sign in to access the chat bot.");
+                return;
+            }
+            navigation.navigate("chatScreen"); // Navigate to the ChatScreen
+        };
 
 
   return (
@@ -69,7 +79,7 @@ const TabsLayout = () => {
 
         {/* Floating Chat Button */}
       <TouchableOpacity
-        onPress={() => navigation.navigate('api/chatScreen')} // Navigate to the ChatScreen
+        onPress={handleChatbotNavigation} // Navigate to the ChatScreen
         className="absolute bottom-24 right-1 p-4 rounded-full shadow-lg"
       >
             <Image

@@ -18,6 +18,7 @@ const GlobalProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        const isGuest = firebaseUser.isAnonymous;
         setUser({
         uid: firebaseUser.uid,
         email: firebaseUser.email,
@@ -57,7 +58,7 @@ const GlobalProvider = ({ children }) => {
       await updateProfile(auth.currentUser, updatedUserData);
       const updatedUser = { ...user, ...updatedUserData };
       setUser(updatedUser);
-      Alert.alert("Success!", "Your profile has been updated successfully!");
+      Alert.alert("Success!", user.isAnonymous ? "As a guest, some features may be limited." : "Your profile has been updated successfully!");
     } catch (error) {
       console.error("Error updating user:", error);
       Alert.alert("Error", "There was an error updating your profile. Please try again later.");
