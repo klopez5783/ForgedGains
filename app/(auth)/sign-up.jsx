@@ -1,3 +1,4 @@
+import AntDesign from '@expo/vector-icons/AntDesign'
 import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
@@ -7,6 +8,7 @@ import {
   Platform,
   ScrollView,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
@@ -15,6 +17,7 @@ import CustomBTN from '../../components/CustomBTN'
 import FormField from '../../components/FormField'
 import { images } from '../../constants'
 import { signup } from '../../Database/authentication'
+
 
 export default function SignUp() {
   const router = useRouter();
@@ -69,10 +72,19 @@ export default function SignUp() {
         <ScrollView>
           <View className="mx-auto justify-center min-h-[70vh] px-4 my-6">
 
+
+            <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
+              <AntDesign name="arrowleft" size={Platform.isPad ? 40 : 30} color="#FFC300" />
+              <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Go Back</Text>
+            </TouchableOpacity>
+
+            
             <Image 
             source={images.logoV4} 
             className={Platform.isPad ? "w-[225px] h-[20vh] mx-auto" : "w-[175px] h-[15vh] mx-auto"}
             resizeMode='contain' />
+
+            
             
             <Text className="text-3xl text-darkGold font-bold mt-10">Sign Up for Forged Fitness</Text>
 
