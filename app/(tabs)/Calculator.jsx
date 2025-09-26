@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useNavigation, useRoute } from "@react-navigation/native"
+import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Button, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,6 +16,8 @@ import { useGlobalContext } from '../../context/globalProvider'
 export default function Calculator() {
 
   const route = useRoute();
+
+  const router = useRouter();
   
   const receivedForm = route.params?.form || {}; // Default to empty object if undefined
   
@@ -120,34 +123,27 @@ export default function Calculator() {
 
 
     const submitForm = async () => {
-      console.log("Current Form:\n" , form)
-      if (Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
+    console.log("Current Form:\n", form);
+    if (Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
         console.log("Form is completely filled out!");
-        
-        const updatedUser = {
-          ...user,
-          gender: form.Gender || user.gender, // Use form value if available, else keep existing value
-          height: Number(form.height) || user.height,
-          weight: Number(form.Weight) || user.weight,
-          bodyFat: Number(form.BodyFat) || user.bodyFat,
-          activityLevel: form.ActivityLevel || user.activityLevel,
-          age: Number(form.Age) || user.age,
-        };
-    
+
+        // 1. Await all asynchronous data operations first
         await updateFitnessData(user, form);
-
         const refreshedUser = await getUserData(user);
-        updateUser(refreshedUser);
-
-        router.push('/Home');
         
+        // 2. Perform synchronous state update
+        updateUser(refreshedUser);
+        
+        // 3. Defer navigation to ensure the state update renders fully
+        setTimeout(() => {
+            // Use the simplified absolute path for Expo Router navigation
+            router.replace('/Home'); 
+        }, 10); // 10ms is usually sufficient for a clean transition
 
-
-      } else {
+    } else {
         alert("Please fill out all fields before submitting.");
-      }
-      
     }
+}
       
 
   return (

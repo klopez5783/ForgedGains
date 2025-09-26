@@ -10,23 +10,34 @@ import "../global.css";
 
 export default function App() {
   
-  const {user, loading} = useGlobalContext();
+  const {user,loading} = useGlobalContext();
   const router = useRouter();
 
-  // If the provider is still loading, show a loading indicator
+  // 1. Show Loading while user status is determined
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000814" }}>
-        <ActivityIndicator size="large" color="#FFC300" />
+        {/* You need to import ActivityIndicator from 'react-native' or similar */}
+        {/* <ActivityIndicator size="large" color="#FFC300" /> */}
+        <Text style={{color: '#FFC300'}}>Loading...</Text>
       </View>
     );
   }
   
-  if(user) {
+  // 2. Redirect permanent users immediately after loading is done
+  // If the user exists AND they are NOT anonymous, redirect.
+  if (user && !user.isAnonymous) {
+    // A slight delay (0ms is fine) is good practice for navigation calls
+    // to ensure the component is fully mounted/ready.
     setTimeout(() => {
-    router.replace("/(tabs)/Home");
+      router.replace("/Home"); // Use the simple path /Home
     }, 1);
+    
+    // Return null or a blank screen to prevent flashing the intro content 
+    // while the redirect happens.
+    return null; 
   }
+
 
   return (
       <LinearGradient
