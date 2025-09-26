@@ -23,7 +23,8 @@ export default function Home() {
     // ✅ Single useEffect to fetch all data and set all states
     useEffect(() => {
         const fetchUserData = async () => {
-            if (user) {
+            console.log("user:", user);
+            if (!user.isAnonymous) {
                 try {
                     const data = await getUserData(user);
                     if (data) {
@@ -91,6 +92,15 @@ export default function Home() {
             alert(err.message);
         }
 
+    }
+
+    const handleSignIn = () => {
+        // Navigate to app/(auth)/sign-in.jsx
+        router.push('/sign-in');
+    }
+
+    const handleSignUp = () => {
+        router.push('/sign-up');
     }
 
     const handleShowDeleteModal = () => {
@@ -215,21 +225,48 @@ export default function Home() {
                         </View>
                     )}
 
-                    <View className="flex flex-row items-center">
-                      <CustomBTN
-                        Title="Sign Out"
-                        handlePress={handleSignOut}
-                        width={175}
-                        otherStyles={"mt-5"}
-                    />
+                    
+                      {user.isAnonymous ? (
+                        <View className="flex flex-row items-center">
 
-                    <CustomBTN
-                        Title="Delete Account"
-                        handlePress={handleShowDeleteModal}
-                        width={175}
-                        otherStyles={"mt-5 bg-red-600"}
-                    />
-                    </View>
+                            <CustomBTN
+                            Title="Sign In"
+                            handlePress={handleSignIn}
+                            width={175}
+                            otherStyles={"mt-5"}
+                            />
+                            
+                            <CustomBTN
+                            Title="Sign Up"
+                            handlePress={handleSignUp}
+                            width={175}
+                            otherStyles={"mt-5"}
+                            />
+
+                        </View>
+
+                        ):(
+
+                        <View className="flex flex-row items-center">
+
+                            <CustomBTN
+                            Title="Sign Out"
+                            handlePress={handleSignOut}
+                            width={175}
+                            otherStyles={"mt-5"}
+                            />
+                            
+                            <CustomBTN
+                            Title="Delete Account"
+                            handlePress={handleShowDeleteModal}
+                            width={175}
+                            otherStyles={"mt-5 bg-red-600"}
+                            />
+
+                        </View>
+                        )}
+
+                    
                 </View>
             </ScrollView>
         </SafeAreaView>

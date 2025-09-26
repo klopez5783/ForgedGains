@@ -10,8 +10,17 @@ import "../global.css";
 
 export default function App() {
   
-  const {user} = useGlobalContext();
+  const {user, loading} = useGlobalContext();
   const router = useRouter();
+
+  // If the provider is still loading, show a loading indicator
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000814" }}>
+        <ActivityIndicator size="large" color="#FFC300" />
+      </View>
+    );
+  }
   
   if(user) {
     setTimeout(() => {
@@ -62,7 +71,7 @@ export default function App() {
             
               <CustomBTN width={250} 
               Title="I'm Ready."
-              handlePress={() => router.push('/(auth)/sign-up')}
+              handlePress={() => router.push('/(tabs)/Home')}
               otherStyles="mt-5"
               />
           </View>

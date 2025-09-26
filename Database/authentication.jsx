@@ -3,6 +3,7 @@ import {
   deleteUser,
   sendPasswordResetEmail,
   serverTimestamp,
+  signInAnonymously,
   signInWithEmailAndPassword,
   signOut
 } from "firebase/auth";
@@ -126,5 +127,19 @@ export const deleteCurrentUser = async () => {
       errorMessage = "Please sign in again to delete your account.";
     }
     throw new Error(errorMessage);
+  }
+};
+
+
+// ✅ New function to sign in an anonymous user
+export const signInAnonymous = async () => {
+  try {
+    const userCredential = await signInAnonymously(auth);
+    const user = userCredential.user;
+    console.log("Signed in anonymously with UID:", user.uid);
+    return user;
+  } catch (error) {
+    console.error("Error during anonymous sign-in:", error);
+    throw new Error("Failed to sign in anonymously.");
   }
 };

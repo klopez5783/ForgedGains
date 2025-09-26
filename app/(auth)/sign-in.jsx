@@ -45,7 +45,7 @@ export default function SignIn() {
           <View className="mb-15 px-2 pt-10">
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
               <AntDesign name="arrowleft" size={Platform.isPad ? 40 : 30} color="#FFC300" />
-              <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Sign Up</Text>
+              <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Go Back</Text>
             </TouchableOpacity>
           </View>
 

@@ -1,6 +1,7 @@
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, View } from "react-native";
+import { signInAnonymous } from "../Database/authentication";
 import { auth } from "../fireBaseConfig"; // ✅ this is key
 
 const GlobalContext = createContext({
@@ -15,15 +16,30 @@ const GlobalProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName || "Display Name Here",
-        });
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: isGuest 
+                       ? "Guest" 
+                       : firebaseUser.displayName || "Display Name Here",
+        isAnonymous: isGuest
+    });
       } else {
-        setUser(null);
+        // No user found, sign in anonymously
+        try {
+          const anonymousUser = await signInAnonymous();
+          setUser({
+            uid: anonymousUser.uid,
+            email: null, // Anonymous users don't have an email
+            displayName: "Guest", // Or any other guest-like name
+            isAnonymous: true,
+          });
+        } catch (error) {
+          console.error("Anonymous sign-in failed:", error);
+          setUser(null); // Set user to null if anonymous sign-in fails
+        }
       }
       setLoading(false);
     });
@@ -51,7 +67,7 @@ const GlobalProvider = ({ children }) => {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000814" }}>
-        <ActivityIndicator size="large" color="FFC300" />
+        <ActivityIndicator size="large" color="#FFC300" />
       </View>
     );
   }
