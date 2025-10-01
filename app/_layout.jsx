@@ -1,6 +1,7 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
+import { ModalProvider } from "../components/Modal";
 import GlobalProvider from '../context/globalProvider';
 
 SplashScreen.preventAutoHideAsync();
@@ -27,6 +28,7 @@ export default function RootLayout() {
 
   return (
     <GlobalProvider>
+      <ModalProvider>
         <Stack
         screenOptions={{
           gestureEnabled: false,
@@ -46,6 +48,7 @@ export default function RootLayout() {
             }} 
           />
         </Stack>
+      </ModalProvider>
     </GlobalProvider>
   );
 }
