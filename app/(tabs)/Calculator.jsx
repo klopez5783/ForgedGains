@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Button, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getUserData, updateFitnessData } from '../../Database/FitnessData'
+import { calculateGuestData } from '../../Utilities/FitnessDataCalculations'
 import CustomBTN from '../../components/CustomBTN'
 import FormField from '../../components/FormField'
 import Select from '../../components/Select'
@@ -74,16 +75,20 @@ export default function Calculator() {
   
   
 
-  useEffect(() => {
-    // Runs whenever selectedFeet or selectedInches change
+// --- REPLACE EXISTING useEffect FOR selectedFeet/Inches ---
+useEffect(() => {
     console.log("Feet and Inches changed:", selectedFeet, selectedInches);
     
     if (selectedHeightUnit === "CM") {
-      setForm({...form, height: selectedCentimeters});
+        setForm((prevForm) => ({ ...prevForm, height: selectedCentimeters }));
     } else {
-      setForm({...form, height: selectedFeet + "'" + selectedInches});
+        // Ensure the string format is correct
+        const heightStr = selectedFeet + "'" + selectedInches;
+        setForm((prevForm) => ({ ...prevForm, height: heightStr }));
     }
-  }, [selectedFeet, selectedInches]); // Runs when selectedFeet or selectedInches change
+}, [selectedFeet, selectedInches, selectedCentimeters, selectedHeightUnit]); 
+// 👆 The dependency array now correctly includes all height state variables.
+// -----------------------------------------------------------------
   
 
   const [form, setForm] = useState({
@@ -122,28 +127,70 @@ export default function Calculator() {
     }
 
 
-    const submitForm = async () => {
+const submitForm = async () => {
     console.log("Current Form:\n", form);
-    if (Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
-        console.log("Form is completely filled out!");
+    
+    // ⚠️ CRITICAL: Move navigation to the top so it's scheduled even if an error occurs.
+    // However, if we move it to the top and an alert is triggered, it will still navigate.
+    // The safest approach is to ensure navigation happens only AFTER a successful branch.
+    
+    // --- 1. FIELD VALIDATION ---
+    if (!Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
+        alert("Please fill out all fields before submitting.");
+        return; // Stop execution here. Navigation should not happen if validation fails.
+    }
+    
+    // --- 2. DATA HANDLING ---
+    
+    // Determine if the user is a full/persistent user (has a UID)
+    const isAuthenticatedUser = user && user.uid;
+    let success = false; // Flag to track successful data processing
 
-        // 1. Await all asynchronous data operations first
-        await updateFitnessData(user, form);
-        const refreshedUser = await getUserData(user);
-        
-        // 2. Perform synchronous state update
-        updateUser(refreshedUser);
-        
-        // 3. Defer navigation to ensure the state update renders fully
-        setTimeout(() => {
-            // Use the simplified absolute path for Expo Router navigation
-            router.replace('/Home'); 
-        }, 10); // 10ms is usually sufficient for a clean transition
+    if (isAuthenticatedUser) {
+        // --- AUTHENTICATED USER FLOW ---
+        try {
+            await updateFitnessData(user, form);
+            const refreshedUser = await getUserData(user);
+            updateUser(refreshedUser);
+            success = true;
+        } catch (error) {
+            console.error("Error saving data for authenticated user:", error);
+            alert("Failed to save your fitness data. Please try again.");
+            // success remains false
+        }
 
     } else {
-        alert("Please fill out all fields before submitting.");
+        // --- GUEST USER FLOW ---
+        console.log("Guest user detected. Calculating and updating session state.");
+
+        console.log("Form data for guest calculation:", form);
+
+
+        const guestResults = calculateGuestData(form);
+
+        if (guestResults) {
+            // Update session state
+            updateUser({
+                ...user, // Preserve uid: null, isAnonymous: true, etc.
+                ...guestResults // Add the calculated metrics (bmr, tdee, macros)
+            });
+            
+            // This alert will now show because the code didn't stop at validation
+            alert("Your calculations are complete! Please sign up or log in to save this data permanently.");
+            success = true; // Mark as successful for navigation
+        } else {
+            alert("Calculation failed due to invalid inputs.");
+            // success remains false
+        }
     }
-}
+
+    // --- 3. NAVIGATION (Only navigate on success) ---
+    if (success) {
+        setTimeout(() => {
+            router.replace('/Home'); 
+        }, 10);
+    }
+};
       
 
   return (
@@ -346,18 +393,15 @@ export default function Calculator() {
                   width={125}
                 />
                 <CustomBTN
-                  Title="Set Height"
-                  otherStyles="bg-darkGold self-center mt-2"
-                  handlePress={() => {
-                    if (selectedHeightUnit === "CM") {
-                      setForm({ ...form, height: selectedCentimeters });
-                      setHeightModalVisible(!heightModalVisible);
-                    } else {
-                      setForm({ ...form, height: selectedFeet + "'" + selectedInches });
-                      setHeightModalVisible(!heightModalVisible);
-                    }
-                  }}
-                  width={125}
+                    Title="Set Height"
+                    otherStyles="bg-darkGold self-center mt-2"
+                    handlePress={() => {
+                        // 🛑 REMOVED: Redundant setForm logic. 
+                        // The updated useEffect (in section 2) now handles setting the form state 
+                        // whenever the height picker states change. We only need to close the modal here.
+                        setHeightModalVisible(!heightModalVisible); 
+                    }}
+                    width={125}
                 />
               </View>
             </View>

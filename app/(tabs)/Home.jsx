@@ -22,38 +22,49 @@ export default function Home() {
 
     // ✅ Single useEffect to fetch all data and set all states
     useEffect(() => {
-        const fetchUserData = async () => {
+    const fetchAndDisplayData = async () => {
             console.log("user:", user);
-            if (user) {
+            
+            // 1. Check if guest user has calculated data in the global state
+            const hasGuestData = user && user.bmr > 0; // Check for BMR > 0 as a flag
+
+            if (user && user.uid) {
+                // --- AUTHENTICATED USER FLOW (Fetch from Firestore) ---
                 try {
                     const data = await getUserData(user);
-                    if (data) {
-                        const bodyFatDate = data.bodyFatUpdatedAt?.toDate();
+                    
+                    // If data is null/empty from Firestore, use the global user object as a fallback
+                    const sourceData = data || user; 
+
+                    if (sourceData) {
+                        // All your original data parsing logic (dates, parsing floats)
+                        const bodyFatDate = sourceData.bodyFatUpdatedAt?.toDate();
                         const bodyFatFormattedDate = bodyFatDate ? `${(bodyFatDate.getMonth() + 1).toString().padStart(2, '0')}/${bodyFatDate.getDate().toString().padStart(2, '0')}/${bodyFatDate.getFullYear()}` : "";
                         
-                        const weightDate = data.weightUpdatedAt?.toDate();
+                        const weightDate = sourceData.weightUpdatedAt?.toDate();
                         const WeightFormattedDate = weightDate ? `${(weightDate.getMonth() + 1).toString().padStart(2, '0')}/${weightDate.getDate().toString().padStart(2, '0')}/${weightDate.getFullYear()}` : "";
 
                         const parsedData = {
-                            firstName: data.firstName || "Guest",
-                            age: data.age || "",
-                            gender: data.gender || "",
-                            weight: data.weight || "",
-                            height: data.height || "",
-                            bodyFat: data.BodyFat || "",
+                            // Use sourceData properties, defaulting where necessary
+                            firstName: sourceData.firstName || user.displayName || "User",
+                            age: sourceData.age || "",
+                            gender: sourceData.gender || "",
+                            weight: sourceData.weight || "",
+                            height: sourceData.height || "",
+                            bodyFat: sourceData.BodyFat || sourceData.bodyFat || "", // Check both casing
                             bodyFatTimeStamp: bodyFatFormattedDate,
                             weightTimeStamp: WeightFormattedDate,
-                            activityLevel: data.activityLevel || "",
+                            activityLevel: sourceData.activityLevel || "",
                             // Use parsed values with a fallback to 0
-                            bmr: parseFloat(data.bmr) || 0,
-                            protein: parseFloat(data.protein) || 0,
-                            carbs: parseFloat(data.carbs) || 0,
-                            fats: parseFloat(data.fats) || 0,
-                            tdee: parseFloat(data.tdee) || 0,
+                            bmr: parseFloat(sourceData.bmr) || 0,
+                            protein: parseFloat(sourceData.protein) || 0,
+                            carbs: parseFloat(sourceData.carbs) || 0,
+                            fats: parseFloat(sourceData.fats) || 0,
+                            tdee: parseFloat(sourceData.tdee) || 0,
                         };
 
                         setUserFitnessData(parsedData);
-                        console.log("User Fitness Data:", parsedData);
+                        console.log("User Fitness Data (Authenticated):", parsedData);
                         setBmr(parsedData.bmr);
                         setTdee(parsedData.tdee);
                         setMacros({
@@ -67,10 +78,49 @@ export default function Home() {
                 } finally {
                     setLoading(false);
                 }
+            
+            } else if (hasGuestData) {
+                // --- GUEST USER FLOW (Data is already in Global State) ---
+                console.log("No UID, but found guest results in global state. Displaying...");
+                
+                // NOTE: The calculated data in the global 'user' object is already numeric/ready
+                const guestData = {
+                    firstName: user.displayName, // "Guest"
+                    age: user.age,
+                    gender: user.gender,
+                    weight: user.weight,
+                    height: user.height,
+                    bodyFat: user.BodyFat || user.bodyFat, 
+                    bodyFatTimeStamp: "", // Guest data won't have Firestore timestamps
+                    weightTimeStamp: "",
+                    activityLevel: user.ActivityLevel,
+                    bmr: user.bmr,
+                    protein: user.protein,
+                    carbs: user.carbs,
+                    fats: user.fats,
+                    tdee: user.tdee,
+                };
+
+                setUserFitnessData(guestData);
+                console.log("User Fitness Data (Guest):", guestData);
+                setBmr(guestData.bmr);
+                setTdee(guestData.tdee);
+                setMacros({
+                    "Fats": guestData.fats,
+                    "Carbs": guestData.carbs,
+                    "Protein": guestData.protein
+                });
+                setLoading(false);
+                
+            } else {
+                // --- NO DATA FOUND (Initial load for a new guest) ---
+                console.log("No authenticated user or guest data found. Skipping data fetch.");
+                setLoading(false);
             }
         };
-        fetchUserData();
-    }, [user]);
+        
+        fetchAndDisplayData();
+    }, [user]); // Depend on user to re-run when the global user object changes
 
     const handleSignOut = async () => {
         try {
