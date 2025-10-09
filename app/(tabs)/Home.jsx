@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, Platform, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../../components/CustomBTN';
 import PieChart from '../../components/MacroPieChart';
@@ -181,6 +181,43 @@ export default function Home() {
         showModal(modalContent);
     };
 
+    const handleShowSourcesModal = () => {
+    const modalContent = (
+        <View style={{ padding: 20 }}>
+            <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: 'bold', marginBottom: 15 }}>
+                Sources & References
+            </Text>
+
+            <Text style={{ fontSize: 16, marginBottom: 15 }}>
+                • Body Fat Formula: U.S. Navy Method{"\n"}
+                https://www.omnicalculator.com/health/navy-body-fat
+            </Text>
+
+            <Text style={{ fontSize: 16, marginBottom: 15 }}>
+                • Calorie Deficit Guidelines: NIH Dietary Guidelines{"\n"}
+                https://www.nhlbi.nih.gov/health/educational/lose_wt/index.htm
+            </Text>
+
+            <Text style={{ fontSize: 16, marginBottom: 15 }}>
+                • Macro Distribution Recommendations: USDA Dietary Guidelines{"\n"}
+                https://www.dietaryguidelines.gov
+            </Text>
+
+            <Text style={{ fontSize: 14, color: "gray", marginTop: 20 }}>
+                Disclaimer: This app provides general fitness and nutrition information 
+                and is not a substitute for medical advice. Consult a healthcare professional before making changes to your diet or exercise routine.
+            </Text>
+
+            <View style={{ alignItems: 'center', marginTop: 25 }}>
+                <Button title="Close" onPress={hideModal} />
+            </View>
+        </View>
+    );
+
+    showModal(modalContent);
+};
+
+
     return (
         <SafeAreaView className="bg-backGround h-full">
             <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
@@ -280,6 +317,13 @@ export default function Home() {
                                         )}
                                     </View>
                                 </View>
+
+                                <TouchableOpacity onPress={handleShowSourcesModal}>
+                                    <Text style={{ color: '#007AFF', marginTop: 20, textAlign: 'center' }}>
+                                        View Sources & References
+                                    </Text>
+                                </TouchableOpacity>
+
                             </View>
 
                             <View className="rounded-lg p-4 mt-5 bg-backGround-300">
@@ -338,6 +382,11 @@ export default function Home() {
                         </View>
                         )}
 
+                        <Text style={{ fontSize: 14, marginTop: 20, color: "gray" }}>
+                            Disclaimer: This app provides general fitness and nutrition information
+                            and is not intended as a substitute for professional medical advice.
+                            Always consult a healthcare provider before starting a new fitness program.
+                        </Text>
                     
                 </View>
             </ScrollView>
