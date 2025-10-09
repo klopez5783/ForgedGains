@@ -234,26 +234,48 @@ export default function Home() {
                                     <View className={`${Platform.isPad ? "" : "w-1/4"} mx-auto flex-col gap-1`}>
                                         {Macros && (
                                             <View className="flex-col">
+                                                {/* Protein */}
                                                 <View className="flex-row justify-between">
                                                     <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-green-500 font-psemibold`}>Protein: </Text>
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-green-500 font-psemibold`}>{Macros.Protein}g</Text>
+                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-green-500 font-psemibold`}>
+                                                        {/* 1. Check if the value is a valid number (!isNaN)
+                                                        2. If true, display the value (rounded to avoid rendering too many decimals).
+                                                        3. If false (it's NaN), display '0'. 
+                                                        */}
+                                                        {!isNaN(Macros.Protein) ? Math.round(Macros.Protein) : '0'}g
+                                                    </Text>
                                                 </View>
+                                                
+                                                {/* Fats */}
                                                 <View className="flex-row justify-between">
                                                     <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>Fats:</Text>
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>{Macros.Fats}g</Text>
+                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>
+                                                        {!isNaN(Macros.Fats) ? Math.round(Macros.Fats) : '0'}g
+                                                    </Text>
                                                 </View>
+                                                
+                                                {/* Carbs */}
                                                 <View className="flex-row justify-between">
                                                     <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-blue-500 font-psemibold`}>Carbs: </Text>
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-blue-500 font-psemibold`}>{Macros.Carbs}g</Text>
+                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-blue-500 font-psemibold`}>
+                                                        {!isNaN(Macros.Carbs) ? Math.round(Macros.Carbs) : '0'}g
+                                                    </Text>
                                                 </View>
                                             </View>
                                         )}
                                     </View>
                                     <View className="mx-auto">
-                                        {Macros && (
+                                        {/* // 1. Check if Macros object exists
+                                        // 2. Check if tdee is a valid, finite number (not NaN, not Infinity)
+                                        // 3. Check if one of the core macro values (like Protein) is a valid number */}
+                                        {Macros && isFinite(tdee) && !isNaN(Macros.Protein) && (
                                             <PieChart
+                                                // The Data prop should ideally be checked inside the PieChart component itself,
+                                                // but this ensures the component receives an object that won't immediately crash.
                                                 Data={Macros}
-                                                Calories={tdee - 500}
+                                                
+                                                // Pass the safe, rounded calories value
+                                                Calories={Math.round(tdee - 500)}
                                             />
                                         )}
                                     </View>

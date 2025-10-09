@@ -1,6 +1,6 @@
-import AntDesign from '@expo/vector-icons/AntDesign'
-import { Link, useRouter } from 'expo-router'
-import { useState } from 'react'
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Link, useRouter } from 'expo-router';
+import { useState } from 'react';
 import {
   Image,
   Keyboard,
@@ -11,13 +11,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import CustomBTN from '../../components/CustomBTN'
-import FormField from '../../components/FormField'
-import { images } from '../../constants'
-import { signup } from '../../Database/authentication'
-
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomBTN from '../../components/CustomBTN';
+import FormField from '../../components/FormField';
+import { images } from '../../constants';
+import { signup } from '../../Database/authentication';
 
 export default function SignUp() {
   const router = useRouter();
@@ -74,7 +73,11 @@ export default function SignUp() {
 
 
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
-              <AntDesign name="arrowleft" size={Platform.isPad ? 40 : 30} color="#FFC300" />
+              <AntDesign name="arrow-left" size={Platform.isPad ? 40 : 30} color="#FFC300" />
+              {/* <Image 
+              source={icons.leftArrow} 
+              className={Platform.isPad ? "w-10 h-10 text-[#FFC300]" : "w-7 h-7 text-[#FFC300]"} 
+              resizeMode='contain' /> */}
               <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Go Back</Text>
             </TouchableOpacity>
 

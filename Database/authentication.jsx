@@ -2,12 +2,11 @@ import {
   createUserWithEmailAndPassword,
   deleteUser,
   sendPasswordResetEmail,
-  serverTimestamp,
   signInAnonymously,
   signInWithEmailAndPassword,
   signOut
 } from "firebase/auth";
-import { deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 import { app, auth } from "../fireBaseConfig"; // Import your Firebase app instance
 
 

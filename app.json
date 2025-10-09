@@ -9,11 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": false,
+      "icon": "./assets/icons/ios-dark.png",
       "bundleIdentifier": "com.klopez1.ForgedGains",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
