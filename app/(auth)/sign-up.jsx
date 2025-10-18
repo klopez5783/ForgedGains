@@ -35,7 +35,7 @@ export default function SignUp() {
     setIsSubmiting(true);
 
     // Password requirements
-    const passwordRequirements = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Minimum 8 characters, at least one letter and one number
+    const passwordRequirements = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/; // Minimum 8 characters, at least one letter and one number
 
     if (form.password !== form.confirmPassword) {
       setIsSubmiting(false);
@@ -73,18 +73,14 @@ export default function SignUp() {
 
 
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
-              <AntDesign name="arrow-left" size={Platform.isPad ? 40 : 30} color="#FFC300" />
-              {/* <Image 
-              source={icons.leftArrow} 
-              className={Platform.isPad ? "w-10 h-10 text-[#FFC300]" : "w-7 h-7 text-[#FFC300]"} 
-              resizeMode='contain' /> */}
-              <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Go Back</Text>
+              <AntDesign name="arrow-left" size={30} color="#FFC300" />
+              <Text className={"text-lg font-psemibold text-darkGold ml-2"}>Go Back</Text>
             </TouchableOpacity>
 
             
             <Image 
             source={images.logoV4} 
-            className={Platform.isPad ? "w-[225px] h-[20vh] mx-auto" : "w-[175px] h-[15vh] mx-auto"}
+            className={"w-[175px] h-[15vh] mx-auto"}
             resizeMode='contain' />
 
             
@@ -123,24 +119,12 @@ export default function SignUp() {
 
           <CustomBTN
           Title="Sign Up"
-          width={Platform.isPad ? 400 : 300}
+          width={300}
           handlePress={handleSignUp}
-          otherStyles={Platform.isPad ? "mt-6" : "mt-4"}
+          otherStyles={"mt-4"}
           />
 
-          { Platform.isPad ? (
-            <View className="flex justify-center pt-4 flex-row gap-2">
-              <Text className="text-2xl text-gray-100 font-pregular">
-                Already have an account?
-              </Text>
-              <Link
-                href="/sign-in"
-                className="text-2xl font-psemibold text-darkGold"
-              >
-                Sign in
-              </Link>
-            </View>
-          ) : (
+          
             <View className="flex justify-center pt-5 flex-row gap-2">
               <Text className="text-lg text-gray-100 font-pregular">
                 Already have an account?
@@ -152,7 +136,7 @@ export default function SignUp() {
                 Sign in
               </Link>
             </View>
-          )}
+          
           
 
           </View>

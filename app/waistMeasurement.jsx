@@ -1,11 +1,11 @@
-import { View, Text, ScrollView, Image, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { images } from '../constants';
-import FormField from '../components/FormField';
+import { useState } from 'react';
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../components/CustomBTN';
+import FormField from '../components/FormField';
+import { images } from '../constants';
 
 export default function waistMeasurement() {
   const route = useRoute(); 
@@ -80,7 +80,7 @@ export default function waistMeasurement() {
                 handlePress={() => {
                   if (!waist) return alert("Please enter a waist measurement");
                   console.log("Waist Measurement:", waist);
-                  console.log("Height:", form.Height);
+                  console.log("Height:", form.height);
                   console.log("gender: ", form.Gender);
                   console.log("Navigating to Neck");
                   navigation.navigate("neckMeasurement", { form , waist }); // Pass waist to NeckScreen

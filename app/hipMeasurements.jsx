@@ -1,13 +1,12 @@
-import { View, Text, ScrollView, Image, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { images } from '../constants';
-import FormField from '../components/FormField';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useState } from 'react';
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../components/CustomBTN';
-import { useRoute } from '@react-navigation/native';
-import {convertToInches} from '../Utilities/heightCalulations';
+import FormField from '../components/FormField';
+import { images } from '../constants';
+import { convertToInches } from '../Utilities/heightCalulations';
 
 export default function hipMeasurements() {
     const route = useRoute(); 
@@ -21,7 +20,7 @@ export default function hipMeasurements() {
         const waistNum = parseFloat(waist);
         const neckNum = parseFloat(neck);
         const hipNum = parseFloat(hip);
-        const heightNum = convertToInches(form.Height) == "Invalid height Format" ? null : convertToInches(form.Height);
+        const heightNum = convertToInches(form.height) == "Invalid height Format" ? null : convertToInches(form.height);
 
           // Log the values to check if they're valid numbers
         console.log("waist:", waistNum);

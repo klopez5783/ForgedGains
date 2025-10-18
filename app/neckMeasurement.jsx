@@ -1,13 +1,12 @@
-import { View, Text, ScrollView, Image, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { images } from '../constants';
-import FormField from '../components/FormField';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useState } from 'react';
+import { Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../components/CustomBTN';
-import { useRoute } from '@react-navigation/native';
-import {convertToInches} from '../Utilities/heightCalulations';
+import FormField from '../components/FormField';
+import { images } from '../constants';
+import { convertToInches } from '../Utilities/heightCalulations';
 
 export default function neckMeasurement() {
     const route = useRoute(); 
@@ -19,7 +18,7 @@ export default function neckMeasurement() {
   const calculateBodyFat = () => {
     const waistNum = parseFloat(waist);
     const neckNum = parseFloat(neck);
-    const heightNum = convertToInches(form.Height) == "Invalid height Format" ? null : convertToInches(form.Height);
+    const heightNum = convertToInches(form.height) == "Invalid height Format" ? null : convertToInches(form.height);
     const bodyFat = 86.010 * Math.log10(waistNum - neckNum) 
                   - 70.041 * Math.log10(heightNum) 
                   + 36.76;
@@ -54,7 +53,7 @@ export default function neckMeasurement() {
 
           <View>
             <Text className="text-white text-2xl font-psemibold self-center mt-6">
-              Measuring your Nexk
+              Measuring your Neck
             </Text>
             <View className="items-center mt-4">
               <Text className="text-white text-lg font-psemibold w-96 mt-2">
