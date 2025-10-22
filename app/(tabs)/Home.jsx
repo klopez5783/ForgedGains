@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, Platform, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../../components/CustomBTN';
 import PieChart from '../../components/MacroPieChart';
@@ -181,10 +181,47 @@ export default function Home() {
         showModal(modalContent);
     };
 
+    const handleShowSourcesModal = () => {
+    const modalContent = (
+        <View style={{ padding: 20 }}>
+            <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: 'bold', marginBottom: 15 }}>
+                Sources & References
+            </Text>
+
+            <Text style={{ fontSize: 16, marginBottom: 15 }}>
+                • Body Fat Formula: U.S. Navy Method{"\n"}
+                https://www.omnicalculator.com/health/navy-body-fat
+            </Text>
+
+            <Text style={{ fontSize: 16, marginBottom: 15 }}>
+                • Calorie Deficit Guidelines: NIH Dietary Guidelines{"\n"}
+                https://www.nhlbi.nih.gov/health/educational/lose_wt/index.htm
+            </Text>
+
+            <Text style={{ fontSize: 16, marginBottom: 15 }}>
+                • Macro Distribution Recommendations: USDA Dietary Guidelines{"\n"}
+                https://www.dietaryguidelines.gov
+            </Text>
+
+            <Text style={{ fontSize: 14, color: "gray", marginTop: 20 }}>
+                Disclaimer: This app provides general fitness and nutrition information 
+                and is not a substitute for medical advice. Consult a healthcare professional before making changes to your diet or exercise routine.
+            </Text>
+
+            <View style={{ alignItems: 'center', marginTop: 25 }}>
+                <Button title="Close" onPress={hideModal} />
+            </View>
+        </View>
+    );
+
+    showModal(modalContent);
+};
+
+
     return (
         <SafeAreaView className="bg-backGround h-full">
             <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-                <View className={`justify-center ${Platform.isPad ? 'w-3/4' : 'w-full'} mx-auto px-4`}>
+                <View className={`justify-center w-full mx-auto px-4`}>
                     <Text className="text-3xl text-darkGold font-bold mt-10">
                         Home
                     </Text>
@@ -196,29 +233,29 @@ export default function Home() {
                     ) : (
                         <View>
                             <View className="rounded-lg p-4 mt-3 bg-backGround-300">
-                                <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} font-pbold text-white font-bold mt-2 ml-4`}>
+                                <Text className={`text-lg font-pbold text-white font-bold mt-2 ml-4`}>
                                     Hello {userFitnessData?.firstName || "User"},
                                 </Text>
                                 <View className="mt-3 flex-row justify-evenly items-center">
                                     <View>
-                                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                                        <Text className={`text-lg text-white font-psemibold`}>
                                             Body Fat: {userFitnessData?.bodyFat || ""}%
                                         </Text>
-                                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                                        <Text className={`text-lg text-white font-psemibold`}>
                                             Weight: {userFitnessData?.weight || ""}
                                         </Text>
-                                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                                        <Text className={`text-lg text-white font-psemibold`}>
                                             Age: {userFitnessData?.age || ""}
                                         </Text>
-                                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white font-psemibold`}>
+                                        <Text className={`text-lg text-white font-psemibold`}>
                                             Height: {userFitnessData?.height || ""}
                                         </Text>
                                     </View>
                                     <View className="flex-col content-start">
-                                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white`}>
+                                        <Text className={`text-lg text-white`}>
                                             Updated: {userFitnessData?.bodyFatTimeStamp}
                                         </Text>
-                                        <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-white`}>
+                                        <Text className={`text-lg text-white`}>
                                             Updated: {userFitnessData?.weightTimeStamp}
                                         </Text>
                                     </View>
@@ -231,43 +268,72 @@ export default function Home() {
 
                             <View className="rounded-lg p-4 mt-2 bg-backGround-300">
                                 <View className="flex-row justify-evenly">
-                                    <View className={`${Platform.isPad ? "" : "w-1/4"} mx-auto flex-col gap-1`}>
+                                    <View className={"w-1/4 mx-auto flex-col gap-1"} >
                                         {Macros && (
                                             <View className="flex-col">
+                                                {/* Protein */}
                                                 <View className="flex-row justify-between">
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-green-500 font-psemibold`}>Protein: </Text>
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-green-500 font-psemibold`}>{Macros.Protein}g</Text>
+                                                    <Text className={`"text-lg"} text-green-500 font-psemibold`}>Protein: </Text>
+                                                    <Text className={`"text-lg"} text-right text-green-500 font-psemibold`}>
+                                                        {/* 1. Check if the value is a valid number (!isNaN)
+                                                        2. If true, display the value (rounded to avoid rendering too many decimals).
+                                                        3. If false (it's NaN), display '0'. 
+                                                        */}
+                                                        {!isNaN(Macros.Protein) ? Math.round(Macros.Protein) : '0'}g
+                                                    </Text>
                                                 </View>
+                                                
+                                                {/* Fats */}
                                                 <View className="flex-row justify-between">
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>Fats:</Text>
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-red-500 font-psemibold`}>{Macros.Fats}g</Text>
+                                                    <Text className={`"text-lg"} text-red-500 font-psemibold`}>Fats:</Text>
+                                                    <Text className={`"text-lg"} text-red-500 font-psemibold`}>
+                                                        {!isNaN(Macros.Fats) ? Math.round(Macros.Fats) : '0'}g
+                                                    </Text>
                                                 </View>
+                                                
+                                                {/* Carbs */}
                                                 <View className="flex-row justify-between">
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-blue-500 font-psemibold`}>Carbs: </Text>
-                                                    <Text className={`${Platform.isPad ? "text-2xl" : "text-lg"} text-right text-blue-500 font-psemibold`}>{Macros.Carbs}g</Text>
+                                                    <Text className={`"text-lg"} text-blue-500 font-psemibold`}>Carbs: </Text>
+                                                    <Text className={`"text-lg"} text-right text-blue-500 font-psemibold`}>
+                                                        {!isNaN(Macros.Carbs) ? Math.round(Macros.Carbs) : '0'}g
+                                                    </Text>
                                                 </View>
                                             </View>
                                         )}
                                     </View>
                                     <View className="mx-auto">
-                                        {Macros && (
+                                        {/* // 1. Check if Macros object exists
+                                        // 2. Check if tdee is a valid, finite number (not NaN, not Infinity)
+                                        // 3. Check if one of the core macro values (like Protein) is a valid number */}
+                                        {Macros && isFinite(tdee) && !isNaN(Macros.Protein) && (
                                             <PieChart
+                                                // The Data prop should ideally be checked inside the PieChart component itself,
+                                                // but this ensures the component receives an object that won't immediately crash.
                                                 Data={Macros}
-                                                Calories={tdee - 500}
+                                                
+                                                // Pass the safe, rounded calories value
+                                                Calories={Math.round(tdee - 500)}
                                             />
                                         )}
                                     </View>
                                 </View>
+
+                                <TouchableOpacity onPress={handleShowSourcesModal}>
+                                    <Text style={{ color: '#007AFF', marginTop: 20, textAlign: 'center' }}>
+                                        View Sources & References
+                                    </Text>
+                                </TouchableOpacity>
+
                             </View>
 
                             <View className="rounded-lg p-4 mt-5 bg-backGround-300">
                                 <View className="rounded-lg p-2 bg-backGround-300">
-                                    <Text className={`text-white font-bold ${Platform.isPad ? "text-2xl" : "text-lg"}`}>
+                                    <Text className={`text-white font-bold "text-2xl" : "text-lg"}`}>
                                         Your BMR: {bmr ? `${bmr} kcal/day` : "Calculating..."}
                                     </Text>
                                 </View>
                                 <View className="rounded-lg p-2 mt-2 bg-backGround-300">
-                                    <Text className={`text-white font-bold ${Platform.isPad ? "text-2xl" : "text-lg"}`}>
+                                    <Text className={`text-white font-bold "text-2xl" : "text-lg"}`}>
                                         Your TDEE: {tdee ? `${tdee} kcal/day` : "Calculating..."}
                                     </Text>
                                 </View>
@@ -316,6 +382,11 @@ export default function Home() {
                         </View>
                         )}
 
+                        <Text style={{ fontSize: 14, marginTop: 20, color: "gray" }}>
+                            Disclaimer: This app provides general fitness and nutrition information
+                            and is not intended as a substitute for professional medical advice.
+                            Always consult a healthcare provider before starting a new fitness program.
+                        </Text>
                     
                 </View>
             </ScrollView>

@@ -1,7 +1,7 @@
 import { AntDesign } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomBTN from '../../components/CustomBTN'
 import FormField from '../../components/FormField'
@@ -41,14 +41,14 @@ export default function resetPassword() {
           <View className="mb-15 px-2 pt-10">
             <TouchableOpacity onPress={() => router.back()} className="flex-row items-center">
               <AntDesign name="arrowleft" size={30} color="#FFC300" />
-              <Text className={Platform.isPad ? "text-2xl font-psemibold text-darkGold ml-2" : "text-lg font-psemibold text-darkGold ml-2"}>Go Back</Text>
+              <Text className="text-lg font-psemibold text-darkGold ml-2">Go Back</Text>
             </TouchableOpacity>
           </View>
 
 
             <View>
               <Image source={images.logoV4}
-                className={`${Platform.isPad ? "w-[275px] h-[40vh]" : "w-[175px] h-[35vh]"} mx-auto`}
+                className={"w-[175px] h-[35vh] mx-auto"}
                 resizeMode='contain' />
             </View>
           

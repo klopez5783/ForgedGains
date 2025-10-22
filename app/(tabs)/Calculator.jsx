@@ -203,11 +203,23 @@ const submitForm = async () => {
 
         <View className={`mx-auto justify-center px-4`}>
     
-           <Text className="text-3xl text-darkGold font-bold mt-10">
+           <Text className="text-3xl text-darkGold font-bold mt-2">
        Deficit Calculator
          </Text>
+
+
+      {/* ✅ ADD: Info banner for guests */}
+      {user?.isAnonymous && (
+        <View className="bg-blue-500/20 border border-blue-500 rounded-lg p-3 mt-3">
+          <Text className="text-white text-sm text-center">
+            ℹ️ Your results will be shown after you complete this form. 
+            Sign up to save your data permanently.
+          </Text>
+        </View>
+      )}
+
      {/* Weight & Height */}
-         <View className="flex flex-row mx-auto w-full justify-evenly mt-7">
+         <View className="flex flex-row mx-auto w-full justify-evenly mt-5">
             <View className="w-1/2 p-1">
               <Text className="font-pmedium text-white text-lg">Weight</Text>
               <Pressable
@@ -233,7 +245,7 @@ const submitForm = async () => {
 
         {/* Gender */}
         <View className="w-full p-1">
-          <Text className="text-lg text-white font-pmedium mt-7">Gender</Text>
+          <Text className="text-lg text-white font-pmedium mt-5">Gender</Text>
         <Select
           optionOne="Male"
           defaultOption={form.Gender}
@@ -243,7 +255,7 @@ const submitForm = async () => {
         </View>
 
         {/* Activity Level */}
-        <View className=" p-1 mt-7">
+        <View className=" p-1 mt-5">
           <Text className="font-pmedium text-white text-lg">Activity Level</Text>
           <Pressable
             className="bg-backGround-300 rounded-2xl p-1 h-16 w-full"
@@ -259,7 +271,7 @@ const submitForm = async () => {
         </View>
 
         {/* Body Fat */}
-        <View className="p-1 mt-7">
+        <View className="p-1 mt-5">
           <View className="flex-row items-center">
             <Text className="font-pmedium text-white text-lg">Body Fat </Text>
             <Pressable onPress={() => setInfoModalVisible(true)}>
