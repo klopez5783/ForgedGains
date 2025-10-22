@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomBTN from '../../components/CustomBTN';
 import PieChart from '../../components/MacroPieChart';
@@ -181,40 +181,187 @@ export default function Home() {
         showModal(modalContent);
     };
 
-    const handleShowSourcesModal = () => {
-    const modalContent = (
-        <View style={{ padding: 20 }}>
-            <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: 'bold', marginBottom: 15 }}>
-                Sources & References
-            </Text>
+    
 
-            <Text style={{ fontSize: 16, marginBottom: 15 }}>
-                • Body Fat Formula: U.S. Navy Method{"\n"}
-                https://www.omnicalculator.com/health/navy-body-fat
-            </Text>
+   const handleShowSourcesModal = () => {
+  const openURL = async (url) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        alert("Unable to open link");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-            <Text style={{ fontSize: 16, marginBottom: 15 }}>
-                • Calorie Deficit Guidelines: NIH Dietary Guidelines{"\n"}
-                https://www.nhlbi.nih.gov/health/educational/lose_wt/index.htm
-            </Text>
+  const modalContent = (
+    <ScrollView style={{ maxHeight: 600 }}>
+      <View style={{ padding: 20 }}>
+        <Text style={{ fontSize: 22, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>
+          Medical Sources & References
+        </Text>
 
-            <Text style={{ fontSize: 16, marginBottom: 15 }}>
-                • Macro Distribution Recommendations: USDA Dietary Guidelines{"\n"}
-                https://www.dietaryguidelines.gov
-            </Text>
-
-            <Text style={{ fontSize: 14, color: "gray", marginTop: 20 }}>
-                Disclaimer: This app provides general fitness and nutrition information 
-                and is not a substitute for medical advice. Consult a healthcare professional before making changes to your diet or exercise routine.
-            </Text>
-
-            <View style={{ alignItems: 'center', marginTop: 25 }}>
-                <Button title="Close" onPress={hideModal} />
-            </View>
+        {/* DOCTOR CONSULTATION - REQUIRED */}
+        <View style={{ 
+          backgroundColor: '#FEF3C7', 
+          borderWidth: 2, 
+          borderColor: '#F59E0B',
+          borderRadius: 8,
+          padding: 12,
+          marginBottom: 20 
+        }}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#92400E', marginBottom: 5 }}>
+            ⚕️ Consult Your Doctor
+          </Text>
+          <Text style={{ fontSize: 14, color: '#78350F' }}>
+            These calculations are educational estimates only. Always consult with a qualified 
+            healthcare provider or registered dietitian before making medical decisions or 
+            starting any new diet or exercise program.
+          </Text>
         </View>
-    );
 
-    showModal(modalContent);
+        {/* 1. BMR - MISSING FROM YOUR MODAL */}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 5 }}>
+            • BMR Calculation (Mifflin-St Jeor)
+          </Text>
+          <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
+            Basal Metabolic Rate - calories your body needs at rest
+          </Text>
+          <TouchableOpacity onPress={() => openURL('https://www.ncbi.nlm.nih.gov/books/NBK56068/')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline' }}>
+              📖 NIH - Dietary Reference Intakes
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openURL('https://www.eatright.org')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline', marginTop: 4 }}>
+              📖 Academy of Nutrition and Dietetics
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 2. TDEE - MISSING FROM YOUR MODAL */}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 5 }}>
+            • TDEE & Activity Levels
+          </Text>
+          <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
+            Total Daily Energy Expenditure with activity multipliers
+          </Text>
+          <TouchableOpacity onPress={() => openURL('https://www.dietaryguidelines.gov')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline' }}>
+              📖 USDA Dietary Guidelines
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openURL('https://www.acefitness.org')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline', marginTop: 4 }}>
+              📖 American Council on Exercise
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 3. Body Fat */}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 5 }}>
+            • Body Fat Percentage (U.S. Navy)
+          </Text>
+          <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
+            Circumference-based estimation method
+          </Text>
+          <TouchableOpacity onPress={() => openURL('https://www.omnicalculator.com/health/navy-body-fat')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline' }}>
+              📖 U.S. Navy Calculator
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openURL('https://www.med.navy.mil/Navy-Marine-Corps-Public-Health-Center/Population-Health/Nutrition-and-Growth/Body-Composition/')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline', marginTop: 4 }}>
+              📖 Naval Health Research Center
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 4. Calorie Deficit */}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 5 }}>
+            • Calorie Deficit (500 cal)
+          </Text>
+          <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
+            Safe weight loss: 1-2 pounds per week
+          </Text>
+          <TouchableOpacity onPress={() => openURL('https://www.nhlbi.nih.gov/health/educational/lose_wt/index.htm')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline' }}>
+              📖 NIH - Losing Weight
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openURL('https://www.cdc.gov/healthyweight/losing_weight/index.html')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline', marginTop: 4 }}>
+              📖 CDC - Healthy Weight Loss
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 5. Macros */}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 5 }}>
+            • Macronutrient Distribution
+          </Text>
+          <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
+            Protein (30%), Fats (25%), Carbs (45%)
+          </Text>
+          <TouchableOpacity onPress={() => openURL('https://www.dietaryguidelines.gov')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline' }}>
+              📖 USDA Dietary Guidelines
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => openURL('https://jissn.biomedcentral.com/')}>
+            <Text style={{ fontSize: 14, color: '#007AFF', textDecorationLine: 'underline', marginTop: 4 }}>
+              📖 Int'l Society of Sports Nutrition
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ACCURACY LIMITATIONS - REQUIRED */}
+        <View style={{ 
+          backgroundColor: '#FEE2E2', 
+          borderWidth: 1, 
+          borderColor: '#DC2626',
+          borderRadius: 8,
+          padding: 12,
+          marginTop: 10,
+          marginBottom: 20 
+        }}>
+          <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#991B1B', marginBottom: 5 }}>
+            ⚠️ Accuracy Limitations
+          </Text>
+          <Text style={{ fontSize: 13, color: '#7F1D1D' }}>
+            These calculations are estimates based on formulas. Individual results may vary due to:
+          </Text>
+          <Text style={{ fontSize: 13, color: '#7F1D1D', marginTop: 5 }}>
+            • Metabolic differences{'\n'}
+            • Measurement accuracy{'\n'}
+            • Body composition{'\n'}
+            • Medical conditions
+          </Text>
+          <Text style={{ fontSize: 13, color: '#7F1D1D', marginTop: 8 }}>
+            This app does not use device sensors to measure biological data and makes 
+            no claims of medical-grade accuracy.
+          </Text>
+        </View>
+
+        <Text style={{ fontSize: 12, color: 'gray', marginTop: 10, marginBottom: 20, fontStyle: 'italic' }}>
+          Disclaimer: This app provides general fitness and nutrition information for 
+          educational purposes only. Not a substitute for professional medical advice.
+        </Text>
+
+        <Button title="Close" onPress={hideModal} />
+      </View>
+    </ScrollView>
+  );
+
+  showModal(modalContent);
 };
 
 
@@ -225,6 +372,18 @@ export default function Home() {
                     <Text className="text-3xl text-darkGold font-bold mt-10">
                         Home
                     </Text>
+
+                    {userFitnessData && (
+                    <View className="bg-yellow-900/30 border-2 border-yellow-500 rounded-lg p-3 mt-3">
+                        <Text className="text-yellow-200 font-pbold text-base mb-1">
+                        ⚕️ Important Medical Notice
+                        </Text>
+                        <Text className="text-yellow-100 text-xs">
+                        These results are educational estimates only. Consult your doctor before 
+                        making medical decisions or starting any fitness program. Individual results may vary.
+                        </Text>
+                    </View>
+                    )}
 
                     {loading ? (
                         <View className="flex-1 justify-center items-center mt-5">

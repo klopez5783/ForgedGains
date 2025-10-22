@@ -100,6 +100,8 @@ useEffect(() => {
     ActivityLevel: ''
     });
 
+    const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+
     useEffect(() => {
       if (route.params?.form) {
         setForm(prevForm => ({
@@ -127,70 +129,59 @@ useEffect(() => {
     }
 
 
-const submitForm = async () => {
+const handleSubmitPress = () => {
+    // Field validation
+    if (!Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
+      alert("Please fill out all fields before submitting.");
+      return;
+    }
+    
+    // Show medical disclaimer modal
+    setShowSubmissionModal(true);
+  };
+
+  const proceedWithSubmission = async () => {
+    // Close modal
+    setShowSubmissionModal(false);
+    
+    // Your existing submitForm logic goes here
     console.log("Current Form:\n", form);
     
-    // ⚠️ CRITICAL: Move navigation to the top so it's scheduled even if an error occurs.
-    // However, if we move it to the top and an alert is triggered, it will still navigate.
-    // The safest approach is to ensure navigation happens only AFTER a successful branch.
-    
-    // --- 1. FIELD VALIDATION ---
-    if (!Object.values(form).every(value => value !== '' && value !== null && value !== undefined)) {
-        alert("Please fill out all fields before submitting.");
-        return; // Stop execution here. Navigation should not happen if validation fails.
-    }
-    
-    // --- 2. DATA HANDLING ---
-    
-    // Determine if the user is a full/persistent user (has a UID)
     const isAuthenticatedUser = user && user.uid;
-    let success = false; // Flag to track successful data processing
+    let success = false;
 
     if (isAuthenticatedUser) {
-        // --- AUTHENTICATED USER FLOW ---
-        try {
-            await updateFitnessData(user, form);
-            const refreshedUser = await getUserData(user);
-            updateUser(refreshedUser);
-            success = true;
-        } catch (error) {
-            console.error("Error saving data for authenticated user:", error);
-            alert("Failed to save your fitness data. Please try again.");
-            // success remains false
-        }
-
+      try {
+        await updateFitnessData(user, form);
+        const refreshedUser = await getUserData(user);
+        updateUser(refreshedUser);
+        success = true;
+      } catch (error) {
+        console.error("Error saving data for authenticated user:", error);
+        alert("Failed to save your fitness data. Please try again.");
+      }
     } else {
-        // --- GUEST USER FLOW ---
-        console.log("Guest user detected. Calculating and updating session state.");
+      console.log("Guest user detected. Calculating and updating session state.");
+      const guestResults = calculateGuestData(form);
 
-        console.log("Form data for guest calculation:", form);
-
-
-        const guestResults = calculateGuestData(form);
-
-        if (guestResults) {
-            // Update session state
-            updateUser({
-                ...user, // Preserve uid: null, isAnonymous: true, etc.
-                ...guestResults // Add the calculated metrics (bmr, tdee, macros)
-            });
-            
-            // This alert will now show because the code didn't stop at validation
-            alert("Your calculations are complete! Please sign up or log in to save this data permanently.");
-            success = true; // Mark as successful for navigation
-        } else {
-            alert("Calculation failed due to invalid inputs.");
-            // success remains false
-        }
+      if (guestResults) {
+        updateUser({
+          ...user,
+          ...guestResults
+        });
+        alert("Your calculations are complete! Please sign up or log in to save this data permanently.");
+        success = true;
+      } else {
+        alert("Calculation failed due to invalid inputs.");
+      }
     }
 
-    // --- 3. NAVIGATION (Only navigate on success) ---
     if (success) {
-        setTimeout(() => {
-            router.replace('/Home'); 
-        }, 10);
+      setTimeout(() => {
+        router.replace('/Home'); 
+      }, 10);
     }
-};
+  };
       
 
   return (
@@ -198,7 +189,7 @@ const submitForm = async () => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
-    <SafeAreaView className="bg-backGround h-full">
+    <SafeAreaView className="bg-backGround h-9/10">
       <ScrollView>
 
         <View className={`mx-auto justify-center px-4`}>
@@ -305,7 +296,7 @@ const submitForm = async () => {
         <CustomBTN
           Title="Submit Form"
           otherStyles="bg-darkGold mt-4 mx-2"
-          handlePress={() => submitForm()}
+          handlePress={handleSubmitPress}  // ✅ NEW
           width={125}
         />
 
@@ -537,6 +528,90 @@ const submitForm = async () => {
             </View>
           </View>
         </Modal>
+
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showSubmissionModal}
+        onRequestClose={() => setShowSubmissionModal(false)}
+      >
+        <View className="justify-center items-center flex-1 bg-backGround/90">
+          <View className="bg-backGround-300 w-11/12 max-w-md rounded-2xl p-5" style={{ maxHeight: '75%' }}>
+            
+            <View className="items-center mb-4">
+              <Text className="text-3xl mb-2">⚕️</Text>
+              <Text className="text-darkGold text-2xl font-pbold text-center">
+                Before You Continue
+              </Text>
+            </View>
+
+            <ScrollView className="mb-4" showsVerticalScrollIndicator={true}>
+              {/* Main Disclaimer */}
+              <View className="bg-yellow-900/30 border-2 border-yellow-500 rounded-lg p-4 mb-4">
+                <Text className="text-yellow-200 font-psemibold text-base mb-3">
+                  Important Medical Notice:
+                </Text>
+                <Text className="text-yellow-100 text-sm leading-5 mb-3">
+                  The calculations provided are educational estimates based on scientific formulas. 
+                  They are NOT medical measurements and cannot replace professional assessment.
+                </Text>
+                <Text className="text-yellow-100 text-sm leading-5">
+                  Please consult with a doctor or registered dietitian before starting any new 
+                  diet or exercise program, especially if you have existing health conditions.
+                </Text>
+              </View>
+
+              {/* What This App Does NOT Do */}
+              <View className="bg-red-900/20 border border-red-500 rounded-lg p-4 mb-4">
+                <Text className="text-red-300 font-psemibold text-sm mb-2">
+                  This App Does NOT:
+                </Text>
+                <Text className="text-red-200 text-xs leading-4">
+                  ❌ Measure biological data with sensors{'\n'}
+                  ❌ Provide medical-grade accuracy{'\n'}
+                  ❌ Diagnose medical conditions{'\n'}
+                  ❌ Replace professional medical advice
+                </Text>
+              </View>
+
+              {/* Individual Variation */}
+              <View className="bg-gray-800 rounded-lg p-4">
+                <Text className="text-gray-300 font-psemibold text-sm mb-2">
+                  Individual Results May Vary Due To:
+                </Text>
+                <Text className="text-gray-400 text-xs leading-4">
+                  • Metabolic differences{'\n'}
+                  • Body composition variations{'\n'}
+                  • Measurement accuracy{'\n'}
+                  • Hormonal factors{'\n'}
+                  • Medical conditions
+                </Text>
+              </View>
+            </ScrollView>
+
+            {/* Buttons */}
+            <View className="flex-row justify-between mt-2">
+              <CustomBTN
+                Title="Cancel"
+                otherStyles="bg-gray-600"
+                handlePress={() => setShowSubmissionModal(false)}
+                width={140}
+              />
+              <CustomBTN
+                Title="I Understand"
+                otherStyles="bg-darkGold"
+                handlePress={proceedWithSubmission}
+                width={140}
+              />
+            </View>
+
+            <Text className="text-gray-500 text-xs text-center mt-3 leading-4">
+              By continuing, you acknowledge this is for educational purposes only 
+              and not a substitute for medical advice.
+            </Text>
+          </View>
+        </View>
+      </Modal>
 
         </View>
       </ScrollView>
