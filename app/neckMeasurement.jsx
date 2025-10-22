@@ -18,14 +18,29 @@ export default function neckMeasurement() {
   const calculateBodyFat = () => {
     const waistNum = parseFloat(waist);
     const neckNum = parseFloat(neck);
-    const heightNum = convertToInches(form.height) == "Invalid height Format" ? null : convertToInches(form.height);
+    
+    // ✅ FIXED: Check for null instead of string
+    const heightNum = convertToInches(form.height);
+    
+    console.log("waist:", waistNum);
+    console.log("neck:", neckNum);
+    console.log("height:", heightNum);
+    console.log("form.height raw:", form.height);
+    
+    // ✅ Validate all inputs before calculation
+    if (!heightNum || isNaN(waistNum) || isNaN(neckNum)) {
+        alert("Invalid measurements. Please check your inputs and try again.");
+        return;
+    }
+    
     const bodyFat = 86.010 * Math.log10(waistNum - neckNum) 
                   - 70.041 * Math.log10(heightNum) 
                   + 36.76;
-    console.log("Navigating to Start");
+                  
+    console.log("Calculated Body Fat:", bodyFat);
     console.log("Form Data:", form);
     navigation.navigate("(tabs)", { screen: "Calculator", params: { form , bodyFat } });
-  };
+};
 
   return (
     <SafeAreaView className="bg-backGround h-full flex-1">

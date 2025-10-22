@@ -20,20 +20,30 @@ export default function hipMeasurements() {
         const waistNum = parseFloat(waist);
         const neckNum = parseFloat(neck);
         const hipNum = parseFloat(hip);
-        const heightNum = convertToInches(form.height) == "Invalid height Format" ? null : convertToInches(form.height);
-
-          // Log the values to check if they're valid numbers
+        
+        // ✅ FIXED: Check for null instead of string
+        const heightNum = convertToInches(form.height);
+        
+        // Log the values to check if they're valid numbers
         console.log("waist:", waistNum);
         console.log("neck:", neckNum);
         console.log("hip:", hipNum);
         console.log("height:", heightNum);
+        console.log("form.height raw:", form.height);
+
+        // ✅ Validate all inputs before calculation
+        if (!heightNum || isNaN(waistNum) || isNaN(neckNum) || isNaN(hipNum)) {
+            alert("Invalid measurements. Please check your inputs and try again.");
+            return;
+        }
 
         const bodyFat = 163.205 * Math.log10(waistNum + hipNum - neckNum) 
               - 97.684 * Math.log10(heightNum) 
-              - 78.387;  // Corrected subtraction
-        console.log("Calulated Body Fat:", bodyFat);
+              - 78.387;
+              
+        console.log("Calculated Body Fat:", bodyFat);
         navigation.navigate("(tabs)", { screen: "Calculator", params: { form , bodyFat } });
-      };
+    };
     
     return (
         <SafeAreaView className="bg-backGround h-full flex-1">
